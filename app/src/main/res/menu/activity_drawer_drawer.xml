@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/my_surveys"
+            android:icon="@drawable/completed_surveys"
+            android:title="Completed surveys" />
+        <item
+            android:id="@+id/take_a_survey"
+                android:icon="@drawable/take_a_survey"
+            android:title="Get a survey" />
+        <item
+            android:id="@+id/statistics"
+            android:icon="@drawable/statistics"
+            android:title="statistics"/>
+        <item
+            android:id="@+id/login"
+            android:icon="@drawable/login_icon"
+            android:title="login"/>
+    </group>
+</menu>
