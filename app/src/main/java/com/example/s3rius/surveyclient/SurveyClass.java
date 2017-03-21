@@ -7,16 +7,6 @@ import java.util.Collections;
 public class SurveyClass {
     private ArrayList<Question> questions = new ArrayList<>();
 
-//    private void normalize(){
-//        int max = 0;
-//        for (int i = 0; i < numberOfAnswers.length; i++) {
-//            if (numberOfAnswers[i] > max){
-//                max=numberOfAnswers[i];
-//            }
-//        }
-//        answers = new String[numberOfAnswers.length][max];
-//    }
-
     public void addquestion(String question, String[] answers){
         questions.add(new Question(question, answers));
     }

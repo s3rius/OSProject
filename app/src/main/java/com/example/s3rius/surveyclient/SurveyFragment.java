@@ -123,7 +123,6 @@ public class SurveyFragment extends ListFragment {
             try {
                 dataJsonObj = new JSONObject(strJson);
                 JSONArray questions = dataJsonObj.getJSONArray("questions");
-                // 2. перебираем и выводим контакты каждого друга
                 for (int i = 0; i < questions.length(); i++) {
                     JSONObject question = questions.getJSONObject(i);
                     String question1 = question.getString("name");

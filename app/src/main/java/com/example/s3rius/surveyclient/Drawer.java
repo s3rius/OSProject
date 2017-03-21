@@ -242,4 +242,7 @@ public class Drawer extends AppCompatActivity
 
     }
 
+    public void onClickSurveyDone(View view) {
+
+    }
 }
