@@ -28,6 +28,7 @@ public class SurveyFragment extends ListFragment {
     long id;
     static SurveyClass survey;
 
+
     public SurveyFragment() {
         // Required empty public constructor
     }
@@ -35,6 +36,7 @@ public class SurveyFragment extends ListFragment {
     public static SurveyClass getSurvey() {
         return survey;
     }
+
 
     public static void setSurvey(SurveyClass survey) {
         SurveyFragment.survey = survey;
@@ -57,10 +59,7 @@ public class SurveyFragment extends ListFragment {
         super.onStart();
         ParseSurvey parseSurvey;
         parseSurvey = new ParseSurvey(id);
-
         parseSurvey.execute();
-        SurveyListAdapter adapter = new SurveyListAdapter(getActivity(), parseSurvey.getSurvey());
-        setListAdapter(adapter);
     }
 
     @Override
@@ -83,14 +82,6 @@ public class SurveyFragment extends ListFragment {
 
         public ParseSurvey(long id){
             this.id = id;
-        }
-
-        public SurveyClass getSurvey() {
-            return survey;
-        }
-
-        public void setSurvey(SurveyClass survey) {
-            this.survey = survey;
         }
 
         @Override
@@ -128,7 +119,7 @@ public class SurveyFragment extends ListFragment {
             // выводим целиком полученную json-строку
             Log.d(LOG_TAG, strJson);
             JSONObject dataJsonObj = null;
-            SurveyFragment.setSurvey(new SurveyClass());
+            SurveyClass survey1 = new SurveyClass();
             try {
                 dataJsonObj = new JSONObject(strJson);
                 JSONArray questions = dataJsonObj.getJSONArray("questions");
@@ -140,10 +131,12 @@ public class SurveyFragment extends ListFragment {
                     String[] answers1 = new String[answers.length()];
                     for (int j = 0; j < answers.length(); j++) {
                         JSONObject answer1 = answers.getJSONObject(j);
-                        answers1[i] = answer1.getString("name");
+                        answers1[j] = answer1.getString("name");
                     }
-                    SurveyFragment.getSurvey().addquestion(question1, answers1);
+                    survey1.addquestion(question1, answers1);
                 }
+                setSurvey(survey1);
+                setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), SurveyFragment.getSurvey()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

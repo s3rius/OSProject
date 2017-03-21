@@ -48,6 +48,14 @@ public class SurveyClass {
             return question;
         }
 
+        public long getQuantityOfAnswers(){
+            return answers.length;
+        }
+
+        public String getAnswerAt(int position){
+            return answers[position];
+        }
+
         public String[] getAnswers() {
             return answers;
         }
