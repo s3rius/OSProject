@@ -29,6 +29,7 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Take a Survey");
         return inflater.inflate(R.layout.fragment_take_survey, container, false);
     }
     @Override
@@ -48,9 +49,10 @@ public class TakeSurvey extends ListFragment {
     }
 
     private void startSurvey(long id) {
+        Fragment surveyFragment = new SurveyFragment();
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
-        Fragment surveyFragment = new SurveyFragment();
+        bundle.putString("title", testsList[(int)id]);
         surveyFragment.setArguments(bundle);
         // Create new fragment and transaction
         // consider using Java coding conventions (upper first char class names!!!)

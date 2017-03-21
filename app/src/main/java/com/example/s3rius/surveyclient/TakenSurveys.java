@@ -28,11 +28,13 @@ public class TakenSurveys extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Taken Surveys");
         return inflater.inflate(R.layout.fragment_taken_surveys, container, false);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         ArrayList<String> content = new ArrayList<>(Arrays.asList(fuckList));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, content);

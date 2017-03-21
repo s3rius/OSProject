@@ -26,6 +26,7 @@ public class StatisticsFragment extends Fragment {
 //        // Inflate the layout for this fragment
 //        ImageView imageView = (ImageView)().findViewById(R.id.image_on_statistics);
 //        imageView.setImageResource(R.drawable.statistics);
+        getActivity().setTitle("Statistics");
         return inflater.inflate(R.layout.fragment_statistics, container, false);
     }
     public void takeStatistics(){

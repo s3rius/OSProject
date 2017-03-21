@@ -3,6 +3,7 @@ package com.example.s3rius.surveyclient;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class SurveyFragment extends ListFragment {
 
     String[] lol = null;
     long id;
+    String title;
     static SurveyClass survey;
 
 
@@ -45,12 +47,14 @@ public class SurveyFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            Bundle arguments = getArguments();
+            id = arguments.getLong("id");
+            title = arguments.getString("title");
+            getActivity().setTitle(title);
+        }
         return inflater.inflate(R.layout.fragment_survey, container, false);
 
-       // if(getArguments()!= null){
-       //     id = savedInstanceState.getLong("id");
-       // }
-        // Inflate the layout for this fragment
 
     }
 
@@ -72,6 +76,7 @@ public class SurveyFragment extends ListFragment {
         //       android.R.layout.simple_list_item_1, content);
         //setListAdapter(adapter);
     }
+
     private class ParseSurvey extends AsyncTask<Void, Void, String> {
 
         HttpURLConnection urlConnection = null;
@@ -80,7 +85,7 @@ public class SurveyFragment extends ListFragment {
         long id = 0;
         private SurveyClass survey = new SurveyClass();
 
-        public ParseSurvey(long id){
+        public ParseSurvey(long id) {
             this.id = id;
         }
 

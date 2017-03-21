@@ -17,6 +17,7 @@ import android.content.SharedPreferences.Editor;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import org.json.*;
 
 import java.io.BufferedReader;
@@ -27,13 +28,12 @@ import java.net.URL;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    final String SAVED_LOGIN = "saved_login";
+    final String SAVED_PASS = "saved_pass";
     SharedPreferences sPref;
-
     NavigationView navigationView = null;
     Toolbar toolbar = null;
 
-    final String SAVED_LOGIN = "saved_login";
-    final String SAVED_PASS = "saved_pass";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class Drawer extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(isUserExist()){
+        if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
             loginItem.setTitle("Logout");
         }
@@ -102,54 +102,54 @@ public class Drawer extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-            if (id == R.id.my_surveys) {
-                TakenSurveys fragment = new TakenSurveys();
+        if (id == R.id.my_surveys) {
+            TakenSurveys fragment = new TakenSurveys();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        } else if (id == R.id.take_a_survey) {
+            TakeSurvey fragment = new TakeSurvey();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        } else if (id == R.id.statistics) {
+            StatisticsFragment fragment = new StatisticsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        } else if (id == R.id.login) {
+            if (!isUserExist()) {
+                LoginFragment fragment = new LoginFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
-            } else if (id == R.id.take_a_survey) {
+            } else {
+                sPref = getPreferences(MODE_PRIVATE);
+                Editor ed = sPref.edit();
+                ed.clear();
+                ed.apply();
+
+                // get menu from navigationView
+                Menu menu = navigationView.getMenu();
+
+                // find MenuItem you want to change
+                MenuItem loginItem = menu.findItem(R.id.login);
+
+                // set new title to the MenuItem
+                loginItem.setTitle("Login");
+
+                Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show();
                 TakeSurvey fragment = new TakeSurvey();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
-            }else if(id==R.id.statistics){
-                StatisticsFragment fragment = new StatisticsFragment();
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                fragmentTransaction.commit();
-            }else if(id==R.id.login){
-                if (!isUserExist()){
-                    LoginFragment fragment = new LoginFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction =
-                            getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-                    fragmentTransaction.commit();
-                }
-                else {
-                    sPref = getPreferences(MODE_PRIVATE);
-                    Editor ed = sPref.edit();
-                    ed.clear();
-                    ed.apply();
-
-                    // get menu from navigationView
-                    Menu menu = navigationView.getMenu();
-
-                    // find MenuItem you want to change
-                    MenuItem loginItem = menu.findItem(R.id.login);
-
-                    // set new title to the MenuItem
-                    loginItem.setTitle("Login");
-
-                    TakeSurvey fragment = new TakeSurvey();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction =
-                            getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-                    fragmentTransaction.commit();
-                }
             }
+        }
 //            else if(id==R.id.profile_image){
 //                ProfileFragment fragment = new ProfileFragment();
 //                android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -175,10 +175,13 @@ public class Drawer extends AppCompatActivity
     void saveUser() {
         sPref = getPreferences(MODE_PRIVATE);
         Editor ed = sPref.edit();
-        EditText loginField = (EditText)findViewById(R.id.loginlogin);
-        EditText passField = (EditText)findViewById(R.id.passpass);
-        ed.putString(SAVED_LOGIN,loginField.getText().toString());
-        ed.putString(SAVED_PASS,passField.getText().toString());
+        EditText loginField = (EditText) findViewById(R.id.loginlogin);
+        EditText passField = (EditText) findViewById(R.id.passpass);
+        String log, pass;
+        log = loginField.getText().toString();
+        pass = loginField.getText().toString();
+        ed.putString(SAVED_LOGIN, loginField.getText().toString());
+        ed.putString(SAVED_PASS, passField.getText().toString());
         ed.apply();
         Toast.makeText(this, "Login and pass saved", Toast.LENGTH_SHORT).show();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -186,21 +189,19 @@ public class Drawer extends AppCompatActivity
     }
 
 
-
     boolean isUserExist() {
         sPref = getPreferences(MODE_PRIVATE);
         String login = sPref.getString(SAVED_LOGIN, null);
         String pass = sPref.getString(SAVED_PASS, null);
-        if((pass != null)&&(login != null)) {
+        if ((pass != null) && (login != null)) {
             return true;
         }
         return false;
     }
 
 
-
     public void OnclickLogin(View view) {
-        if(validateUser()) {
+        if (validateUser()) {
             saveUser();
 
             // get menu from navigationView
@@ -217,8 +218,7 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Incorrect login and password", Toast.LENGTH_SHORT).show();
         }
     }
@@ -238,8 +238,12 @@ public class Drawer extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void startSurvey(long id){
+    public void startSurvey(long id) {
 
+    }
+
+    public void setActionBarTitle(String title) {
+        getActionBar().setTitle(title);
     }
 
     public void onClickSurveyDone(View view) {
