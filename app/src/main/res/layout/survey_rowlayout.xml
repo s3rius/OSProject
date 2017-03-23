@@ -9,6 +9,7 @@
         android:id="@+id/questionText"
         android:textColor="#000000"
         android:textStyle="bold"
+
         />
     <RadioGroup
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
     </RadioGroup>
     <View
     android:layout_width="fill_parent"
-    android:layout_height="2dp"
+    android:layout_height="1dp"
     android:background="#000000"/>
+
 </LinearLayout>

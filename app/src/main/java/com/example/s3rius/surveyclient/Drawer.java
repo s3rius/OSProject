@@ -177,17 +177,20 @@ public class Drawer extends AppCompatActivity
         Editor ed = sPref.edit();
         EditText loginField = (EditText) findViewById(R.id.loginlogin);
         EditText passField = (EditText) findViewById(R.id.passpass);
-        String log, pass;
-        log = loginField.getText().toString();
-        pass = loginField.getText().toString();
+
         ed.putString(SAVED_LOGIN, loginField.getText().toString());
         ed.putString(SAVED_PASS, passField.getText().toString());
         ed.apply();
         Toast.makeText(this, "Login and pass saved", Toast.LENGTH_SHORT).show();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
     }
 
+    private boolean isEmpty(EditText etText) {
+        if (etText.getText().toString().trim().length() > 0)
+            return false;
+
+        return true;
+    }
 
     boolean isUserExist() {
         sPref = getPreferences(MODE_PRIVATE);
@@ -201,25 +204,32 @@ public class Drawer extends AppCompatActivity
 
 
     public void OnclickLogin(View view) {
-        if (validateUser()) {
-            saveUser();
+        EditText loginField = (EditText) findViewById(R.id.loginlogin);
+        EditText passField = (EditText) findViewById(R.id.passpass);
+        if(isEmpty(loginField) || isEmpty(passField)) {
+            Toast.makeText(this, "Please input the data", Toast.LENGTH_SHORT).show();
+        }else {
+            if (validateUser()) {
 
-            // get menu from navigationView
-            Menu menu = navigationView.getMenu();
+                saveUser();
 
-            // find MenuItem you want to change
-            MenuItem loginItem = menu.findItem(R.id.login);
+                // get menu from navigationView
+                Menu menu = navigationView.getMenu();
 
-            // set new title to the MenuItem
-            loginItem.setTitle("Logout");
+                // find MenuItem you want to change
+                MenuItem loginItem = menu.findItem(R.id.login);
 
-            TakeSurvey fragment = new TakeSurvey();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
-        } else {
-            Toast.makeText(this, "Incorrect login and password", Toast.LENGTH_SHORT).show();
+                // set new title to the MenuItem
+                loginItem.setTitle("Logout");
+
+                TakeSurvey fragment = new TakeSurvey();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+            } else {
+                Toast.makeText(this, "Incorrect login and password", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

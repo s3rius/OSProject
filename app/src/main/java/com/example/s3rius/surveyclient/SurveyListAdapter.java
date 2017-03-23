@@ -39,7 +39,9 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
         v = inflater.inflate(R.layout.survey_rowlayout, null);
         TextView surveytext = (TextView)v.findViewById(R.id.questionText);
         RadioGroup answers = (RadioGroup)v.findViewById(R.id.surveyRadioG);
+
         surveytext.setText(getSurvey().getQuestionAt(position).getQuestion());
+
         for (int i = 0; i < getSurvey().getQuestionAt(position).getQuantityOfAnswers(); i++) {
             RadioButton radioButton = new RadioButton(context);
             radioButton.setText(getSurvey().getQuestionAt(position).getAnswerAt(i));
@@ -51,5 +53,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
     public SurveyClass getSurvey() {
         return survey;
     }
+
+
 
 }
