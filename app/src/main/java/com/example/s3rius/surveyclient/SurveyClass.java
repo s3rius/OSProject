@@ -11,6 +11,7 @@ public class SurveyClass {
         questions.add(new Question(question, answers));
     }
 
+
     public int getQuantityOfQuestions() {
         return questions.size();
     }
