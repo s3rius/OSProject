@@ -12,15 +12,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.s3rius.surveyclient.SurveyClass.Question;
 
 public class SurveyListAdapter extends ArrayAdapter<Question> {
 
     Context context;
     LayoutInflater inflater;
-    SurveyClass survey;
+    Survey survey;
 
-    SurveyListAdapter(Context context, SurveyClass survey){
+    SurveyListAdapter(Context context, Survey survey){
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
@@ -28,7 +27,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
 
     @Override
     public int getCount() {
-        return getSurvey().getQuantityOfQuestions();
+        return getSurvey().getQuestions().size();
     }
 
     @NonNull
@@ -40,17 +39,17 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
         TextView surveytext = (TextView)v.findViewById(R.id.questionText);
         RadioGroup answers = (RadioGroup)v.findViewById(R.id.surveyRadioG);
 
-        surveytext.setText(getSurvey().getQuestionAt(position).getQuestion());
+        surveytext.setText(getSurvey().getQuestions().get(position).getName());
 
-        for (int i = 0; i < getSurvey().getQuestionAt(position).getQuantityOfAnswers(); i++) {
+        for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
             RadioButton radioButton = new RadioButton(context);
-            radioButton.setText(getSurvey().getQuestionAt(position).getAnswerAt(i));
+            radioButton.setText(getSurvey().getQuestions().get(position).getAnswers().get(i).getName());
             answers.addView(radioButton);
         }
         return v;
     }
 
-    public SurveyClass getSurvey() {
+    public Survey getSurvey() {
         return survey;
     }
 

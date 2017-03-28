@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SurveyFragment extends ListFragment {
@@ -28,19 +30,19 @@ public class SurveyFragment extends ListFragment {
     String[] lol = null;
     long id;
     String title;
-    static SurveyClass survey;
+    static Survey survey;
 
 
     public SurveyFragment() {
         // Required empty public constructor
     }
 
-    public static SurveyClass getSurvey() {
+    public static Survey getSurvey() {
         return survey;
     }
 
 
-    public static void setSurvey(SurveyClass survey) {
+    public static void setSurvey(Survey survey) {
         SurveyFragment.survey = survey;
     }
 
@@ -125,21 +127,23 @@ public class SurveyFragment extends ListFragment {
             // выводим целиком полученную json-строку
             Log.d(LOG_TAG, strJson);
             JSONObject dataJsonObj = null;
-            SurveyClass survey1 = new SurveyClass();
+            List<Question> questions = new ArrayList<>();
             try {
                 dataJsonObj = new JSONObject(strJson);
-                JSONArray questions = dataJsonObj.getJSONArray("questions");
-                for (int i = 0; i < questions.length(); i++) {
-                    JSONObject question = questions.getJSONObject(i);
-                    String question1 = question.getString("name");
-                    JSONArray answers = question.getJSONArray("answers");
-                    String[] answers1 = new String[answers.length()];
-                    for (int j = 0; j < answers.length(); j++) {
-                        JSONObject answer1 = answers.getJSONObject(j);
-                        answers1[j] = answer1.getString("name");
+                String surveyName = dataJsonObj.getString("name");
+                JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
+                for (int i = 0; i < questionsJson.length(); i++) {
+                    JSONObject question = questionsJson.getJSONObject(i);
+                    String questionName = question.getString("name");
+                    JSONArray answersJson = question.getJSONArray("answers");
+                    List<Answer> answers = new ArrayList<>();
+                    for (int j = 0; j < answersJson.length(); j++) {
+                        JSONObject answer1 = answersJson.getJSONObject(j);
+                        answers.add(new Answer(answer1.getString("name"), null));
                     }
-                    survey1.addquestion(question1, answers1);
+                    questions.add(new Question(questionName, answers));
                 }
+                Survey survey1 = new Survey(surveyName, "comment", questions, null);
                 setSurvey(survey1);
                 setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), SurveyFragment.getSurvey()));
             } catch (JSONException e) {
