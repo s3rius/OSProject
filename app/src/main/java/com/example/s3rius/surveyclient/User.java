@@ -1,15 +1,11 @@
-package ru.ssau.domain;
+package com.example.s3rius.surveyclient;
 
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-public class User implements UserDetails{
+public class User {
 
     private Integer      id;
     private String       name;
@@ -79,34 +75,26 @@ public class User implements UserDetails{
         this.surveys = surveys;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
-        Collection<GrantedAuthority> roles = new HashSet();
-        roles.add( new SimpleGrantedAuthority( this.getRole().name() ) );
-        return roles;
-    }
 
-    @Override
+
     public String getUsername(){
         return this.getLogin();
     }
 
-    @Override
+
     public boolean isAccountNonExpired(){
         return false;
     }
 
-    @Override
+
     public boolean isAccountNonLocked(){
         return false;
     }
 
-    @Override
     public boolean isCredentialsNonExpired(){
         return false;
     }
 
-    @Override
     public boolean isEnabled(){
         return true;
     }

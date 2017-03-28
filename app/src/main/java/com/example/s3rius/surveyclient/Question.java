@@ -1,4 +1,4 @@
-package ru.ssau.domain;
+package com.example.s3rius.surveyclient;
 
 import java.util.List;
 
