@@ -87,7 +87,7 @@ public class SurveyFragment extends ListFragment {
         long id = 0;
         private SurveyClass survey = new SurveyClass();
 
-        public ParseSurvey(long id) {
+        private ParseSurvey(long id) {
             this.id = id;
         }
 
@@ -126,12 +126,20 @@ public class SurveyFragment extends ListFragment {
             super.onPostExecute(strJson);
             // выводим целиком полученную json-строку
             Log.d(LOG_TAG, strJson);
-            JSONObject dataJsonObj = null;
+            JSONObject dataJsonObj;
             List<Question> questions = new ArrayList<>();
+            //List<User> users = new ArrayList<>();
             try {
                 dataJsonObj = new JSONObject(strJson);
                 String surveyName = dataJsonObj.getString("name");
+               // JSONArray usersArray = dataJsonObj.getJSONArray("users");
                 JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
+//                for (int i = 0; i < usersArray.length(); i++) {
+//                    User user = new User();
+//                    JSONObject userObj = usersArray.getJSONObject(i);
+//                    user.setName(userObj.getString("name"));
+//                    users.add(user);
+//                }
                 for (int i = 0; i < questionsJson.length(); i++) {
                     JSONObject question = questionsJson.getJSONObject(i);
                     String questionName = question.getString("name");
