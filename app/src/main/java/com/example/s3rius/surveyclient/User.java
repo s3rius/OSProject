@@ -74,28 +74,4 @@ public class User {
     public void setSurveys( List<Survey> surveys ){
         this.surveys = surveys;
     }
-
-
-
-    public String getUsername(){
-        return this.getLogin();
-    }
-
-
-    public boolean isAccountNonExpired(){
-        return false;
-    }
-
-
-    public boolean isAccountNonLocked(){
-        return false;
-    }
-
-    public boolean isCredentialsNonExpired(){
-        return false;
-    }
-
-    public boolean isEnabled(){
-        return true;
-    }
 }
