@@ -1,10 +1,7 @@
 package com.example.s3rius.surveyclient;
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,13 +15,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.*;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.example.s3rius.surveyclient.fragments.LoginFragment;
+import com.example.s3rius.surveyclient.fragments.ProfileFragment;
+import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
+import com.example.s3rius.surveyclient.fragments.TakeSurvey;
+import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

@@ -1,8 +1,6 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.surveypac;
 
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 public class User {
@@ -13,7 +11,7 @@ public class User {
     private String       login;
     private String       password;
     private List<Survey> surveys;
-    private UserRoles    role;
+    private UserRoles role;
 
 
     public User(){

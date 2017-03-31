@@ -1,6 +1,5 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.surveypac;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Survey{

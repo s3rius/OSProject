@@ -1,4 +1,4 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.fragments;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.example.s3rius.surveyclient.R;
+import com.example.s3rius.surveyclient.surveypac.Question;
+import com.example.s3rius.surveyclient.surveypac.Survey;
 
 
 public class SurveyListAdapter extends ArrayAdapter<Question> {

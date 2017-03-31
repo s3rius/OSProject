@@ -1,4 +1,4 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.surveypac;
 
 public class Answer{
     private String  name;

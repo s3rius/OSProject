@@ -1,24 +1,25 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.fragments;
 
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.s3rius.surveyclient.surveypac.Answer;
+import com.example.s3rius.surveyclient.R;
+import com.example.s3rius.surveyclient.surveypac.Question;
+import com.example.s3rius.surveyclient.surveypac.Survey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +86,6 @@ public class SurveyFragment extends ListFragment {
         BufferedReader reader = null;
         String resultJson = "";
         long id = 0;
-        private SurveyClass survey = new SurveyClass();
 
         public ParseSurvey(long id) {
             this.id = id;

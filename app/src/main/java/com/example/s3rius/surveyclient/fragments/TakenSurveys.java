@@ -1,4 +1,4 @@
-package com.example.s3rius.surveyclient;
+package com.example.s3rius.surveyclient.fragments;
 
 
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import com.example.s3rius.surveyclient.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
