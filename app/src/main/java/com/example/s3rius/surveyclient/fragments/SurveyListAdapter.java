@@ -56,6 +56,6 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
         return survey;
     }
 
-
+    
 
 }

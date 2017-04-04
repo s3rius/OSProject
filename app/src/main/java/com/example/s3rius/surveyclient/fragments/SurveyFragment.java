@@ -3,11 +3,13 @@ package com.example.s3rius.surveyclient.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.s3rius.surveyclient.surveypac.Answer;
 import com.example.s3rius.surveyclient.R;
@@ -79,6 +81,13 @@ public class SurveyFragment extends ListFragment {
         //       android.R.layout.simple_list_item_1, content);
         //setListAdapter(adapter);
     }
+
+    @Nullable
+    @Override
+    public View getView() {
+        return super.getView();
+    }
+
 
     private class ParseSurvey extends AsyncTask<Void, Void, String> {
 

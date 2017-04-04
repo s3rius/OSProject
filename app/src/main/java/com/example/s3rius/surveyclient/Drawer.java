@@ -2,6 +2,8 @@ package com.example.s3rius.surveyclient;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentContainer;
 import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -13,11 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.content.SharedPreferences.Editor;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
+import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 
@@ -28,6 +32,7 @@ public class Drawer extends AppCompatActivity
     SharedPreferences sPref;
     NavigationView navigationView = null;
     Toolbar toolbar = null;
+    Fragment surveyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,7 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
+            surveyFragment = fragment.getSurveyFragment();
         } else if (id == R.id.statistics) {
             StatisticsFragment fragment = new StatisticsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -243,15 +249,8 @@ public class Drawer extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void startSurvey(long id) {
-
-    }
-
-    public void setActionBarTitle(String title) {
-        getActionBar().setTitle(title);
-    }
 
     public void onClickSurveyDone(View view) {
-
+        
     }
 }

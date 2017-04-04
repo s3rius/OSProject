@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
@@ -19,6 +20,8 @@ import java.util.Arrays;
 
 
 public class TakeSurvey extends ListFragment {
+
+    private Fragment surveyFragment;
 
     String[] testsList = {"Тест0", "Тест1", "Опросы","Которые",
             "Доступны", "Для", "Выбора","Пока","Здесь", "Пусто",
@@ -47,12 +50,11 @@ public class TakeSurvey extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        SurveyFragment surveyFragment = new SurveyFragment();
         startSurvey(id);
     }
 
     private void startSurvey(long id) {
-        Fragment surveyFragment = new SurveyFragment();
+        surveyFragment = new SurveyFragment();
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
         bundle.putString("title", testsList[(int)id]);
@@ -66,6 +68,10 @@ public class TakeSurvey extends ListFragment {
         transaction1.addToBackStack(null);
         // Commit the transaction
         transaction1.commit();
+    }
+
+    public Fragment getSurveyFragment() {
+        return surveyFragment;
     }
 
     public void takeTakeSurveys(){
