@@ -15,5 +15,6 @@
     <string name="statistics">statistics</string>
     <string name="categories">Categories</string>
     <string name="completed_surveys">Completed surveys</string>
+    <string name="create_survey_string">Create Survey</string>
 
 </resources>

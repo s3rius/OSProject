@@ -3,6 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/top100"
+            android:icon="@drawable/top100"
+            android:title="@string/top_surveys" />
+        <item
+            android:id="@+id/createSurvey"
+            android:icon="@drawable/create_survey"
+            android:title="@string/create_survey_string" />
+        <item
             android:id="@+id/my_surveys"
             android:icon="@drawable/completed_surveys"
             android:title="@string/completed_surveys" />
@@ -18,9 +26,5 @@
             android:id="@+id/login"
             android:icon="@drawable/login_icon"
             android:title="@string/login" />
-        <item
-            android:id="@+id/top100"
-            android:icon="@drawable/top100"
-            android:title="@string/top_surveys" />
     </group>
 </menu>

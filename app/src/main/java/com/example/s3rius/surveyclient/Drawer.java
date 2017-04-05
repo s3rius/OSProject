@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
+import com.example.s3rius.surveyclient.fragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
@@ -28,6 +29,10 @@ import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
+import com.example.s3rius.surveyclient.surveypac.Answer;
+import com.example.s3rius.surveyclient.surveypac.Question;
+
+import java.util.ArrayList;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -275,13 +280,13 @@ public class Drawer extends AppCompatActivity
                             View button = group.getChildAt(k);
                             if (button instanceof RadioButton) {
                                 if (((RadioButton) button).isChecked()) {
-                                    answered += k+1;
+                                    answered += k + 1;
                                     isChecked = true;
                                     break;
                                 }
                             }
                         }
-                        if(!isChecked){
+                        if (!isChecked) {
                             isAllChecked = false;
                             break;
                         }
@@ -289,13 +294,26 @@ public class Drawer extends AppCompatActivity
                     }
                 }
             }
-            if (!isAllChecked){
+            if (!isAllChecked) {
                 Toast.makeText(this, "not all question is answered.", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
                 // TODO: 05.04.17 Замутить отправку готового опроса на сервак.
             }
         }
+    }
+
+    public void addQuestionInCreator(View view) {
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("ans1", 0));
+        Question question = new Question("que1",answers);
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+        Fragment createFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (createFragment instanceof CreateSurveyFragment) {
+//            ((CreateSurveyFragment)createFragment).setSurvey(((CreateSurveyFragment) createFragment)
+//                    .getSurvey().setQuestions(((CreateSurveyFragment) createFragment).getSurvey()
+//                            .setQuestions(questions));
+//        }
     }
 }

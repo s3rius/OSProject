@@ -58,8 +58,6 @@ public class SurveyFragment extends ListFragment {
             getActivity().setTitle(title);
         }
         return inflater.inflate(R.layout.fragment_survey, container, false);
-
-
     }
 
     @Override
