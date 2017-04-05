@@ -152,8 +152,8 @@ public class Drawer extends AppCompatActivity
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
             }
-        } else if(id == R.id.top100){
-            Top100Fragment fragment= new Top100Fragment();
+        } else if (id == R.id.top100) {
+            Top100Fragment fragment = new Top100Fragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -260,7 +260,8 @@ public class Drawer extends AppCompatActivity
 
     public void onClickSurveyDone(View view) {
         String answered = "";
-        boolean isAllChecked = false;
+        boolean isAllChecked = true;
+        boolean isChecked = false;
         Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (surveyFragment instanceof SurveyFragment) {
             ListView listView = ((SurveyFragment) surveyFragment).getListView();
@@ -274,20 +275,27 @@ public class Drawer extends AppCompatActivity
                             View button = group.getChildAt(k);
                             if (button instanceof RadioButton) {
                                 if (((RadioButton) button).isChecked()) {
-                                    answered += k;
-                                    isAllChecked = true;
+                                    answered += k+1;
+                                    isChecked = true;
                                     break;
                                 }
                             }
                         }
-                        if(!isAllChecked){
-                            isAllChecked=false;
-                            Toast.makeText(this,"Not all questions is answered", Toast.LENGTH_SHORT).show();
+                        if(!isChecked){
+                            isAllChecked = false;
+                            break;
                         }
+                        isChecked = false;
                     }
                 }
             }
-            Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
+            if (!isAllChecked){
+                Toast.makeText(this, "not all question is answered.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
+                // TODO: 05.04.17 Замутить отправку готового опроса на сервак.
+            }
         }
     }
 }
