@@ -14,7 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.content.SharedPreferences.Editor;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -24,6 +27,9 @@ import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
+import com.example.s3rius.surveyclient.surveypac.Question;
+
+import java.util.ArrayList;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,7 +38,7 @@ public class Drawer extends AppCompatActivity
     SharedPreferences sPref;
     NavigationView navigationView = null;
     Toolbar toolbar = null;
-    Fragment surveyFragment;
+    SurveyFragment surveyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,6 +257,28 @@ public class Drawer extends AppCompatActivity
 
 
     public void onClickSurveyDone(View view) {
-        
+        String answered = "";
+        Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (surveyFragment instanceof SurveyFragment) {
+            ListView listView = ((SurveyFragment) surveyFragment).getListView();
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                View question = listView.getChildAt(i);
+                for (int j = 0; j < ((ViewGroup) question).getChildCount(); j++) {
+                    View child = ((ViewGroup) question).getChildAt(j);
+                    if (child instanceof RadioGroup) {
+                        RadioGroup group = (RadioGroup) child;
+                        for (int k = 0; k < group.getChildCount(); k++) {
+                            View button = group.getChildAt(k);
+                            if (button instanceof RadioButton) {
+                                if (((RadioButton) button).isChecked()) {
+                                    answered += k;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
+        }
     }
 }

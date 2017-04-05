@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 public class TakeSurvey extends ListFragment {
 
-    private Fragment surveyFragment;
+    private SurveyFragment surveyFragment;
 
     String[] testsList = {"Тест0", "Тест1", "Опросы","Которые",
             "Доступны", "Для", "Выбора","Пока","Здесь", "Пусто",
@@ -70,7 +70,7 @@ public class TakeSurvey extends ListFragment {
         transaction1.commit();
     }
 
-    public Fragment getSurveyFragment() {
+    public SurveyFragment getSurveyFragment() {
         return surveyFragment;
     }
 
