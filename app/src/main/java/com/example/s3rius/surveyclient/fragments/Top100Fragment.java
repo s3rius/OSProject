@@ -7,24 +7,24 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.s3rius.surveyclient.R;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.example.s3rius.surveyclient.surveypac.Survey;
 
 
-public class TakeSurvey extends ListFragment {
+public class Top100Fragment extends ListFragment {
 
-    private SurveyFragment surveyFragment;
+    SurveyFragment surveyFragment;
 
-    String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
-            "Доступны", "Для", "Выбора", "Пока", "Здесь", "Пусто",
-            "Но", "Тестовый тест", "Уже готов", "Тестовый тест"};
+    String[] testsList = {"Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос",
+            "Неинтересный опрос", "Неинтересный опрос",
+            "Неинтересный опрос", "Неинтересный опрос",
+            "Неинтересный опрос", "Неинтересный опрос",
+            "Неинтересный опрос", "Неинтересный опрос",
+            "Неинтересный опрос", "Неинтересный опрос"};
 
-    public TakeSurvey() {
+    public Top100Fragment() {
         // Required empty public constructor
     }
 
@@ -32,24 +32,13 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO: 05.04.17 Замутить передачу категории по бандлу. 
-        getActivity().setTitle("Take a Survey");
-        return inflater.inflate(R.layout.fragment_take_survey, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ArrayList<String> content = new ArrayList<>(Arrays.asList(testsList));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, content);
-        setListAdapter(adapter);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_top100, container, false);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        startSurvey(id);
     }
 
     private void startSurvey(long id) {
@@ -67,13 +56,5 @@ public class TakeSurvey extends ListFragment {
         transaction1.addToBackStack(null);
         // Commit the transaction
         transaction1.commit();
-    }
-
-    public SurveyFragment getSurveyFragment() {
-        return surveyFragment;
-    }
-
-    public void takeTakeSurveys() {
-        // FIXME: 18.03.17 get Surveys that can be taken List with links from server.
     }
 }

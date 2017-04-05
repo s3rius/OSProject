@@ -5,18 +5,22 @@
         <item
             android:id="@+id/my_surveys"
             android:icon="@drawable/completed_surveys"
-            android:title="Completed surveys" />
+            android:title="@string/completed_surveys" />
         <item
-            android:id="@+id/take_a_survey"
-                android:icon="@drawable/take_a_survey"
-            android:title="Get a survey" />
+            android:id="@+id/category"
+            android:icon="@drawable/take_a_survey"
+            android:title="@string/categories" />
         <item
             android:id="@+id/statistics"
             android:icon="@drawable/statistics"
-            android:title="statistics"/>
+            android:title="@string/statistics" />
         <item
             android:id="@+id/login"
             android:icon="@drawable/login_icon"
-            android:title="login"/>
+            android:title="@string/login" />
+        <item
+            android:id="@+id/top100"
+            android:icon="@drawable/login_icon"
+            android:title="@string/top_surveys" />
     </group>
 </menu>

@@ -11,5 +11,9 @@
     <string name="cancel">Cancel</string>
     <string name="login">login</string>
     <string name="password">password</string>
+    <string name="top_surveys">Top surveys</string>
+    <string name="statistics">statistics</string>
+    <string name="categories">Categories</string>
+    <string name="completed_surveys">Completed surveys</string>
 
 </resources>

@@ -20,12 +20,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
+import com.example.s3rius.surveyclient.fragments.Top100Fragment;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,7 +36,6 @@ public class Drawer extends AppCompatActivity
     SharedPreferences sPref;
     NavigationView navigationView = null;
     Toolbar toolbar = null;
-    SurveyFragment surveyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +111,12 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.take_a_survey) {
-            TakeSurvey fragment = new TakeSurvey();
+        } else if (id == R.id.category) {
+            CategoryFragment fragment = new CategoryFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
-            surveyFragment = fragment.getSurveyFragment();
         } else if (id == R.id.statistics) {
             StatisticsFragment fragment = new StatisticsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -152,6 +152,12 @@ public class Drawer extends AppCompatActivity
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
             }
+        } else if(id == R.id.top100){
+            Top100Fragment fragment= new Top100Fragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
         }
 //            else if(id==R.id.profile_image){
 //                ProfileFragment fragment = new ProfileFragment();
@@ -268,6 +274,7 @@ public class Drawer extends AppCompatActivity
                             if (button instanceof RadioButton) {
                                 if (((RadioButton) button).isChecked()) {
                                     answered += k;
+                                    break;
                                 }
                             }
                         }
