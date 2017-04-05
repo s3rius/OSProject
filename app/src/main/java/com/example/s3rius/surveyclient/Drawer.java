@@ -1,19 +1,18 @@
 package com.example.s3rius.surveyclient;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentContainer;
-import android.view.Menu;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.content.SharedPreferences.Editor;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,9 +26,6 @@ import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
-import com.example.s3rius.surveyclient.surveypac.Question;
-
-import java.util.ArrayList;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -213,9 +209,9 @@ public class Drawer extends AppCompatActivity
     public void OnclickLogin(View view) {
         EditText loginField = (EditText) findViewById(R.id.loginlogin);
         EditText passField = (EditText) findViewById(R.id.passpass);
-        if(isEmpty(loginField) || isEmpty(passField)) {
+        if (isEmpty(loginField) || isEmpty(passField)) {
             Toast.makeText(this, "Please input the data", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             if (validateUser()) {
 
                 saveUser();
@@ -278,7 +274,7 @@ public class Drawer extends AppCompatActivity
                     }
                 }
             }
-        Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
         }
     }
 }

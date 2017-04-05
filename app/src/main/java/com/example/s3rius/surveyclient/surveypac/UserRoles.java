@@ -1,10 +1,10 @@
 package com.example.s3rius.surveyclient.surveypac;
 
-public enum UserRoles{
+public enum UserRoles {
 
     ADMIN, USER, ANONYMOUS;
 
-    UserRoles(){
+    UserRoles() {
     }
 
 }

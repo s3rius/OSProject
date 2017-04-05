@@ -9,10 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import com.example.s3rius.surveyclient.surveypac.Answer;
 import com.example.s3rius.surveyclient.R;
+import com.example.s3rius.surveyclient.surveypac.Answer;
 import com.example.s3rius.surveyclient.surveypac.Question;
 import com.example.s3rius.surveyclient.surveypac.Survey;
 
@@ -141,7 +140,7 @@ public class SurveyFragment extends ListFragment {
             try {
                 dataJsonObj = new JSONObject(strJson);
                 String surveyName = dataJsonObj.getString("name");
-               // JSONArray usersArray = dataJsonObj.getJSONArray("users");
+                // JSONArray usersArray = dataJsonObj.getJSONArray("users");
                 JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
 //                for (int i = 0; i < usersArray.length(); i++) {
 //                    User user = new User();

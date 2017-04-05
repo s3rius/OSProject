@@ -22,7 +22,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
     LayoutInflater inflater;
     Survey survey;
 
-    SurveyListAdapter(Context context, Survey survey){
+    SurveyListAdapter(Context context, Survey survey) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
@@ -37,10 +37,10 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
-        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.survey_rowlayout, null);
-        TextView surveytext = (TextView)v.findViewById(R.id.questionText);
-        RadioGroup answers = (RadioGroup)v.findViewById(R.id.surveyRadioG);
+        TextView surveytext = (TextView) v.findViewById(R.id.questionText);
+        RadioGroup answers = (RadioGroup) v.findViewById(R.id.surveyRadioG);
 
         surveytext.setText(getSurvey().getQuestions().get(position).getName());
 
@@ -56,6 +56,5 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
         return survey;
     }
 
-    
 
 }

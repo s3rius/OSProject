@@ -2,7 +2,6 @@ package com.example.s3rius.surveyclient.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -10,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +20,9 @@ public class TakeSurvey extends ListFragment {
 
     private SurveyFragment surveyFragment;
 
-    String[] testsList = {"Тест0", "Тест1", "Опросы","Которые",
-            "Доступны", "Для", "Выбора","Пока","Здесь", "Пусто",
-            "Но", "Тестовый тест","Уже готов", "Тестовый тест"};
+    String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
+            "Доступны", "Для", "Выбора", "Пока", "Здесь", "Пусто",
+            "Но", "Тестовый тест", "Уже готов", "Тестовый тест"};
 
     public TakeSurvey() {
         // Required empty public constructor
@@ -38,6 +35,7 @@ public class TakeSurvey extends ListFragment {
         getActivity().setTitle("Take a Survey");
         return inflater.inflate(R.layout.fragment_take_survey, container, false);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -57,7 +55,7 @@ public class TakeSurvey extends ListFragment {
         surveyFragment = new SurveyFragment();
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
-        bundle.putString("title", testsList[(int)id]);
+        bundle.putString("title", testsList[(int) id]);
         surveyFragment.setArguments(bundle);
         // Create new fragment and transaction
         // consider using Java coding conventions (upper first char class names!!!)
@@ -74,7 +72,7 @@ public class TakeSurvey extends ListFragment {
         return surveyFragment;
     }
 
-    public void takeTakeSurveys(){
+    public void takeTakeSurveys() {
         // FIXME: 18.03.17 get Surveys that can be taken List with links from server.
     }
 }

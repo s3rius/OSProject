@@ -12,14 +12,13 @@ import com.example.s3rius.surveyclient.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 
 public class TakenSurveys extends ListFragment {
     String[] fuckList = {"Пластмассовый мир победил", "Макет оказался сильней", "Последний кораблик остыл",
             "Последний фонарик устал,", "а в горле сопят комья воспоминаний", "Оооооооо моя оборона",
-    "Солнечный зайчик стеклянного глаза", "Оооооооо моя оборона", "Траурный мячик нелепого мира",
-    "Траурный мячик дешёвого мира"};
+            "Солнечный зайчик стеклянного глаза", "Оооооооо моя оборона", "Траурный мячик нелепого мира",
+            "Траурный мячик дешёвого мира"};
 
     public TakenSurveys() {
         // Required empty public constructor
@@ -33,6 +32,7 @@ public class TakenSurveys extends ListFragment {
         getActivity().setTitle("Taken Surveys");
         return inflater.inflate(R.layout.fragment_taken_surveys, container, false);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -42,7 +42,8 @@ public class TakenSurveys extends ListFragment {
                 android.R.layout.simple_list_item_1, content);
         setListAdapter(adapter);
     }
-    public void takeTakenSurveys(){
+
+    public void takeTakenSurveys() {
         // FIXME: 18.03.17 get TakenSurveys List with links from server.
     }
 }
