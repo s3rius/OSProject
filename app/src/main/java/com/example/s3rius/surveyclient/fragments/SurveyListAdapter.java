@@ -18,9 +18,9 @@ import com.example.s3rius.surveyclient.surveypac.Survey;
 
 public class SurveyListAdapter extends ArrayAdapter<Question> {
 
-    Context context;
-    LayoutInflater inflater;
-    Survey survey;
+    private Context context;
+    private LayoutInflater inflater;
+    private Survey survey;
 
     SurveyListAdapter(Context context, Survey survey) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());

@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.surveypac.Survey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +19,9 @@ import java.util.Arrays;
 
 public class Top100Fragment extends ListFragment {
 
-    SurveyFragment surveyFragment;
+    private SurveyFragment surveyFragment;
 
-    String[] testsList = {"Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос",
+    private String[] testsList = {"Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос",
             "Неинтересный опрос", "Неинтересный опрос",
             "Неинтересный опрос", "Неинтересный опрос",
             "Неинтересный опрос", "Неинтересный опрос",

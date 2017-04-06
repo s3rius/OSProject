@@ -20,7 +20,7 @@ public class TakeSurvey extends ListFragment {
 
     private SurveyFragment surveyFragment;
 
-    String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
+    private String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
             "Доступны", "Для", "Выбора", "Пока", "Здесь", "Пусто",
             "Но", "Тестовый тест", "Уже готов", "Тестовый тест"};
 

@@ -28,11 +28,10 @@ import java.util.List;
 public class SurveyFragment extends ListFragment {
 
     public static String LOG_TAG = "my_log";
-
-    String[] lol = null;
-    long id;
-    String title;
-    static Survey survey;
+    private static Survey survey;
+    private String[] lol = null;
+    private long id;
+    private String title;
 
 
     public SurveyFragment() {

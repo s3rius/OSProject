@@ -20,7 +20,6 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:onClick="addQuestionInCreator"
         android:src="@drawable/add_question"
         app:layout_anchorGravity="bottom|right|end" />
 </FrameLayout>

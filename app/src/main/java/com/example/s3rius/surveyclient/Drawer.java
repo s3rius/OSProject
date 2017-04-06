@@ -21,7 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
-import com.example.s3rius.surveyclient.fragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
@@ -29,18 +28,14 @@ import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
-import com.example.s3rius.surveyclient.surveypac.Answer;
-import com.example.s3rius.surveyclient.surveypac.Question;
-
-import java.util.ArrayList;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    final String SAVED_LOGIN = "saved_login";
-    final String SAVED_PASS = "saved_pass";
-    SharedPreferences sPref;
-    NavigationView navigationView = null;
-    Toolbar toolbar = null;
+    private final String SAVED_LOGIN = "saved_login";
+    private final String SAVED_PASS = "saved_pass";
+    private SharedPreferences sPref;
+    private NavigationView navigationView = null;
+    private Toolbar toolbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,19 +296,5 @@ public class Drawer extends AppCompatActivity
                 // TODO: 05.04.17 Замутить отправку готового опроса на сервак.
             }
         }
-    }
-
-    public void addQuestionInCreator(View view) {
-        ArrayList<Answer> answers = new ArrayList<>();
-        answers.add(new Answer("ans1", 0));
-        Question question = new Question("que1",answers);
-        ArrayList<Question> questions = new ArrayList<>();
-        questions.add(question);
-        Fragment createFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//        if (createFragment instanceof CreateSurveyFragment) {
-//            ((CreateSurveyFragment)createFragment).setSurvey(((CreateSurveyFragment) createFragment)
-//                    .getSurvey().setQuestions(((CreateSurveyFragment) createFragment).getSurvey()
-//                            .setQuestions(questions));
-//        }
     }
 }
