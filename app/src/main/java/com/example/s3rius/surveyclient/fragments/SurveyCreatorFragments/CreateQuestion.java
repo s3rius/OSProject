@@ -12,10 +12,10 @@ import com.example.s3rius.surveyclient.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateQuestoin extends Fragment {
+public class CreateQuestion extends Fragment {
 
 
-    public CreateQuestoin() {
+    public CreateQuestion() {
         // Required empty public constructor
     }
 

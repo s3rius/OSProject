@@ -1,5 +1,6 @@
 package com.example.s3rius.surveyclient;
 
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -21,13 +22,16 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
+import com.example.s3rius.surveyclient.fragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
+import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
+import com.example.s3rius.surveyclient.surveypac.Survey;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -158,6 +162,12 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
+        }else if (id==R.id.createSurvey){
+            CreateSurveyFragment fragment = new CreateSurveyFragment();
+            android.support.v4.app.FragmentTransaction transaction =
+                    getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.commit();
         }
 //            else if(id==R.id.profile_image){
 //                ProfileFragment fragment = new ProfileFragment();
@@ -293,9 +303,29 @@ public class Drawer extends AppCompatActivity
                 Toast.makeText(this, "not all question is answered.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
-                // TODO: 05.04.17 Замутить отправку готового опроса на сервак.
+                // TODO: 05.04.17 Make server transaction of done survey.
             }
         }
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     }
 
+    public void onQuestionCreate(View view) {
+
+    }
+
+    public void addQuestionStart(View view) {
+        Survey survey = null;
+        Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newSurvey instanceof CreateSurveyFragment){
+            survey = ((CreateSurveyFragment) newSurvey).getSurvey();
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("survey", survey);
+        CreateQuestion newFragment = new CreateQuestion();
+        newFragment.setArguments(bundle);
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
