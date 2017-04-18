@@ -310,7 +310,7 @@ public class Drawer extends AppCompatActivity
     }
 
     public void onQuestionCreate(View view) {
-
+        // TODO: 18.04.17 get survey in addQuest and add a quest to it, pass it to addAnswers.
     }
 
     public void addQuestionStart(View view) {
