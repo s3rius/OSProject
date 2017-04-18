@@ -2,6 +2,7 @@ package com.example.s3rius.surveyclient.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +36,17 @@ public class CreateSurveyFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_create_survey, container, false);
+        FloatingActionButton button = (FloatingActionButton)v.findViewById(R.id.commitSurvey);
         getActivity().setTitle("new Survey");
+        button.setVisibility(View.GONE);
         if(getArguments()!= null){
+            button.setVisibility(View.VISIBLE);
             Bundle args = getArguments();
             Survey survey = (Survey)args.getSerializable("survey");
             this.survey = survey;
         }
-        return inflater.inflate(R.layout.fragment_create_survey, container, false);
+        return v;
     }
 
     @Override
