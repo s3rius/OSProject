@@ -16,5 +16,7 @@
     <string name="categories">Categories</string>
     <string name="completed_surveys">Completed surveys</string>
     <string name="create_survey_string">Create Survey</string>
+    <string name="new_question">Please enter new Question</string>
+    <string name="new_answer">Please enter new answer</string>
 
 </resources>

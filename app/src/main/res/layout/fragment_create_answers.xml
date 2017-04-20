@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion">
+    tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="16dp"
-        android:text="@string/new_question"/>
+        android:text="@string/new_answer"/>
+
     <EditText
-        android:id="@+id/newQuestText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="200dp" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addQuesButtonDone"
+        android:id="@+id/addAnsButtonDone"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
@@ -24,4 +24,5 @@
         android:src="@drawable/survey_done"
         app:layout_anchorGravity="bottom|right|end"
         android:onClick="onQuestionCreate"/>
+
 </FrameLayout>

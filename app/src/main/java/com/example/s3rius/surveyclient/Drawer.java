@@ -26,12 +26,18 @@ import com.example.s3rius.surveyclient.fragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
+import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
+import com.example.s3rius.surveyclient.surveypac.Answer;
+import com.example.s3rius.surveyclient.surveypac.Question;
 import com.example.s3rius.surveyclient.surveypac.Survey;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -310,7 +316,24 @@ public class Drawer extends AppCompatActivity
     }
 
     public void onQuestionCreate(View view) {
-        // TODO: 18.04.17 get survey in addQuest and add a quest to it, pass it to addAnswers.
+        Survey survey = null;
+        EditText editText;
+        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newQuestion instanceof CreateAnswers){
+            survey = ((CreateQuestion)newQuestion).getSurvey();
+            editText =(EditText)newQuestion.getView().findViewById(R.id.newQuestText);
+            List<Question> questions = survey.getQuestions();
+            questions.add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+            survey.setQuestions(questions);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("survey", survey);
+        CreateAnswers newFragment = new CreateAnswers();
+        newFragment.setArguments(bundle);
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void addQuestionStart(View view) {
