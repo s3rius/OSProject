@@ -6,14 +6,15 @@
     tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:text="@string/new_answer"/>
+
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:id="@+id/new_Answer"
+        android:layout_height="match_parent"
+        android:hint="@string/new_answer"
+        android:layout_marginTop="58dp"
+        android:gravity="start"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addAnsButtonDone"
@@ -23,6 +24,26 @@
         android:layout_margin="16dp"
         android:src="@drawable/survey_done"
         app:layout_anchorGravity="bottom|right|end"
-        android:onClick="onQuestionCreate"/>
+        android:onClick="onAnswerCreate"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addOneAnsButtonDone"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="16dp"
+        android:src="@drawable/add_question"
+        app:layout_anchorGravity="bottom|left|end"
+        android:onClick="onOneAnswerCreate"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/cancelAnsButtonDone"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="16dp"
+        android:src="@drawable/arrow_back"
+        app:layout_anchorGravity="bottom|right|end"
+        android:onClick="onQuestionCancel"/>
 
 </FrameLayout>

@@ -6,14 +6,14 @@
     tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:text="@string/new_question"/>
+
     <EditText
         android:id="@+id/newQuestText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:hint="@string/new_question"
+        android:layout_marginTop="58dp"
+        android:gravity="start"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addQuesButtonDone"
@@ -21,7 +21,17 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/survey_done"
+        android:src="@drawable/add_question"
         app:layout_anchorGravity="bottom|right|end"
-        android:onClick="onQuestionCreate"/>
+        android:onClick="addQuestion"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addQuesButtonCancel"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="16dp"
+        android:src="@drawable/arrow_back"
+        app:layout_anchorGravity="bottom|left|end"
+        android:onClick="onQuestionCancel"/>
 </FrameLayout>

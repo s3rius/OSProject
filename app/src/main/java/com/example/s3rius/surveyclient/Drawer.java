@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -315,16 +316,16 @@ public class Drawer extends AppCompatActivity
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     }
 
-    public void onQuestionCreate(View view) {
+    public void onAnswerCreate(View view) {
         Survey survey = null;
         EditText editText;
         Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if(newQuestion instanceof CreateAnswers){
-            survey = ((CreateQuestion)newQuestion).getSurvey();
-            editText =(EditText)newQuestion.getView().findViewById(R.id.newQuestText);
-            List<Question> questions = survey.getQuestions();
-            questions.add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
-            survey.setQuestions(questions);
+            editText =(EditText)newQuestion.getView().findViewById(R.id.new_Answer);
+                survey = ((CreateAnswers) newQuestion).getSurvey();
+                List<Question> questions = survey.getQuestions();
+                questions.add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+                survey.setQuestions(questions);
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable("survey", survey);
@@ -350,5 +351,66 @@ public class Drawer extends AppCompatActivity
         transaction.replace(R.id.fragment_container, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void onQuestionCancel(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+    }
+
+    public void addQuestion(View view) {
+        Survey survey = null;
+        EditText question = null;
+        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newQuestion instanceof CreateQuestion){
+            question = (EditText)newQuestion.getView().findViewById(R.id.newQuestText);
+            if(question.getText().toString().equals("")){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("survey", survey);
+                CreateSurveyFragment newFragment = new CreateSurveyFragment();
+                newFragment.setArguments(bundle);
+                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }else {
+                survey = ((CreateQuestion) newQuestion).getSurvey();
+                survey.getQuestions().add(new Question(question.getText().toString(), new ArrayList<Answer>()));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("survey", survey);
+                CreateAnswers newFragment = new CreateAnswers();
+                newFragment.setArguments(bundle);
+                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }
+        else {
+            Toast.makeText(this, "OMG U HAVE SERIOUS BUG REPORT IT PLS!" , Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onOneAnswerCreate(View view) {
+        Survey survey = null;
+        EditText question = null;
+        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newQuestion instanceof CreateAnswers){
+            question = (EditText)newQuestion.getView().findViewById(R.id.new_Answer);
+            survey = ((CreateAnswers)newQuestion).getSurvey();
+            survey.getQuestions().add(new Question(question.getText().toString(), new ArrayList<Answer>()));
+            question.setText("");
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("survey", survey);
+//            CreateAnswers newFragment = new CreateAnswers();
+//            newFragment.setArguments(bundle);
+//            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.fragment_container, newFragment);
+//            transaction.addToBackStack(null);
+//            transaction.commit();
+        }
+        else {
+            Toast.makeText(this, "OMG U HAVE SERIOUS BUG REPORT IT PLS!" , Toast.LENGTH_LONG).show();
+        }
     }
 }
