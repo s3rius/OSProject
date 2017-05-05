@@ -15,7 +15,7 @@ import com.example.s3rius.surveyclient.surveypac.Survey;
 import java.util.ArrayList;
 
 
-public class CreateSurveyFragment extends ListFragment{
+public class CreateSurveyFragment extends ListFragment {
 
 
     private Survey survey = null;
@@ -37,13 +37,16 @@ public class CreateSurveyFragment extends ListFragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_survey, container, false);
-        FloatingActionButton button = (FloatingActionButton)v.findViewById(R.id.commitSurvey);
+        FloatingActionButton completeButton = (FloatingActionButton) v.findViewById(R.id.commitSurvey);
+        FloatingActionButton changeButton = (FloatingActionButton) v.findViewById(R.id.changeSurvey);
         getActivity().setTitle("new Survey");
-        button.setVisibility(View.GONE);
-        if(getArguments()!= null){
-            button.setVisibility(View.VISIBLE);
+        completeButton.setVisibility(View.GONE);
+        changeButton.setVisibility(View.GONE);
+        if (getArguments() != null) {
+            completeButton.setVisibility(View.VISIBLE);
+            changeButton.setVisibility(View.VISIBLE);
             Bundle args = getArguments();
-            Survey survey = (Survey)args.getSerializable("survey");
+            Survey survey = (Survey) args.getSerializable("survey");
             this.survey = survey;
         }
         return v;
@@ -52,7 +55,7 @@ public class CreateSurveyFragment extends ListFragment{
     @Override
     public void onStart() {
         super.onStart();
-        if(survey == null){
+        if (survey == null) {
             survey = new Survey();
             survey.setQuestions(new ArrayList<Question>());
         }

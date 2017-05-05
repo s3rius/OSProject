@@ -18,5 +18,6 @@
     <string name="create_survey_string">Create Survey</string>
     <string name="new_question">Please enter new Question</string>
     <string name="new_answer">Please enter new answer</string>
+    <string name="new_value">Please enter new Value</string>
 
 </resources>

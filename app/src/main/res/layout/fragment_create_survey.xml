@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="18dp"
         android:layout_marginTop="58dp"
-        android:text="Your survey will look like this"/>
+        android:text="Your survey will look like this" />
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
@@ -25,8 +26,8 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/add_question"
         android:onClick="newSurvey"
+        android:src="@drawable/add_question"
         app:layout_anchorGravity="bottom|right|end" />
 
     <android.support.design.widget.FloatingActionButton
@@ -35,8 +36,8 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
-        android:src="@drawable/create_survey"
         android:onClick="onChangeSurvey"
+        android:src="@drawable/create_survey"
         app:layout_anchorGravity="bottom|center" />
 
     <android.support.design.widget.FloatingActionButton

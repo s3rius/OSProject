@@ -61,7 +61,7 @@ public class SurveyListAdapterforCreation extends ArrayAdapter<Question> impleme
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(context, "LongClick",Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "LongClick", Toast.LENGTH_LONG).show();
         return true;
     }
 }

@@ -1,20 +1,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <EditText
-        android:layout_width="match_parent"
         android:id="@+id/new_Answer"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/new_answer"
         android:layout_marginTop="58dp"
-        android:gravity="start"/>
+        android:gravity="start"
+        android:hint="@string/new_answer" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addAnsButtonDone"
@@ -22,9 +22,9 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:onClick="onAnswerCreate"
         android:src="@drawable/survey_done"
-        app:layout_anchorGravity="bottom|right|end"
-        android:onClick="onAnswerCreate"/>
+        app:layout_anchorGravity="bottom|right|end" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addOneAnsButtonDone"
@@ -32,9 +32,9 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
+        android:onClick="onOneAnswerCreate"
         android:src="@drawable/add_question"
-        app:layout_anchorGravity="bottom|left|end"
-        android:onClick="onOneAnswerCreate"/>
+        app:layout_anchorGravity="bottom|left|end" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/cancelAnsButtonDone"
@@ -42,8 +42,8 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
+        android:onClick="onQuestionCancel"
         android:src="@drawable/arrow_back"
-        app:layout_anchorGravity="bottom|right|end"
-        android:onClick="onQuestionCancel"/>
+        app:layout_anchorGravity="bottom|right|end" />
 
 </FrameLayout>

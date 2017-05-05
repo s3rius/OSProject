@@ -48,10 +48,10 @@ public class CategoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        takeSurveyByCategory(testsList[(int)id]);
+        takeSurveyByCategory(testsList[(int) id]);
     }
 
-    public void takeSurveyByCategory(String category){
+    public void takeSurveyByCategory(String category) {
         TakeSurvey surveyFragment = new TakeSurvey();
         Bundle bundle = new Bundle();
         bundle.putString("title", category);

@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,9 +11,9 @@
         android:id="@+id/newQuestText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/new_question"
         android:layout_marginTop="58dp"
-        android:gravity="start"/>
+        android:gravity="start"
+        android:hint="@string/new_question" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addQuestionDone"
@@ -21,9 +21,9 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:onClick="addQuestion"
         android:src="@drawable/add_question"
-        app:layout_anchorGravity="bottom|right|end"
-        android:onClick="addQuestion"/>
+        app:layout_anchorGravity="bottom|right|end" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addQuesButtonCancel"
@@ -31,7 +31,7 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
+        android:onClick="onQuestionCancel"
         android:src="@drawable/arrow_back"
-        app:layout_anchorGravity="bottom|left|end"
-        android:onClick="onQuestionCancel"/>
+        app:layout_anchorGravity="bottom|left|end" />
 </FrameLayout>

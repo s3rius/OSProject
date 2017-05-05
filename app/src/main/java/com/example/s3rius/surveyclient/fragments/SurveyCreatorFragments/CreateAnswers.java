@@ -15,7 +15,7 @@ import com.example.s3rius.surveyclient.surveypac.Survey;
  */
 public class CreateAnswers extends Fragment {
 
-Survey survey;
+    Survey survey;
 
 
     public CreateAnswers() {
@@ -27,9 +27,9 @@ Survey survey;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle("new Answer");
-        if(getArguments()!=null){
+        if (getArguments() != null) {
             Bundle arguments = getArguments();
-            survey = (Survey)arguments.getSerializable("survey");
+            survey = (Survey) arguments.getSerializable("survey");
         }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_answers, container, false);

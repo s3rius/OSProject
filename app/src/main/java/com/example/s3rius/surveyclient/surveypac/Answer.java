@@ -1,6 +1,8 @@
 package com.example.s3rius.surveyclient.surveypac;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
     private String name;
     private Integer answered;
 
