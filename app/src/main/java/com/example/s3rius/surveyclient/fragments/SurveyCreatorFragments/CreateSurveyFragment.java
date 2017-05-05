@@ -1,4 +1,4 @@
-package com.example.s3rius.surveyclient.fragments;
+package com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments;
 
 
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import com.example.s3rius.surveyclient.surveypac.Survey;
 import java.util.ArrayList;
 
 
-public class CreateSurveyFragment extends ListFragment {
+public class CreateSurveyFragment extends ListFragment{
 
 
     private Survey survey = null;
@@ -56,6 +56,6 @@ public class CreateSurveyFragment extends ListFragment {
             survey = new Survey();
             survey.setQuestions(new ArrayList<Question>());
         }
-        setListAdapter(new SurveyListAdapter(CreateSurveyFragment.this.getContext(), survey));
+        setListAdapter(new SurveyListAdapterforCreation(CreateSurveyFragment.this.getContext(), survey));
     }
 }

@@ -16,7 +16,7 @@
         android:gravity="start"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addQuesButtonDone"
+        android:id="@+id/addQuestionDone"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"

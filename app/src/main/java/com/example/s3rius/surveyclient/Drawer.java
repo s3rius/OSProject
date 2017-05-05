@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient;
 
-import android.app.FragmentTransaction;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
-import com.example.s3rius.surveyclient.fragments.CreateSurveyFragment;
+import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
@@ -38,7 +39,6 @@ import com.example.s3rius.surveyclient.surveypac.Question;
 import com.example.s3rius.surveyclient.surveypac.Survey;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -316,101 +316,93 @@ public class Drawer extends AppCompatActivity
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     }
 
-    public void onAnswerCreate(View view) {
-        Survey survey = null;
-        EditText editText;
-        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if(newQuestion instanceof CreateAnswers){
-            editText =(EditText)newQuestion.getView().findViewById(R.id.new_Answer);
-                survey = ((CreateAnswers) newQuestion).getSurvey();
-                List<Question> questions = survey.getQuestions();
-                questions.add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
-                survey.setQuestions(questions);
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("survey", survey);
-        CreateAnswers newFragment = new CreateAnswers();
-        newFragment.setArguments(bundle);
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    public void addQuestionStart(View view) {
-        Survey survey = null;
-        Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if(newSurvey instanceof CreateSurveyFragment){
-            survey = ((CreateSurveyFragment) newSurvey).getSurvey();
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("survey", survey);
-        CreateQuestion newFragment = new CreateQuestion();
-        newFragment.setArguments(bundle);
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
     public void onQuestionCancel(View view) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
     }
 
+
+    public void newSurvey(View view) {
+        Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newSurvey instanceof CreateSurveyFragment){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("survey",((CreateSurveyFragment)newSurvey).getSurvey());
+            CreateQuestion createQuestion = new CreateQuestion();
+            createQuestion.setArguments(bundle);
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, createQuestion);
+            transaction.commit();
+            transaction.addToBackStack(null);
+        }
+    }
+
+    public void SurveyCreatingDone(View view) {
+    }
+
     public void addQuestion(View view) {
         Survey survey = null;
-        EditText question = null;
+        EditText editText = null;
         Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if(newQuestion instanceof CreateQuestion){
-            question = (EditText)newQuestion.getView().findViewById(R.id.newQuestText);
-            if(question.getText().toString().equals("")){
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("survey", survey);
-                CreateSurveyFragment newFragment = new CreateSurveyFragment();
-                newFragment.setArguments(bundle);
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }else {
-                survey = ((CreateQuestion) newQuestion).getSurvey();
-                survey.getQuestions().add(new Question(question.getText().toString(), new ArrayList<Answer>()));
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("survey", survey);
-                CreateAnswers newFragment = new CreateAnswers();
-                newFragment.setArguments(bundle);
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+            editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
+            survey = ((CreateQuestion)newQuestion).getSurvey();
+            survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("survey",survey);
+            CreateAnswers createAnswers = new CreateAnswers();
+            createAnswers.setArguments(bundle);
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, createAnswers);
+            transaction.commit();
+            transaction.addToBackStack(null);
         }
-        else {
-            Toast.makeText(this, "OMG U HAVE SERIOUS BUG REPORT IT PLS!" , Toast.LENGTH_LONG).show();
-        }
+
     }
 
     public void onOneAnswerCreate(View view) {
         Survey survey = null;
-        EditText question = null;
-        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if(newQuestion instanceof CreateAnswers){
-            question = (EditText)newQuestion.getView().findViewById(R.id.new_Answer);
-            survey = ((CreateAnswers)newQuestion).getSurvey();
-            survey.getQuestions().add(new Question(question.getText().toString(), new ArrayList<Answer>()));
-            question.setText("");
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("survey", survey);
-//            CreateAnswers newFragment = new CreateAnswers();
-//            newFragment.setArguments(bundle);
-//            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            transaction.replace(R.id.fragment_container, newFragment);
-//            transaction.addToBackStack(null);
-//            transaction.commit();
-        }
-        else {
-            Toast.makeText(this, "OMG U HAVE SERIOUS BUG REPORT IT PLS!" , Toast.LENGTH_LONG).show();
+        EditText editText = null;
+        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newAnswer instanceof CreateAnswers){
+            survey = ((CreateAnswers)newAnswer).getSurvey();
+            editText = (EditText)newAnswer.getView().findViewById(R.id.new_Answer);
+            survey.getQuestions().get(survey.getQuestions().size()-1).getAnswers().add(new Answer(editText.getText().toString(),0));
+            editText.setText("");
         }
     }
+
+    public void onAnswerCreate(View view) {
+        Survey survey = null;
+        EditText editText = null;
+        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(newAnswer instanceof CreateAnswers){
+            survey = ((CreateAnswers)newAnswer).getSurvey();
+            editText = (EditText)newAnswer.getView().findViewById(R.id.new_Answer);
+            if(!editText.getText().toString().equals("")) {
+                survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
+                editText.setText("");
+            }
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("survey", survey);
+            CreateSurveyFragment createSurveyFragment = new CreateSurveyFragment();
+            createSurveyFragment.setArguments(bundle);
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, createSurveyFragment);
+            transaction.commit();
+            transaction.addToBackStack(null);
+        }
+    }
+
+    public void onChangeSurvey(View view) {
+        CharSequence[] which = {"Question", "Answer"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("What would you like to change?");
+            builder.setItems(which, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    // Do something with the selection
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 }

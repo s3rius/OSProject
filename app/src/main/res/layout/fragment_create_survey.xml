@@ -3,14 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.s3rius.surveyclient.fragments.CreateSurveyFragment">
+    tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_marginTop="58dp"
+        android:text="Your survey will look like this"/>
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="58dp">
+        android:layout_marginTop="76dp">
 
     </ListView>
 
@@ -21,8 +26,18 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/add_question"
-        android:onClick="addQuestionStart"
+        android:onClick="newSurvey"
         app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/changeSurvey"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="16dp"
+        android:src="@drawable/create_survey"
+        android:onClick="onChangeSurvey"
+        app:layout_anchorGravity="bottom|center" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/commitSurvey"
