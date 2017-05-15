@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -162,6 +163,7 @@ public class Drawer extends AppCompatActivity
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
             }
         } else if (id == R.id.top100) {
             Top100Fragment fragment = new Top100Fragment();
@@ -337,6 +339,7 @@ public class Drawer extends AppCompatActivity
     }
 
     public void SurveyCreatingDone(View view) {
+        // TODO: 14.05.17 Server transaction;
     }
 
     public void addQuestion(View view) {
@@ -400,19 +403,6 @@ public class Drawer extends AppCompatActivity
     }
 
     public void onChangeSurvey(final View view) {
-        CharSequence[] which = {"Question", "Answer"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What would you like to change?");
-        builder.setItems(which, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                changeQuestion(view, item);
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void changeQuestion(View view, int num) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         CharSequence[] items;
@@ -421,26 +411,75 @@ public class Drawer extends AppCompatActivity
             items[i] = survey.getQuestions().get(i).getName();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (num == 0) {
             builder.setTitle("What would you like to change?");
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item) {
-
+                    changeChoose(view, item);
                 }
             });
-        }
-
-        if (num == 1) {
-            builder.setTitle("Choose in which question to change the answers");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-
-                }
-            });
-        }
         AlertDialog alert = builder.create();
         alert.show();
     }
 
+    public void changeChoose(final View view, final int num) {
+        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        CharSequence[] which = {"Question", "Answer", "Delete question", "Delete answer"};
+        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What would you like to change?");
+        builder.setItems(which, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if(item == 0 ){
+                    CreateQuestion createQuestion = new CreateQuestion();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("survey", survey);
+                    bundle.putInt("questionInt", num);
+                    createQuestion.setArguments(bundle);
+                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, createQuestion);
+                    transaction.commit();
+                    transaction.addToBackStack(null);
+                }
+                if(item == 1){
+                    changeAns(view, num);
+                }
+                if(item == 2){
+
+                }
+                if(item == 3){
+
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    public void changeAns(final View view, final int num) {
+        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+        CharSequence[] items;
+        items = new CharSequence[survey.getQuestions().get(num).getAnswers().size()];
+        for (int i = 0; i < survey.getQuestions().get(num).getAnswers().size(); i++) {
+            items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What would you like to change?");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                CreateAnswers createQuestion = new CreateAnswers();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("survey", survey);
+                bundle.putInt("questInt", num);
+                bundle.putInt("ansInt", item);
+                createQuestion.setArguments(bundle);
+                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, createQuestion);
+                transaction.commit();
+                transaction.addToBackStack(null);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
 
