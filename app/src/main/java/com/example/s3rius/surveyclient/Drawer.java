@@ -354,6 +354,7 @@ public class Drawer extends AppCompatActivity
             bundle.putSerializable("survey", survey);
             CreateAnswers createAnswers = new CreateAnswers();
             createAnswers.setArguments(bundle);
+            getSupportFragmentManager().popBackStack();
             android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, createAnswers);
             transaction.commit();
@@ -392,10 +393,10 @@ public class Drawer extends AppCompatActivity
                 bundle.putSerializable("survey", survey);
                 CreateSurveyFragment createSurveyFragment = new CreateSurveyFragment();
                 createSurveyFragment.setArguments(bundle);
+                getSupportFragmentManager().popBackStack();
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, createSurveyFragment);
                 transaction.commit();
-                transaction.addToBackStack(null);
             } else {
                 Toast.makeText(this, "Please add answers for this question", Toast.LENGTH_LONG).show();
             }
@@ -441,20 +442,25 @@ public class Drawer extends AppCompatActivity
                     transaction.addToBackStack(null);
                 }
                 if(item == 1){
-                    changeAns(view, num);
+                    changeAns(view, num, false);
                 }
                 if(item == 2){
-
+                    survey.getQuestions().remove(num);
+                    final android.support.v4.app.FragmentTransaction transaction =
+                            getSupportFragmentManager().beginTransaction();
+                    transaction.detach(surveyFrag);
+                    transaction.attach(surveyFrag);
+                    transaction.commit();
                 }
                 if(item == 3){
-
+                    changeAns(view, num, true);
                 }
             }
         });
         AlertDialog alert = builder.create();
         alert.show();
     }
-    public void changeAns(final View view, final int num) {
+    public void changeAns(final View view, final int num, final boolean erase) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         CharSequence[] items;
@@ -466,16 +472,28 @@ public class Drawer extends AppCompatActivity
         builder.setTitle("What would you like to change?");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                CreateAnswers createQuestion = new CreateAnswers();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("survey", survey);
-                bundle.putInt("questInt", num);
-                bundle.putInt("ansInt", item);
-                createQuestion.setArguments(bundle);
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, createQuestion);
-                transaction.commit();
-                transaction.addToBackStack(null);
+                if(!erase) {
+                    CreateAnswers createQuestion = new CreateAnswers();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("survey", survey);
+                    bundle.putInt("questInt", num);
+                    bundle.putInt("ansInt", item);
+                    createQuestion.setArguments(bundle);
+                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, createQuestion);
+                    transaction.commit();
+                    transaction.addToBackStack(null);
+                }
+                else {
+                    survey.getQuestions().get(num).getAnswers().remove(item);
+                    Fragment fragment = null;
+                    fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    final android.support.v4.app.FragmentTransaction transaction =
+                            getSupportFragmentManager().beginTransaction();
+                    transaction.detach(fragment);
+                    transaction.attach(fragment);
+                    transaction.commit();
+                }
             }
         });
         AlertDialog alert = builder.create();
