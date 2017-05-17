@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 /**
  * A simple {@link Fragment} subclass.

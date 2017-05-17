@@ -12,8 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.surveypac.Question;
-import com.example.s3rius.surveyclient.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.Question;
+import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 
 public class SurveyListAdapter extends ArrayAdapter<Question> {

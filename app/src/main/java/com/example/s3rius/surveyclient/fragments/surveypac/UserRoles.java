@@ -1,4 +1,4 @@
-package com.example.s3rius.surveyclient.surveypac;
+package com.example.s3rius.surveyclient.fragments.surveypac;
 
 public enum UserRoles {
 

@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.surveypac.Question;
-import com.example.s3rius.surveyclient.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.Question;
+import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 
 public class SurveyListAdapterforCreation extends ArrayAdapter<Question> implements AdapterView.OnItemLongClickListener {
@@ -48,6 +48,7 @@ public class SurveyListAdapterforCreation extends ArrayAdapter<Question> impleme
 
         for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
             RadioButton radioButton = new RadioButton(context);
+            radioButton.setClickable(false);
             radioButton.setText(getSurvey().getQuestions().get(position).getAnswers().get(i).getName());
             answers.addView(radioButton);
         }

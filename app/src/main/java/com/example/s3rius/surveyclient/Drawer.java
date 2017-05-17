@@ -1,7 +1,6 @@
 package com.example.s3rius.surveyclient;
 
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,9 +34,9 @@ import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
-import com.example.s3rius.surveyclient.surveypac.Answer;
-import com.example.s3rius.surveyclient.surveypac.Question;
-import com.example.s3rius.surveyclient.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
+import com.example.s3rius.surveyclient.fragments.surveypac.Question;
+import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 import java.util.ArrayList;
 
@@ -210,7 +209,6 @@ public class Drawer extends AppCompatActivity
         ed.putString(SAVED_PASS, passField.getText().toString());
         ed.apply();
         Toast.makeText(this, "Login and pass saved", Toast.LENGTH_SHORT).show();
-
     }
 
     private boolean isEmpty(EditText etText) {
@@ -424,10 +422,10 @@ public class Drawer extends AppCompatActivity
 
     public void changeChoose(final View view, final int num) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        CharSequence[] which = {"Question", "Answer", "Delete question", "Delete answer"};
+        CharSequence[] which = {"Change Question", "Change or add Answer", "Delete question", "Delete answer"};
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What would you like to change?");
+        builder.setTitle("What would you like to do?");
         builder.setItems(which, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 if(item == 0 ){

@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.surveypac.Answer;
-import com.example.s3rius.surveyclient.surveypac.Question;
-import com.example.s3rius.surveyclient.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
+import com.example.s3rius.surveyclient.fragments.surveypac.Question;
+import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
