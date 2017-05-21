@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -26,7 +27,6 @@ import android.widget.Toast;
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
-import com.example.s3rius.surveyclient.fragments.StatisticsFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
@@ -38,6 +38,15 @@ import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Drawer extends AppCompatActivity
@@ -198,7 +207,7 @@ public class Drawer extends AppCompatActivity
             fragmentTransaction.commit();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             Toast.makeText(this, "Please login to go to profile.", Toast.LENGTH_LONG).show();
         }
     }
@@ -263,9 +272,14 @@ public class Drawer extends AppCompatActivity
     }
 
     private boolean validateUser() {
-       Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if(loginFragment instanceof LoginFragment){
-            EditText userName = (EditText)loginFragment.getView().findViewById(R.id.new_Answer);
+        Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (loginFragment instanceof LoginFragment) {
+            EditText userName = (EditText) loginFragment.getView().findViewById(R.id.loginlogin);
+            EditText passwordField = (EditText) loginFragment.getView().findViewById(R.id.passpass);
+            String login = userName.getText().toString();
+            String password = passwordField.getText().toString();
+            Validator validator = new Validator(login, password);
+            validator.execute();
         }
         return true;
     }
@@ -416,12 +430,12 @@ public class Drawer extends AppCompatActivity
             items[i] = survey.getQuestions().get(i).getName();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("What would you like to change?");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-                    changeChoose(view, item);
-                }
-            });
+        builder.setTitle("What would you like to change?");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                changeChoose(view, item);
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -434,7 +448,7 @@ public class Drawer extends AppCompatActivity
         builder.setTitle("What would you like to do?");
         builder.setItems(which, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                if(item == 0 ){
+                if (item == 0) {
                     CreateQuestion createQuestion = new CreateQuestion();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("survey", survey);
@@ -445,10 +459,10 @@ public class Drawer extends AppCompatActivity
                     transaction.commit();
                     transaction.addToBackStack(null);
                 }
-                if(item == 1){
+                if (item == 1) {
                     changeAns(view, num, false);
                 }
-                if(item == 2){
+                if (item == 2) {
                     survey.getQuestions().remove(num);
                     final android.support.v4.app.FragmentTransaction transaction =
                             getSupportFragmentManager().beginTransaction();
@@ -456,7 +470,7 @@ public class Drawer extends AppCompatActivity
                     transaction.attach(surveyFrag);
                     transaction.commit();
                 }
-                if(item == 3){
+                if (item == 3) {
                     changeAns(view, num, true);
                 }
             }
@@ -464,6 +478,7 @@ public class Drawer extends AppCompatActivity
         AlertDialog alert = builder.create();
         alert.show();
     }
+
     public void changeAns(final View view, final int num, final boolean erase) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
@@ -476,7 +491,7 @@ public class Drawer extends AppCompatActivity
         builder.setTitle("What would you like to change?");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                if(!erase) {
+                if (!erase) {
                     CreateAnswers createQuestion = new CreateAnswers();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("survey", survey);
@@ -487,8 +502,7 @@ public class Drawer extends AppCompatActivity
                     transaction.replace(R.id.fragment_container, createQuestion);
                     transaction.commit();
                     transaction.addToBackStack(null);
-                }
-                else {
+                } else {
                     survey.getQuestions().get(num).getAnswers().remove(item);
                     Fragment fragment = null;
                     fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -502,6 +516,64 @@ public class Drawer extends AppCompatActivity
         });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private class Validator extends AsyncTask<Void, Void, String> {
+
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        String resultJson = "";
+        String loginParams;
+        String passParams;
+
+        public Validator(String loginParams, String passParams) {
+            this.loginParams = loginParams;
+            this.passParams = passParams;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // получаем данные с внешнего ресурса
+            try {
+                URL url = new URL("http://10.0.1.7:8080/survey/client/login");// TODO: 21.05.17 IP CHANGE!
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                resultJson = buffer.toString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return resultJson;
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            super.onPostExecute(strJson);
+            JSONArray dataJsonObj;
+            try {
+                dataJsonObj = new JSONArray(resultJson);
+                for (int i = 0; i < dataJsonObj.length(); i++) {
+                    JSONObject obj = dataJsonObj.getJSONObject(i);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
 

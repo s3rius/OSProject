@@ -11,10 +11,6 @@
             android:icon="@drawable/create_survey"
             android:title="@string/create_survey_string" />
         <item
-            android:id="@+id/my_surveys"
-            android:icon="@drawable/completed_surveys"
-            android:title="@string/completed_surveys" />
-        <item
             android:id="@+id/category"
             android:icon="@drawable/categories"
             android:title="@string/categories" />
