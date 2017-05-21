@@ -128,12 +128,12 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.statistics) {
-            StatisticsFragment fragment = new StatisticsFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
+//        } else if (id == R.id.statistics) {
+//            StatisticsFragment fragment = new StatisticsFragment();
+//            android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                    getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, fragment);
+//            fragmentTransaction.commit();
         } else if (id == R.id.login) {
             if (!isUserExist()) {
                 LoginFragment fragment = new LoginFragment();
@@ -190,13 +190,17 @@ public class Drawer extends AppCompatActivity
     }
 
     public void profile_on_click(View view) {
-        ProfileFragment fragment = new ProfileFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (isUserExist()) {
+            ProfileFragment fragment = new ProfileFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            Toast.makeText(this, "Please login to go to profile.", Toast.LENGTH_LONG).show();
+        }
     }
 
     void saveUser() {
@@ -238,7 +242,6 @@ public class Drawer extends AppCompatActivity
             if (validateUser()) {
 
                 saveUser();
-
                 // get menu from navigationView
                 Menu menu = navigationView.getMenu();
 
@@ -260,7 +263,10 @@ public class Drawer extends AppCompatActivity
     }
 
     private boolean validateUser() {
-        // FIXME: 18.03.17 Write server validation
+       Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(loginFragment instanceof LoginFragment){
+            EditText userName = (EditText)loginFragment.getView().findViewById(R.id.new_Answer);
+        }
         return true;
     }
 
