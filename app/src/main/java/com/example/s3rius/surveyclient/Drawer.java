@@ -249,13 +249,13 @@ public class Drawer extends AppCompatActivity
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 switch (statusCode) {
                     case 404:
-                        Toast.makeText(context, "boy, ur login is bad", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Incorrect login", Toast.LENGTH_LONG).show();
                         break;
                     case 400:
-                        Toast.makeText(context, "boy, ur pswrd is shit", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Incorrect password", Toast.LENGTH_LONG).show();
                         break;
                     default:
-                        Toast.makeText(context, "Sry, u was a faggt)))", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show();
                 }
             }
         });
