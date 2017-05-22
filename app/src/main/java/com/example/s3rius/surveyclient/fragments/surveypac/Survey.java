@@ -9,8 +9,10 @@ public class Survey implements Serializable {
     private String comment;
     private List<Question> questions;
     private List<User> users;
+    private User creator;
 
     public Survey() {
+
     }
 
     public Survey(String name, String comment, List<Question> questions, List<User> users) {
