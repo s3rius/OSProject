@@ -40,7 +40,6 @@ import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
