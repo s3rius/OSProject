@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -32,11 +33,12 @@ import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQu
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
-import com.example.s3rius.surveyclient.fragments.TakenSurveys;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +49,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -124,13 +128,7 @@ public class Drawer extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.my_surveys) {
-            TakenSurveys fragment = new TakenSurveys();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
-        } else if (id == R.id.category) {
+        if (id == R.id.category) {
             CategoryFragment fragment = new CategoryFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -200,6 +198,10 @@ public class Drawer extends AppCompatActivity
     public void profile_on_click(View view) {
         if (isUserExist()) {
             ProfileFragment fragment = new ProfileFragment();
+            Bundle bundle = new Bundle();
+
+            bundle.putString("username", sPref.getString(SAVED_LOGIN, null));
+            fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -220,7 +222,19 @@ public class Drawer extends AppCompatActivity
         ed.putString(SAVED_LOGIN, loginField.getText().toString());
         ed.putString(SAVED_PASS, passField.getText().toString());
         ed.apply();
-        Toast.makeText(this, "Login and pass saved", Toast.LENGTH_SHORT).show();
+        Menu menu = navigationView.getMenu();
+
+        // find MenuItem you want to change
+        MenuItem loginItem = menu.findItem(R.id.login);
+
+        // set new title to the MenuItem
+        loginItem.setTitle("Logout");
+
+        TakeSurvey fragment = new TakeSurvey();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
     private boolean isEmpty(EditText etText) {
@@ -240,48 +254,35 @@ public class Drawer extends AppCompatActivity
         return false;
     }
 
-
-    public void OnclickLogin(View view) {
-        EditText loginField = (EditText) findViewById(R.id.loginlogin);
-        EditText passField = (EditText) findViewById(R.id.passpass);
-        if (isEmpty(loginField) || isEmpty(passField)) {
-            Toast.makeText(this, "Please input the data", Toast.LENGTH_SHORT).show();
-        } else {
-            if (validateUser()) {
-
+    public void OnclickLogin(final View view) {
+        final Context context = this;
+        String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
+        String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
+        String url = String.format("http://10.60.6.234:8080/survey/client/login?login=%s&password=%s", username, password);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String lol = new String(responseBody);
+                Toast.makeText(context, lol, Toast.LENGTH_LONG).show();
                 saveUser();
-                // get menu from navigationView
-                Menu menu = navigationView.getMenu();
-
-                // find MenuItem you want to change
-                MenuItem loginItem = menu.findItem(R.id.login);
-
-                // set new title to the MenuItem
-                loginItem.setTitle("Logout");
-
-                TakeSurvey fragment = new TakeSurvey();
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                fragmentTransaction.commit();
-            } else {
-                Toast.makeText(this, "Incorrect login and password", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
 
-    private boolean validateUser() {
-        Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (loginFragment instanceof LoginFragment) {
-            EditText userName = (EditText) loginFragment.getView().findViewById(R.id.loginlogin);
-            EditText passwordField = (EditText) loginFragment.getView().findViewById(R.id.passpass);
-            String login = userName.getText().toString();
-            String password = passwordField.getText().toString();
-            Validator validator = new Validator(login, password);
-            validator.execute();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                switch (statusCode) {
+                    case 404:
+                        Toast.makeText(context, "boy, ur login is bad", Toast.LENGTH_LONG).show();
+                        break;
+                    case 400:
+                        Toast.makeText(context, "boy, ur pswrd is shit", Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(context, "Sry, u was a faggt)))", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
-        }
-        return false;
     }
 
     public void OnclickCancelOnLogin(View view) {
@@ -518,60 +519,5 @@ public class Drawer extends AppCompatActivity
         alert.show();
     }
 
-    private class Validator extends AsyncTask<Void, Void, String> {
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        String resultJson = "";
-        String loginParams;
-        String passParams;
-
-        public Validator(String loginParams, String passParams) {
-            this.loginParams = loginParams;
-            this.passParams = passParams;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // получаем данные с внешнего ресурса
-            try {
-                URL url = new URL("http://10.0.1.7:8080/survey/client/login");// TODO: 21.05.17 IP CHANGE!
-
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                resultJson = buffer.toString();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return resultJson;
-        }
-
-        @Override
-        protected void onPostExecute(String strJson) {
-            super.onPostExecute(strJson);
-            JSONArray dataJsonObj;
-            try {
-                dataJsonObj = new JSONArray(resultJson);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 }
 

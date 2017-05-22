@@ -37,7 +37,7 @@ public class Top100Fragment extends ListFragment {
 //            "Неинтересный опрос", "Неинтересный опрос"};
     ArrayList<String> surveyNames = new ArrayList<>();
     ArrayList<Integer> surveIds = new ArrayList<>();
-    private String urlOfSurveys = "http://10.0.1.7:8080/survey/client/topSurveys"; // TODO: 21.05.17 IP CHANGER
+    private String urlOfSurveys = "http://10.60.6.234:8080/survey/client/topSurveys"; // TODO: 21.05.17 IP CHANGER
     private SurveyFragment surveyFragment;
 
     public Top100Fragment() {

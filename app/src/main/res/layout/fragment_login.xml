@@ -27,7 +27,7 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonOkLogin"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:onClick="OnclickLogin"
@@ -37,20 +37,20 @@
         android:layout_alignEnd="@+id/passpass" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonCancelLogin"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:onClick="OnclickCancelOnLogin"
         android:text="@string/cancel"
         android:layout_above="@+id/textView"
-        android:layout_toLeftOf="@+id/button"
+        android:layout_toLeftOf="@+id/buttonOkLogin"
         android:layout_alignStart="@+id/passpass" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button"
+        android:layout_below="@+id/buttonOkLogin"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:text="Do not registered yet? I don't give a fuc" />

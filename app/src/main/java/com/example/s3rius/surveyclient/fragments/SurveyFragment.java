@@ -35,7 +35,7 @@ public class SurveyFragment extends ListFragment {
     private String[] lol = null;
     private long id;
     private String title;
-    private String connectURL = "http://10.0.1.7:8080/survey/client/survey?id=";
+    private String connectURL = "http://10.60.6.234:8080/survey/client/survey?id="; // TODO: 22.05.17 Change IP.
 
 
     public SurveyFragment() {
