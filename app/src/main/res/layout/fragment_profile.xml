@@ -4,12 +4,46 @@
     android:layout_height="match_parent"
     tools:context="com.example.s3rius.surveyclient.fragments.ProfileFragment">
 
+    <ImageView
+        android:layout_marginTop="58dp"
+        android:id="@+id/profile_pic"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:src="@drawable/no_image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
     <TextView
+        android:id="@+id/profile_name"
+        android:layout_marginTop="62dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="U R A FAGGOT!" />
-
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profile_pic"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="20dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/uploadNewProfilePic"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_name"
+        android:layout_toRightOf="@id/profile_pic"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/buttonshape"
+        android:onClick="uploadNewProfilePhoto"
+        android:text="@string/new_profile_picture"/>
+    <Button
+        android:id="@+id/completed_surveys_prof"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/completed_surveys"
+        android:layout_below="@id/profile_pic"
+        android:background="@drawable/buttonshape"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/completed_surveys_prof"
+        android:text="@string/made_surveys"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/buttonshape"/>
 </RelativeLayout>

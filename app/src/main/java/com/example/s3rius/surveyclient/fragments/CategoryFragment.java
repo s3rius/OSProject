@@ -16,10 +16,8 @@ import com.example.s3rius.surveyclient.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static android.R.attr.id;
-
 public class CategoryFragment extends ListFragment {
-    String[] testsList = {"Шутки про матушек", "Сигуерни Виувер",
+    private String[] testsList = {"Шутки про матушек", "Сигуерни Виувер",
             "Дом", "Работа", "Траурный мячик", "Для детей", "Выбора нет",
             "Пока все дома", "Здесь ничего нет", "Пустоты бездны",
             "Лоли-драконы", "Тесто", "Мировое господство", "Для мальчиков"};
@@ -50,10 +48,10 @@ public class CategoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        takeSurveyByCategory(testsList[(int)id]);
+        takeSurveyByCategory(testsList[(int) id]);
     }
 
-    public void takeSurveyByCategory(String category){
+    public void takeSurveyByCategory(String category) {
         TakeSurvey surveyFragment = new TakeSurvey();
         Bundle bundle = new Bundle();
         bundle.putString("title", category);

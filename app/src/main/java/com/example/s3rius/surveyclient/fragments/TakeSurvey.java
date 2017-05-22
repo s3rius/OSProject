@@ -18,9 +18,10 @@ import java.util.Arrays;
 
 public class TakeSurvey extends ListFragment {
 
+    private String urlOfSurveys;
     private SurveyFragment surveyFragment;
 
-    String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
+    private String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
             "Доступны", "Для", "Выбора", "Пока", "Здесь", "Пусто",
             "Но", "Тестовый тест", "Уже готов", "Тестовый тест"};
 
@@ -57,6 +58,7 @@ public class TakeSurvey extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
         bundle.putString("title", testsList[(int) id]);
+        bundle.putString("URL", urlOfSurveys);
         surveyFragment.setArguments(bundle);
         // Create new fragment and transaction
         // consider using Java coding conventions (upper first char class names!!!)
@@ -74,6 +76,7 @@ public class TakeSurvey extends ListFragment {
     }
 
     public void takeTakeSurveys() {
-        // FIXME: 18.03.17 get Surveys that can be taken List with links from server.
+        // FIXME: 18.03.17 get Categories that can be choose List with links from server.
     }
 }
+

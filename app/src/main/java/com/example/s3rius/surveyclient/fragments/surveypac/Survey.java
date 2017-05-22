@@ -1,15 +1,18 @@
-package com.example.s3rius.surveyclient.surveypac;
+package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Survey {
+public class Survey implements Serializable {
 
     private String name;
     private String comment;
     private List<Question> questions;
     private List<User> users;
+    private User creator;
 
     public Survey() {
+
     }
 
     public Survey(String name, String comment, List<Question> questions, List<User> users) {

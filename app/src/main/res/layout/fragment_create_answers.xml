@@ -3,51 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment">
+    tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:layout_marginTop="58dp"
-        android:text="Your survey will look like this" />
 
-    <ListView
-        android:id="@android:id/list"
+
+    <EditText
+        android:id="@+id/new_Answer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="76dp">
-
-    </ListView>
+        android:layout_marginTop="58dp"
+        android:gravity="start"
+        android:hint="@string/new_answer" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addQuesButton"
+        android:id="@+id/addAnsButtonDone"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:onClick="newSurvey"
-        android:src="@drawable/add_question"
+        android:onClick="onAnswerCreate"
+        android:src="@drawable/survey_done"
         app:layout_anchorGravity="bottom|right|end" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/changeSurvey"
+        android:id="@+id/addOneAnsButtonDone"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
-        android:onClick="onChangeSurvey"
-        android:src="@drawable/create_survey"
-        app:layout_anchorGravity="bottom|center" />
+        android:onClick="onOneAnswerCreate"
+        android:src="@drawable/add_question"
+        app:layout_anchorGravity="bottom|left|end" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/commitSurvey"
-        android:layout_width="64dp"
+        android:id="@+id/cancelAnsButtonDone"
+        android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
-        android:onClick="SurveyCreatingDone"
-        android:src="@drawable/survey_done"
-        app:layout_anchorGravity="bottom|left|end" />
+        android:onClick="onQuestionCancel"
+        android:src="@drawable/arrow_back"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </FrameLayout>

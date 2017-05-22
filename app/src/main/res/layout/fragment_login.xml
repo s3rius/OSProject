@@ -5,55 +5,54 @@
     tools:context="com.example.s3rius.surveyclient.fragments.LoginFragment">
 
     <EditText
-        android:id="@+id/passpass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/login"
-        android:layout_marginBottom="30dp"
-        android:layout_above="@+id/loginlogin"
-        android:layout_alignStart="@+id/loginlogin" />
-
-    <EditText
         android:id="@+id/loginlogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
+        android:layout_above="@+id/passpass"
+        android:layout_alignStart="@+id/passpass"
+        android:ems="10"
+        android:hint="@string/login"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/passpass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="270dp"
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonOkLogin"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:onClick="OnclickLogin"
         android:text="@string/login"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignStart="@+id/passpass"
-        android:onClick="OnclickLogin"/>
+        android:layout_marginTop="68dp"
+        android:layout_alignTop="@+id/passpass"
+        android:layout_alignEnd="@+id/passpass" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonCancelLogin"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/loginlogin"
-        android:layout_below="@+id/passpass"
-        android:layout_marginTop="80dp"
+        android:onClick="OnclickCancelOnLogin"
         android:text="@string/cancel"
-        android:onClick="OnclickCancelOnLogin"/>
+        android:layout_above="@+id/textView"
+        android:layout_toLeftOf="@+id/buttonOkLogin"
+        android:layout_alignStart="@+id/passpass" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Do not registered yet? I don't give a fuck."
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/buttonOkLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Do not registered yet? I don't give a fuc" />
 
 </RelativeLayout>
