@@ -235,7 +235,7 @@ public class Drawer extends AppCompatActivity
         final Context context = this;
         String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
         String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
-        String url = String.format("http://10.60.6.234:8080/survey/client/login?login=%s&password=%s", username, password);
+        String url = String.format("http://10.60.6.234:8080/survey/client/login?login=%s&password=%s", username, password); // TODO: 22.05.17 Change IP 
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(url, new AsyncHttpResponseHandler() {
             @Override
