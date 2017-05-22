@@ -30,8 +30,4 @@ public class StatisticsFragment extends Fragment {
         getActivity().setTitle("Statistics");
         return inflater.inflate(R.layout.fragment_statistics, container, false);
     }
-
-    public void takeStatistics() {
-        // FIXME: 18.03.17 get Statistics List with links from server.
-    }
 }

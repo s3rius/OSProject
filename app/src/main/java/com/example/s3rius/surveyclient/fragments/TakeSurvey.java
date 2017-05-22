@@ -76,7 +76,7 @@ public class TakeSurvey extends ListFragment {
     }
 
     public void takeTakeSurveys() {
-        // FIXME: 18.03.17 get Surveys that can be taken List with links from server.
+        // FIXME: 18.03.17 get Categories that can be choose List with links from server.
     }
 }
 

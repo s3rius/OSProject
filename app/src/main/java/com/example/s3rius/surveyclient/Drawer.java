@@ -280,8 +280,9 @@ public class Drawer extends AppCompatActivity
             String password = passwordField.getText().toString();
             Validator validator = new Validator(login, password);
             validator.execute();
+
         }
-        return true;
+        return false;
     }
 
     public void OnclickCancelOnLogin(View view) {
@@ -566,9 +567,7 @@ public class Drawer extends AppCompatActivity
             JSONArray dataJsonObj;
             try {
                 dataJsonObj = new JSONArray(resultJson);
-                for (int i = 0; i < dataJsonObj.length(); i++) {
-                    JSONObject obj = dataJsonObj.getJSONObject(i);
-                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
