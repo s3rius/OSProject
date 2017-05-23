@@ -11,18 +11,11 @@ public class User implements Serializable {
     private String lastName;
     private String login;
     private String password;
-    private List<Survey> surveys;
+    private List<Survey> madeSurveys;
     private UserRoles role;
     private String fileId;
+    private List<Survey> doneSurveys;
 
-    public String getfileId(){
-        return this.fileId;
-    }
-    
-    public void setFileId( String fileId ){
-        this.fileId = fileId;
-    }
-    
     public User() {
     }
 
@@ -66,6 +59,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public List<Survey> getMadeSurveys() {
+        return madeSurveys;
+    }
+
+    public void setMadeSurveys(List<Survey> madeSurveys) {
+        this.madeSurveys = madeSurveys;
+    }
+
     public UserRoles getRole() {
         return role;
     }
@@ -74,11 +75,19 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public List<Survey> getSurveys() {
-        return surveys;
+    public String getFileId() {
+        return fileId;
     }
 
-    public void setSurveys(List<Survey> surveys) {
-        this.surveys = surveys;
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public List<Survey> getDoneSurveys() {
+        return doneSurveys;
+    }
+
+    public void setDoneSurveys(List<Survey> doneSurveys) {
+        this.doneSurveys = doneSurveys;
     }
 }

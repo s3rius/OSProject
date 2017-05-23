@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
+import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
@@ -43,24 +45,22 @@ import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private final String SAVED_LOGIN = "saved_login";
-    private final String SAVED_PASS = "saved_pass";
+    public static final String SAVED_USER = "saved_user";
+    private User user = null;
     private SharedPreferences sPref;
     private NavigationView navigationView = null;
-    private Toolbar toolbar = null;
-    private static int RESULT_LOAD_IMAGE = 1;
 
 
     @Override
@@ -76,7 +76,7 @@ public class Drawer extends AppCompatActivity
         fragmentTransaction.commit();
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -115,6 +115,7 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
+            fragmentTransaction.addToBackStack(null);
 //        } else if (id == R.id.statistics) {
 //            StatisticsFragment fragment = new StatisticsFragment();
 //            android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -128,6 +129,7 @@ public class Drawer extends AppCompatActivity
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
             } else {
                 sPref = getPreferences(MODE_PRIVATE);
                 Editor ed = sPref.edit();
@@ -157,12 +159,14 @@ public class Drawer extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
+            fragmentTransaction.addToBackStack(null);
         } else if (id == R.id.createSurvey) {
             CreateSurveyFragment fragment = new CreateSurveyFragment();
             android.support.v4.app.FragmentTransaction transaction =
                     getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, fragment);
             transaction.commit();
+            transaction.addToBackStack(null);
         }
 //            else if(id==R.id.profile_image){
 //                ProfileFragment fragment = new ProfileFragment();
@@ -176,12 +180,12 @@ public class Drawer extends AppCompatActivity
         return true;
     }
 
-    public void profile_on_click(View view) {
+    public void profile_on_click(View view) throws IOException {
         if (isUserExist()) {
             ProfileFragment fragment = new ProfileFragment();
             Bundle bundle = new Bundle();
 
-            bundle.putString("username", sPref.getString(SAVED_LOGIN, null));
+            bundle.putString("username", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getName());
             fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -194,14 +198,11 @@ public class Drawer extends AppCompatActivity
         }
     }
 
-    void saveUser() {
+    void saveUser() throws JsonProcessingException {
         sPref = getPreferences(MODE_PRIVATE);
         Editor ed = sPref.edit();
-        EditText loginField = (EditText) findViewById(R.id.loginlogin);
-        EditText passField = (EditText) findViewById(R.id.passpass);
-
-        ed.putString(SAVED_LOGIN, loginField.getText().toString());
-        ed.putString(SAVED_PASS, passField.getText().toString());
+        String Juser = new ObjectMapper().writeValueAsString(this.user);
+        ed.putString(SAVED_USER, Juser);
         ed.apply();
         Menu menu = navigationView.getMenu();
 
@@ -227,9 +228,8 @@ public class Drawer extends AppCompatActivity
 
     boolean isUserExist() {
         sPref = getPreferences(MODE_PRIVATE);
-        String login = sPref.getString(SAVED_LOGIN, null);
-        String pass = sPref.getString(SAVED_PASS, null);
-        if ((pass != null) && (login != null)) {
+        String Juser = sPref.getString(SAVED_USER, null);
+        if (Juser != null) {
             return true;
         }
         return false;
@@ -239,19 +239,20 @@ public class Drawer extends AppCompatActivity
         final Context context = this;
         final String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
         String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
-        String url = String.format("http://10.60.6.193:8080/survey/client/login?login=%s&password=%s", username, password); // TODO: 22.05.17 Change IP
+        String url = String.format("http://10.60.9.86:8080/survey/client/login?login=%s&password=%s", username, password); // TODO: 22.05.17 Change IP
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String lol = new String(responseBody);
                 try {
-                    JSONObject userJson = new JSONObject(lol);
-                } catch (JSONException e) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    user = mapper.readValue(lol, User.class);
+                    Toast.makeText(context, "Welcome " + user.getName(), Toast.LENGTH_LONG).show();
+                    saveUser();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(context, lol, Toast.LENGTH_LONG).show();
-                saveUser();
             }
 
             @Override
@@ -268,7 +269,6 @@ public class Drawer extends AppCompatActivity
                 }
             }
         });
-
     }
 
     public void OnclickCancelOnLogin(View view) {
@@ -299,7 +299,7 @@ public class Drawer extends AppCompatActivity
                             View button = group.getChildAt(k);
                             if (button instanceof RadioButton) {
                                 if (((RadioButton) button).isChecked()) {
-                                    answered += k + 1;
+                                    answered += k + 1 + " ";
                                     isChecked = true;
                                     break;
                                 }
@@ -508,16 +508,18 @@ public class Drawer extends AppCompatActivity
     public void uploadNewProfilePhoto(View view) {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto , 1);
+        startActivityForResult(pickPhoto, 1);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        int RESULT_LOAD_IMAGE = 1;
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
@@ -531,6 +533,17 @@ public class Drawer extends AppCompatActivity
             ImageView imageView = (ImageView) findViewById(R.id.profile_pic);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
+    }
+
+    public void onRegistration(View view) {
+        Fragment registration = new RegistrationFragment();
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, registration);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void onRegistrationDone(View view) {
     }
 }
 

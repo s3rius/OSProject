@@ -5,7 +5,6 @@
     tools:context="com.example.s3rius.surveyclient.fragments.StatisticsFragment">
 
     <ImageView
-        android:id="@+id/image_on_statistics"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

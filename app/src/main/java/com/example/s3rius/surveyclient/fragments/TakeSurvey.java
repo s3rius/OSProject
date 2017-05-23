@@ -33,7 +33,6 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO: 05.04.17 Замутить передачу категории по бандлу. 
         getActivity().setTitle("Take a Survey");
         return inflater.inflate(R.layout.fragment_take_survey, container, false);
     }

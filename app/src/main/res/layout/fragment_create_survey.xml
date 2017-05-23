@@ -21,7 +21,6 @@
     </ListView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addQuesButton"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"

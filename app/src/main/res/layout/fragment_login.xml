@@ -34,6 +34,8 @@
         android:text="@string/login"
         android:layout_marginTop="68dp"
         android:layout_alignTop="@+id/passpass"
+        android:background="@drawable/buttonshape"
+
         android:layout_alignEnd="@+id/passpass" />
 
     <Button
@@ -42,17 +44,25 @@
         android:layout_height="wrap_content"
         android:onClick="OnclickCancelOnLogin"
         android:text="@string/cancel"
+        android:background="@drawable/buttonshape"
         android:layout_above="@+id/textView"
-        android:layout_toLeftOf="@+id/buttonOkLogin"
         android:layout_alignStart="@+id/passpass" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:text="@string/do_not_registered"
         android:layout_below="@+id/buttonOkLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="Do not registered yet? I don't give a fuc" />
-
+        android:layout_alignStart="@+id/buttonCancelLogin" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/registration"
+        android:textColor="#173b9f"
+        android:onClick="onRegistration"
+        android:layout_alignBaseline="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignEnd="@+id/buttonOkLogin" />
 </RelativeLayout>

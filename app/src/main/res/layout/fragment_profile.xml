@@ -24,7 +24,6 @@
         />
     <Button
         android:layout_width="match_parent"
-        android:id="@+id/uploadNewProfilePic"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_name"
         android:layout_toRightOf="@id/profile_pic"

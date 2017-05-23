@@ -24,20 +24,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 public class Top100Fragment extends ListFragment {
 
     protected String surveyJson;
-    //    private String[] surveyNames = {"Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос", "Неинтересный опрос",
-//            "Неинтересный опрос", "Неинтересный опрос",
-//            "Неинтересный опрос", "Неинтересный опрос",
-//            "Неинтересный опрос", "Неинтересный опрос",
-//            "Неинтересный опрос", "Неинтересный опрос",
-//            "Неинтересный опрос", "Неинтересный опрос"};
+
     ArrayList<String> surveyNames = new ArrayList<>();
     ArrayList<Integer> surveIds = new ArrayList<>();
-    private String urlOfSurveys = "http://10.60.6.193:8080/survey/client/topSurveys"; // TODO: 21.05.17 IP CHANGER
+    private String urlOfSurveys = "http://10.60.9.86:8080/survey/client/topSurveys"; // TODO: 21.05.17 IP CHANGER
     private SurveyFragment surveyFragment;
 
     public Top100Fragment() {

@@ -26,7 +26,6 @@
         app:layout_anchorGravity="bottom|right|end" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addQuesButtonCancel"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"

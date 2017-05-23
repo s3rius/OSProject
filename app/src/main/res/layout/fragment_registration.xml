@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.s3rius.surveyclient.fragments.RegistrationFragment">
+
+    <TextView
+        android:id="@+id/fillText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fill_fields"
+        android:textSize="19sp"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newName"
+        android:hint="@string/name"
+        android:layout_below="@+id/fillText"
+        android:layout_alignStart="@+id/fillText"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/fillText"
+        android:inputType="textPersonName"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newSurname"
+        android:hint="@string/surname"
+        android:layout_below="@+id/newName"
+        android:layout_alignStart="@+id/fillText"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/fillText"
+        android:inputType="textPersonName"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newLogin"
+        android:hint="@string/Login"
+        android:layout_below="@+id/newSurname"
+        android:layout_alignStart="@+id/fillText"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/fillText"
+        android:inputType="textPersonName"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newPassword"
+        android:hint="@string/Password"
+        android:layout_below="@+id/newLogin"
+        android:layout_alignStart="@+id/fillText"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/fillText"
+        android:inputType="textPassword" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newPasswordRepeat"
+        android:hint="@string/repeatPassword"
+        android:layout_below="@+id/newPassword"
+        android:layout_alignStart="@+id/fillText"
+        android:layout_marginTop="13dp"
+        android:layout_alignEnd="@+id/fillText"
+        android:inputType="textPassword" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|right"
+        android:onClick="onRegistrationDone"
+        android:src="@drawable/survey_done"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignTop="@+id/floatingBack"
+        android:layout_alignEnd="@+id/newPasswordRepeat"
+        android:layout_marginEnd="16dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingBack"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|right"
+        android:onClick="onQuestionCancel"
+        android:src="@drawable/arrow_back"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="26dp"
+        android:layout_below="@+id/newPasswordRepeat"
+        android:layout_alignStart="@+id/newPasswordRepeat" />
+</RelativeLayout>
