@@ -42,8 +42,12 @@ import com.example.s3rius.surveyclient.fragments.Top100Fragment;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -233,14 +237,19 @@ public class Drawer extends AppCompatActivity
 
     public void OnclickLogin(final View view) {
         final Context context = this;
-        String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
+        final String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
         String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
-        String url = String.format("http://10.60.6.234:8080/survey/client/login?login=%s&password=%s", username, password); // TODO: 22.05.17 Change IP 
+        String url = String.format("http://10.60.6.193:8080/survey/client/login?login=%s&password=%s", username, password); // TODO: 22.05.17 Change IP
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String lol = new String(responseBody);
+                try {
+                    JSONObject userJson = new JSONObject(lol);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Toast.makeText(context, lol, Toast.LENGTH_LONG).show();
                 saveUser();
             }
