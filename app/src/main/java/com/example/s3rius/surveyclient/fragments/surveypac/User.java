@@ -13,8 +13,16 @@ public class User implements Serializable {
     private String password;
     private List<Survey> surveys;
     private UserRoles role;
+    private String fileId;
 
-
+    public String getfileId(){
+        return this.fileId;
+    }
+    
+    public void setFileId( String fileId ){
+        this.fileId = fileId;
+    }
+    
     public User() {
     }
 
