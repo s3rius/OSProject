@@ -1,20 +1,24 @@
 package com.example.s3rius.surveyclient;
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -49,7 +53,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -58,6 +65,7 @@ import cz.msebera.android.httpclient.Header;
 public class Drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String SAVED_USER = "saved_user";
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private User user = null;
     private SharedPreferences sPref;
     private NavigationView navigationView = null;
@@ -185,7 +193,8 @@ public class Drawer extends AppCompatActivity
             ProfileFragment fragment = new ProfileFragment();
             Bundle bundle = new Bundle();
 
-            bundle.putString("username", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getName());
+            bundle.putString("username", new ObjectMapper().readValue(SAVED_USER, User.class).getName());
+//            bundle.putString("username", "Tanana");
             fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -201,14 +210,13 @@ public class Drawer extends AppCompatActivity
     void saveUser() throws JsonProcessingException {
         sPref = getPreferences(MODE_PRIVATE);
         Editor ed = sPref.edit();
-        String Juser = new ObjectMapper().writeValueAsString(this.user);
-        ed.putString(SAVED_USER, Juser);
+        String JSONUser = new ObjectMapper().writeValueAsString(this.user);
+        ed.putString(SAVED_USER, JSONUser);
         ed.apply();
         Menu menu = navigationView.getMenu();
 
         // find MenuItem you want to change
         MenuItem loginItem = menu.findItem(R.id.login);
-
         // set new title to the MenuItem
         loginItem.setTitle("Logout");
 
@@ -233,6 +241,7 @@ public class Drawer extends AppCompatActivity
             return true;
         }
         return false;
+//        return true;
     }
 
     public void OnclickLogin(final View view) {
@@ -506,11 +515,46 @@ public class Drawer extends AppCompatActivity
     }
 
     public void uploadNewProfilePhoto(View view) {
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto, 1);
+        if (Build.VERSION.SDK_INT >= 23) {
+            // Here, thisActivity is the current activity
+            if (ContextCompat.checkSelfPermission(Drawer.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(Drawer.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                    // Show an expanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+
+                    // No explanation needed, we can request the permission.
+
+                    ActivityCompat.requestPermissions(Drawer.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                    // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+                ActivityCompat.requestPermissions(Drawer.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        }
+
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, 1);
+
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -532,6 +576,35 @@ public class Drawer extends AppCompatActivity
 
             ImageView imageView = (ImageView) findViewById(R.id.profile_pic);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            BitmapFactory.decodeFile(picturePath).compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//            byte[] imageBytes = baos.toByteArray();
+//            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+            AsyncHttpClient client = new AsyncHttpClient();
+
+            File uploadImg = new File(picturePath);
+            RequestParams params = new RequestParams();
+            try {
+                params.put("profile_picture", uploadImg);
+                client.post("http://10.60.9.86:8080/upload", params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Toast.makeText(Drawer.this, "Upload failed", Toast.LENGTH_SHORT);
+                    }
+                });
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 
