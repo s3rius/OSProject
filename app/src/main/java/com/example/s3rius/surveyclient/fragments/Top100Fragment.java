@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 
 import org.json.JSONArray;
@@ -32,9 +34,11 @@ public class Top100Fragment extends ListFragment {
 
     protected String surveyJson;
 
+    private ViewGroup container;
+
     ArrayList<String> surveyNames = new ArrayList<>();
     ArrayList<Integer> surveIds = new ArrayList<>();
-    private String urlOfSurveys = "http://10.60.9.86:8080/survey/client/topSurveys"; // TODO: 21.05.17 IP CHANGER
+    private String urlOfSurveys =  null; // TODO: 21.05.17 IP CHANGER
     private SurveyFragment surveyFragment;
 
     public Top100Fragment() {
@@ -44,6 +48,7 @@ public class Top100Fragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
+        urlOfSurveys = getString(R.string.server) + "/survey/client/topSurveys";
         GetSurveys getSurveys;
         getSurveys = new GetSurveys();
         getSurveys.execute();
@@ -53,6 +58,7 @@ public class Top100Fragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.container = container;
         // Inflate the layout for this fragment
         getActivity().setTitle("Top surveys");
         return inflater.inflate(R.layout.fragment_top100, container, false);
@@ -88,10 +94,19 @@ public class Top100Fragment extends ListFragment {
 
     private class GetSurveys extends AsyncTask<Void, Void, String> {
 
+        ProgressDialog progressDialog;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String resultJson = "";
         long id = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(container.getContext());
+            progressDialog.setMessage("Please Wait....");
+            progressDialog.show();
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -125,6 +140,8 @@ public class Top100Fragment extends ListFragment {
 
         @Override
         protected void onPostExecute(String strJson) {
+            if(progressDialog!=null)
+                progressDialog.dismiss();
             super.onPostExecute(strJson);
             JSONArray dataJsonObj;
             try {

@@ -35,7 +35,7 @@ public class SurveyFragment extends ListFragment {
     private String[] lol = null;
     private long id;
     private String title;
-    private String connectURL = "http://10.60.9.86:8080/survey/client/survey?id="; // TODO: 22.05.17 Change IP.
+    private String connectURL =  null; // TODO: 22.05.17 Change IP.
 
 
     public SurveyFragment() {
@@ -66,6 +66,7 @@ public class SurveyFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
+        connectURL = getString(R.string.server) + "/survey/client/survey?id=";
         ParseSurvey parseSurvey;
         parseSurvey = new ParseSurvey(id);
         parseSurvey.execute();
