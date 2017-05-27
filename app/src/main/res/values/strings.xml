@@ -25,6 +25,8 @@
     <string name="repeatPassword">Repeat password</string>
     <string name="Password">Password</string>
     <string name="ConnectionErrorList">Can\'t load surveys.\nConnection error</string>
-    <string name="server">http://10.60.6.133:8080</string>
+    <string name="server">http://10.0.1.7:8080</string>
+    <string name="about_us">About us</string>
+    <string name="all_surveys">All surveys</string>
 
 </resources>

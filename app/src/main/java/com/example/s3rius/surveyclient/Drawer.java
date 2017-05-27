@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -55,26 +54,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
 
-public class Drawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String SAVED_USER = "saved_user";
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private User user = null;
@@ -249,6 +238,11 @@ public class Drawer extends AppCompatActivity
         sPref = getPreferences(MODE_PRIVATE);
         String Juser = sPref.getString(SAVED_USER, null);
         if (Juser != null) {
+            try {
+                user = new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
@@ -579,15 +573,15 @@ public class Drawer extends AppCompatActivity
             cursor.moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
+            final String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
             // String picturePath contains the path of selected Image
 
-            ImageView imageView = (ImageView) findViewById(R.id.profile_pic);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
+            final ImageView imageView = (ImageView) findViewById(R.id.profile_pic);
             File fileToUpload = new File(picturePath);
+//            UploadPhoto upload = new UploadPhoto(BitmapFactory.decodeFile(picturePath));
+//            upload.execute();
 
 //            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 //            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -616,34 +610,44 @@ public class Drawer extends AppCompatActivity
 //            byte[] imageBytes = baos.toByteArray();
 //            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-//            AsyncHttpClient client = new AsyncHttpClient();
-//
-//            File uploadImg = new File(picturePath);
-//            RequestParams params = new RequestParams();
-//            try {
-//                params.put("profile_picture", uploadImg);
-//
-//                client.post(getString(R.string.server) + "/client/upload/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
-//
-//                    @Override
-//                    public void onStart() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                        Toast.makeText(Drawer.this, "Upload complete", Toast.LENGTH_SHORT);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//                        Toast.makeText(Drawer.this, "Upload failed", Toast.LENGTH_SHORT);
-//                    }
-//                });
-//
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
+            AsyncHttpClient client = new AsyncHttpClient();
+
+            File uploadImg = new File(picturePath);
+            RequestParams params = new RequestParams();
+            try {
+                params.put("profile_picture", uploadImg);
+                params.put("userLogin", user.getLogin());
+
+                final ProgressDialog[] progressDialog = new ProgressDialog[1];
+                client.post(getString(R.string.server) + "/survey/client/upload/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
+
+                    @Override
+                    public void onStart() {
+                        progressDialog[0] = new ProgressDialog(Drawer.this);
+                        progressDialog[0].setMessage("Please Wait....");
+                        progressDialog[0].show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT);
+                    }
+                });
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
 //            HttpClient httpClient = AndroidHttpClient.newInstance("App");
 //            HttpPost httpPost = new HttpPost(getString(R.string.server) + "/client/upload");
 //
@@ -656,22 +660,28 @@ public class Drawer extends AppCompatActivity
 //            }
 
 
+//            final ProgressDialog[] progressDialog = {null};
 //            Ion.with(Drawer.this)
-//                    .load(getString(R.string.server)+ "/client/upload")
+//                    .load(getString(R.string.server) + "/survey/client/upload")
 //                    .uploadProgressHandler(new ProgressCallback() {
 //                        @Override
 //                        public void onProgress(long uploaded, long total) {
-//                            // Displays the progress bar for the first time.
+//                            progressDialog[0] = new ProgressDialog(Drawer.this);
+//                            progressDialog[0].setMessage("Uploading...");
+//                            progressDialog[0].show();
 //                        }
 //                    })
 //                    .setTimeout(60 * 60 * 1000)
-//                    .setMultipartFile("upload", "image/jpeg", fileToUpload)
+//                    .setMultipartFile("upload", "image/jpeg/png", fileToUpload)
 //                    .asJsonObject()
 //                    // run a callback on completion
 //                    .setCallback(new FutureCallback<JsonObject>() {
 //                        @Override
 //                        public void onCompleted(Exception e, JsonObject result) {
 //                            // When the loop is finished, updates the notification
+//                            if(progressDialog[0]!=null){
+//                                progressDialog[0].dismiss();
+//                            }
 //                            if (e != null) {
 //                                Toast.makeText(Drawer.this, "Error uploading file", Toast.LENGTH_LONG).show();
 //                                return;
@@ -711,73 +721,86 @@ public class Drawer extends AppCompatActivity
     }
 
     public void onRegistrationDone(View view) {
+
     }
 
-
-    private class UploadPhoto extends AsyncTask<String, Integer, String> {
-
-        ProgressDialog progressDialog;
-        String filepath;
-
-        UploadPhoto(String filepath) {
-            this.filepath = filepath;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(Drawer.this);
-            progressDialog.setMessage("Please Wait....");
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... str) {
-
-            String res = null;
-            try {
-//                String ImagePath = str[0];
-
-                File sourceFile = new File(filepath);
-
-                final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
-
-                String filename = filepath.substring(filepath.lastIndexOf("/") + 1);
-
-
-                /**
-                 * OKHTTP3
-                 */
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("file", filename, RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
-                        .build();
-
-                Request request = new Request.Builder()
-                        .url(getString(R.string.server) + "/client/upload")
-                        .post(requestBody)
-                        .build();
-
-                OkHttpClient client = new OkHttpClient();
-                Response response = client.newCall(request).execute();
-                res = response.body().string();
-                return res;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            return res;
-
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            super.onPostExecute(response);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-        }
-    }
+//
+//    private class UploadPhoto extends AsyncTask<String, Integer, String> {
+//
+//        ProgressDialog progressDialog;
+//        HttpURLConnection urlConnection = null;
+//        BufferedReader reader = null;
+//        String resultJson = "";
+//        long id = 0;
+//        String filepath;
+//        private String surveyJson;
+//        private HashMap<String, String> postDataParams;
+//        Bitmap pictureBitmap;
+//
+//        UploadPhoto(Bitmap bitmap) {
+//            pictureBitmap = bitmap;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            progressDialog = new ProgressDialog(Drawer.this);
+//            progressDialog.setMessage("Please Wait....");
+//            progressDialog.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... str) {
+//            String line = "";
+//            try {
+//                URL url = new URL(getString(R.string.server) + "/survey/client/upload");
+//
+//                urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setRequestMethod("POST");
+//                urlConnection.setUseCaches(false);
+//                urlConnection.setDoOutput(true);
+//
+//                urlConnection.connect();
+//
+//                DataOutputStream request = new DataOutputStream(
+//                        urlConnection.getOutputStream());
+//                byte[] pixels = new byte[pictureBitmap.getWidth() * pictureBitmap.getHeight()];
+//                for (int i = 0; i < pictureBitmap.getWidth(); ++i) {
+//                    for (int j = 0; j < pictureBitmap.getHeight(); ++j) {
+//                        //we're interested only in the MSB of the first byte,
+//                        //since the other 3 bytes are identical for B&W images
+//                        pixels[i + j] = (byte) ((pictureBitmap.getPixel(i, j) & 0x80) >> 7);
+//                    }
+//                }
+//
+//                request.write(pixels);
+//                request.flush();
+//                request.close();
+//
+//
+//                InputStream inputStream = urlConnection.getInputStream();
+//                StringBuffer buffer = new StringBuffer();
+//
+//                reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//
+//                while ((line = reader.readLine()) != null) {
+//                    buffer.append(line);
+//                }
+//                inputStream.close();
+//                urlConnection.disconnect();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return line;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String response) {
+//            super.onPostExecute(response);
+//            if (progressDialog != null)
+//                progressDialog.dismiss();
+//        }
+//    }
 }
 
