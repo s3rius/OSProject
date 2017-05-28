@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class TakeSurvey extends ListFragment {
 
-    private String urlOfSurveys =  getString(R.string.server) + "/surveys"; // TODO: 26.05.17 IP CHANGE
+    private String urlOfSurveys =  getString(R.string.server) + "surveys"; // TODO: 26.05.17 IP CHANGE
     private SurveyFragment surveyFragment;
 
     private String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",

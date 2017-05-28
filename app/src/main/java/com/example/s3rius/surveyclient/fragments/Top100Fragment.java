@@ -48,7 +48,7 @@ public class Top100Fragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        urlOfSurveys = getString(R.string.server) + "/survey/client/topSurveys";
+        urlOfSurveys = getString(R.string.server) + "topSurveys";
         GetSurveys getSurveys;
         getSurveys = new GetSurveys();
         getSurveys.execute();
