@@ -52,11 +52,11 @@ import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,6 +74,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private SharedPreferences sPref;
     private NavigationView navigationView = null;
     private Bitmap profilePic;
+    private ImageView profileIcon;
 //    private Target picassoTarget = new Target() {
 //        @Override
 //        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -114,13 +115,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View view = navigationView.getHeaderView(0);
+        profileIcon = (ImageView)view.findViewById(R.id.profile_pic);
         if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
             loginItem.setTitle("Logout");
-        }
-        if (isUserExist()) {
-            final de.hdodenhof.circleimageview.CircleImageView profileIcon =
-                    (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.profile_image);
             if (profilePic != null) {
                 profileIcon.setImageBitmap(profilePic);
             } else {
@@ -129,22 +129,24 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //                        .centerCrop()
 //                        .into(picassoTarget);
 
-
                 AsyncHttpClient client = new AsyncHttpClient();
-                String[] allowedContentTypes = new String[]{"image/png"};
-                client.get(getString(R.string.server) + "img?id=" + user.getLogin(), new BinaryHttpResponseHandler(allowedContentTypes) {
+                client.get(getString(R.string.server) + "img?id=" + user.getLogin(), new FileAsyncHttpResponseHandler(this.getBaseContext()) {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-                        profilePic = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
-                        profileIcon.setImageBitmap(profilePic);
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                        Toast.makeText(Drawer.this, "Error loading profile image", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
-
+                    public void onSuccess(int statusCode, Header[] headers, File file) {
+                        profilePic = BitmapFactory.decodeFile(file.getPath());
+                        if (profilePic != null && profileIcon!=null)
+                            profileIcon.setImageBitmap(profilePic);
+                        Toast.makeText(Drawer.this, "Guttt", Toast.LENGTH_SHORT).show();
                     }
                 });
-//                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
+
+                //Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(avatar);
+                //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
             }
         }
     }
@@ -246,7 +248,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             Bundle bundle = new Bundle();
 
             bundle.putString("username", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getName());
-//            bundle.putString("username", "Tanana");
+            bundle.putString("login", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getLogin());
+//           bundle.putString("username", "Tanana");
             fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -733,11 +736,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        LoginFragment fragment = new LoginFragment();
-                        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                                getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, fragment);
-                        fragmentTransaction.commit();
+                        String lol = new String(responseBody);
+                //        onBackPressed();
                     }
 
                     @Override

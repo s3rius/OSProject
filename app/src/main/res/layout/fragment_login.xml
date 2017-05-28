@@ -34,8 +34,7 @@
         android:text="@string/login"
         android:layout_marginTop="68dp"
         android:layout_alignTop="@+id/passpass"
-        android:background="@drawable/buttonshape"
-
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_alignEnd="@+id/passpass" />
 
     <Button
@@ -44,7 +43,7 @@
         android:layout_height="wrap_content"
         android:onClick="OnclickCancelOnLogin"
         android:text="@string/cancel"
-        android:background="@drawable/buttonshape"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_above="@+id/textView"
         android:layout_alignStart="@+id/passpass" />
 

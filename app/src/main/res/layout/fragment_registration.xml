@@ -75,7 +75,7 @@
         android:layout_below="@id/newPasswordRepeat"
         android:layout_alignStart="@+id/fillText"
         android:layout_alignEnd="@+id/fillText"
-        android:background="@drawable/buttonshape"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         />
 
     <android.support.design.widget.FloatingActionButton

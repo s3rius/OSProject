@@ -2,19 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.s3rius.surveyclient.fragments.ProfileFragment">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_marginTop="58dp"
         android:id="@+id/profile_pic"
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:src="@drawable/no_image"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FF000000"/>
     <TextView
+
         android:id="@+id/profile_name"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="110dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/profile_pic"
@@ -23,12 +27,13 @@
         android:textSize="20dp"
         />
     <Button
+        android:id="@+id/newPhoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_name"
         android:layout_toRightOf="@id/profile_pic"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/buttonshape"
+        android:layout_marginTop="25dp"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:onClick="uploadNewProfilePhoto"
         android:text="@string/new_profile_picture"/>
     <Button
@@ -36,13 +41,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/completed_surveys"
-        android:layout_below="@id/profile_pic"
-        android:background="@drawable/buttonshape"/>
+        android:layout_below="@id/newPhoto"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/completed_surveys_prof"
         android:text="@string/made_surveys"
         android:layout_marginTop="7dp"
-        android:background="@drawable/buttonshape"/>
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 </RelativeLayout>
