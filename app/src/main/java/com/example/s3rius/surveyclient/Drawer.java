@@ -56,7 +56,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -75,6 +74,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private NavigationView navigationView = null;
     private Bitmap profilePic;
     private ImageView profileIcon;
+    private File regPhoto;
 //    private Target picassoTarget = new Target() {
 //        @Override
 //        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -117,39 +117,38 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         navigationView.setNavigationItemSelectedListener(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View view = navigationView.getHeaderView(0);
-        profileIcon = (ImageView)view.findViewById(R.id.profile_pic);
+        profileIcon = (ImageView) view.findViewById(R.id.profile_pic);
         if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
             loginItem.setTitle("Logout");
-            if (profilePic != null) {
-                profileIcon.setImageBitmap(profilePic);
-            } else {
-//                Picasso.with(this)
-//                        .load(getString(R.string.server) + "img?id=" + user.getLogin())
-//                        .centerCrop()
-//                        .into(picassoTarget);
-
-                AsyncHttpClient client = new AsyncHttpClient();
-                client.get(getString(R.string.server) + "img?id=" + user.getLogin(), new FileAsyncHttpResponseHandler(this.getBaseContext()) {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                        Toast.makeText(Drawer.this, "Error loading profile image", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, File file) {
-                        profilePic = BitmapFactory.decodeFile(file.getPath());
-                        if (profilePic != null && profileIcon!=null)
-                            profileIcon.setImageBitmap(profilePic);
-                        Toast.makeText(Drawer.this, "Guttt", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//            if (profilePic != null) {
+//                profileIcon.setImageBitmap(profilePic);
+//            } else {
+////                Picasso.with(this)
+////                        .load(getString(R.string.server) + "img?id=" + user.getLogin())
+////                        .centerCrop()
+////                        .into(picassoTarget);
+//
+//                AsyncHttpClient client = new AsyncHttpClient();
+//                client.get(getString(R.string.server) + "img?id=" + user.getLogin(), new FileAsyncHttpResponseHandler(this.getBaseContext()) {
+//                    @Override
+//                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+//                        Toast.makeText(Drawer.this, "Error loading profile image", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, File file) {
+//                        profilePic = BitmapFactory.decodeFile(file.getPath());
+//                        if (profilePic != null && profileIcon != null)
+//                            profileIcon.setImageBitmap(profilePic);
+//                        Toast.makeText(Drawer.this, "Guttt", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
                 //Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(avatar);
                 //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
             }
         }
-    }
 
     @Override
     public void onBackPressed() {
@@ -187,7 +186,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack("login");
             } else {
                 sPref = getPreferences(MODE_PRIVATE);
                 Editor ed = sPref.edit();
@@ -637,7 +636,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 params.put("userLogin", user.getLogin());
 
                 final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                client.post(getString(R.string.server) + "upload/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
+                client.post(getString(R.string.server) + "/img/upload/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
 
                     @Override
                     public void onStart() {
@@ -676,7 +675,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             final String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            profilePic = BitmapFactory.decodeFile(picturePath);
+            regPhoto = new File(picturePath);
         }
     }
 
@@ -708,7 +707,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         } else if (!pass.getText().toString().equals(passRep.getText().toString())) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
         } else {
-            User newUser = new User();
+            final User newUser = new User();
             newUser.setName(name.getText().toString());
             newUser.setLastName(surname.getText().toString());
             newUser.setLogin(login.getText().toString());
@@ -717,9 +716,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             AsyncHttpClient client = new AsyncHttpClient();
 
             RequestParams params = new RequestParams();
+
             try {
-                if (profilePic != null)
-                    params.put("profile_picture", profilePic);
                 params.put("newUser", new ObjectMapper().writeValueAsString(newUser));
 
                 final ProgressDialog[] progressDialog = new ProgressDialog[1];
@@ -734,10 +732,34 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        if (progressDialog[0] != null)
-                            progressDialog[0].dismiss();
-                        String lol = new String(responseBody);
-                //        onBackPressed();
+                        AsyncHttpClient client = new AsyncHttpClient();
+
+                        RequestParams params = new RequestParams();
+                        if (regPhoto != null) {
+                            try {
+                                params.put("profile_picture", regPhoto);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            params.put("userLogin", newUser.getLogin());
+                            client.post(getString(R.string.server) + "img/upload/", params, new AsyncHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                    if (progressDialog[0] != null)
+                                        progressDialog[0].dismiss();
+                                    onBackPressed();
+                                    Toast.makeText(Drawer.this, "Registration complete", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                    if (progressDialog[0] != null)
+                                        progressDialog[0].dismiss();
+                                    Toast.makeText(Drawer.this, "Picture upload error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        //        onBackPressed();
                     }
 
                     @Override
@@ -752,6 +774,28 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 e.printStackTrace();
             }
         }
+    }
+
+    public void deleteProfilePicture(View view) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("login", user.getLogin());
+        client.delete(getString(R.string.server) + "img/delete", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                profilePic = null;
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if(fragment instanceof ProfileFragment){
+                    ImageView profilePic = (ImageView)fragment.getView().findViewById(R.id.profile_pic);
+                    profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(Drawer.this, "lol u fucked up", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 //
 //    private class UploadPhoto extends AsyncTask<String, Integer, String> {

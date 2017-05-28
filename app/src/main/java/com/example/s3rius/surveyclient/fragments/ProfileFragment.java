@@ -55,6 +55,7 @@ public class ProfileFragment extends Fragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 progressDialog[0].dismiss();
                 Toast.makeText(container.getContext(), "Error loading profile image", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override

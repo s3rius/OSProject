@@ -6,25 +6,15 @@ import java.util.List;
 
 public class User implements Serializable {
 
-    private Integer id;
     private String name;
     private String lastName;
     private String login;
     private String password;
     private List<Survey> madeSurveys;
     private UserRoles role;
-    private String fileId;
     private List<Survey> doneSurveys;
 
     public User() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -75,13 +65,6 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
 
     public List<Survey> getDoneSurveys() {
         return doneSurveys;
