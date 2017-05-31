@@ -1,6 +1,8 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -12,18 +14,26 @@ import android.widget.ListView;
 
 import com.example.s3rius.surveyclient.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class TakeSurvey extends ListFragment {
 
-    private String urlOfSurveys =  getString(R.string.server) + "surveys"; // TODO: 26.05.17 IP CHANGE
+    ArrayList<String> content = new ArrayList<>();
+    ArrayList<Integer> ids = new ArrayList<>();
+    boolean fromCategory = false;
     private SurveyFragment surveyFragment;
-
-    private String[] testsList = {"Тест0", "Тест1", "Опросы", "Которые",
-            "Доступны", "Для", "Выбора", "Пока", "Здесь", "Пусто",
-            "Но", "Тестовый тест", "Уже готов", "Тестовый тест"};
+    private int categoryNo;
+    private ViewGroup container;
 
     public TakeSurvey() {
         // Required empty public constructor
@@ -33,17 +43,26 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Take a Survey");
+        getActivity().setTitle("New Surveys");
+        this.container = container;
+        if (getArguments() != null) {
+            getActivity().setTitle(getArguments().getString("title"));
+            categoryNo = getArguments().getInt("CatInt");
+            fromCategory = true;
+        }
         return inflater.inflate(R.layout.fragment_take_survey, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayList<String> content = new ArrayList<>(Arrays.asList(testsList));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, content);
-        setListAdapter(adapter);
+        if (fromCategory) {
+            GetCatSurveys getCatSurveys = new GetCatSurveys();
+            getCatSurveys.execute();
+        } else {
+            GetNewSurveys getNewSurveys = new GetNewSurveys();
+            getNewSurveys.execute();
+        }
     }
 
     @Override
@@ -55,9 +74,8 @@ public class TakeSurvey extends ListFragment {
     private void startSurvey(long id) {
         surveyFragment = new SurveyFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("id", id);
-        bundle.putString("title", testsList[(int) id]);
-        bundle.putString("URL", urlOfSurveys);
+        bundle.putLong("id", ids.get((int) id));
+        bundle.putString("title", content.get((int) id));
         surveyFragment.setArguments(bundle);
         // Create new fragment and transaction
         // consider using Java coding conventions (upper first char class names!!!)
@@ -74,8 +92,140 @@ public class TakeSurvey extends ListFragment {
         return surveyFragment;
     }
 
-    public void takeTakeSurveys() {
-        // FIXME: 18.03.17 get Categories that can be choose List with links from server.
+    private class GetCatSurveys extends AsyncTask<Void, Void, String> {
+
+        ProgressDialog progressDialog;
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        String resultJson = "";
+        long id = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(container.getContext());
+            progressDialog.setMessage(getString(R.string.please_wait));
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // получаем данные с внешнего ресурса
+            try {
+                URL url = new URL(getString(R.string.server) + "topics/");
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                resultJson = buffer.toString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return resultJson;
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            if (progressDialog != null)
+                progressDialog.dismiss();
+            super.onPostExecute(strJson);
+            JSONArray dataJsonObj;
+            try {
+                dataJsonObj = new JSONArray(resultJson);
+                JSONArray surveys = dataJsonObj.getJSONObject(categoryNo).getJSONArray("surveys");
+                for (int i = 0; i < surveys.length(); i++) {
+                    JSONObject obj = surveys.getJSONObject(i);
+                    content.add(obj.get("name").toString());
+                    ids.add(obj.getInt("id"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, content);
+            setListAdapter(adapter);
+        }
     }
+
+    private class GetNewSurveys extends AsyncTask<Void, Void, String> {
+
+        ProgressDialog progressDialog;
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        String resultJson = "";
+        long id = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(container.getContext());
+            progressDialog.setMessage(getString(R.string.please_wait));
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // получаем данные с внешнего ресурса
+            try {
+                URL url = new URL(getString(R.string.server) + "topSurveys?sortBy=time&limit=20");
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                resultJson = buffer.toString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return resultJson;
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            if (progressDialog != null)
+                progressDialog.dismiss();
+            super.onPostExecute(strJson);
+            JSONArray dataJsonObj;
+            try {
+                dataJsonObj = new JSONArray(resultJson);
+                for (int i = 0; i < dataJsonObj.length(); i++) {
+                    JSONObject obj = dataJsonObj.getJSONObject(i);
+                    content.add(obj.get("name").toString());
+                    ids.add(obj.getInt("id"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, content);
+            setListAdapter(adapter);
+        }
+    }
+
 }
 

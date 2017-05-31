@@ -15,6 +15,11 @@
                     android:id="@+id/createSurvey"
                     android:icon="@drawable/create_survey"
                     android:title="@string/create_survey_string" />
+                <item
+                    android:id="@+id/newestSurveys"
+                    android:icon="@drawable/newest_surveys"
+                    android:title="Newest surveys"
+                    />
             </group>
         </menu>
     </item>

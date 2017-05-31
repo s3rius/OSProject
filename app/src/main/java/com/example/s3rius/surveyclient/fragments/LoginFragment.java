@@ -31,7 +31,7 @@ public class LoginFragment extends Fragment {
         Button login = (Button) view.findViewById(R.id.buttonOkLogin);
         final String username = ((EditText) view.findViewById(R.id.loginlogin)).getText().toString();
         final String userpass = ((EditText) view.findViewById(R.id.passpass)).getText().toString();
-        getActivity().setTitle("Login");
+        getActivity().setTitle(getString(R.string.login));
         return view;
     }
 }

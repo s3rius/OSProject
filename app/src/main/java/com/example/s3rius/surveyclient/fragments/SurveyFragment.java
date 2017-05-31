@@ -33,7 +33,12 @@ public class SurveyFragment extends ListFragment {
     public static String LOG_TAG = "my_log";
     private static Survey survey;
     private String[] lol = null;
-    private long id;
+
+    public long getSurveyId() {
+        return surveyId;
+    }
+
+    private long surveyId;
     private String title;
     private String connectURL = null; // TODO: 22.05.17 Change IP.
 
@@ -47,6 +52,7 @@ public class SurveyFragment extends ListFragment {
     }
 
 
+
     public static void setSurvey(Survey survey) {
         SurveyFragment.survey = survey;
     }
@@ -56,7 +62,7 @@ public class SurveyFragment extends ListFragment {
                              Bundle savedInstanceState) {
         if (getArguments() != null) {
             Bundle arguments = getArguments();
-            id = arguments.getLong("id");
+            surveyId = arguments.getLong("surveyId");
             title = arguments.getString("title");
             getActivity().setTitle(title);
         }
@@ -66,9 +72,9 @@ public class SurveyFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        connectURL = getString(R.string.server) + "survey?id=";
+        connectURL = getString(R.string.server) + "survey?surveyId=";
         ParseSurvey parseSurvey;
-        parseSurvey = new ParseSurvey(id);
+        parseSurvey = new ParseSurvey(surveyId);
         parseSurvey.execute();
     }
 

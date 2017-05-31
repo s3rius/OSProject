@@ -104,7 +104,7 @@ public class Top100Fragment extends ListFragment {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(container.getContext());
-            progressDialog.setMessage("Please Wait....");
+            progressDialog.setMessage(getString(R.string.please_wait));
             progressDialog.show();
         }
 

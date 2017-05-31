@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Survey Client</string>
+    <string name="categories">Категории</string>
+    <string name="completed_surveys">Пройденные опросы</string>
+    <string name="create_survey_string">Создать опрос</string>
+    <string name="do_not_registered">Ещё не зарегистрированы?</string>
+    <string name="fill_fields">Пожалуйста, заполните все поля</string>
+    <string name="login">Логин</string>
+    <string name="made_surveys">Сделанные опросы</string>
+    <string name="name">Имя</string>
+    <string name="name_of_survey">Введите название опроса</string>
+    <string name="new_answer">Введите новый ответ</string>
+    <string name="new_profile_picture">Загрузить новое изображение профиля</string>
+    <string name="new_question">Введите новый вопрос</string>
+    <string name="password">Пароль</string>
+    <string name="profile"><b>Профиль</b></string>
+    <string name="registration">Регистрация</string>
+    <string name="repeatPassword">Повторите пароль</string>
+    <string name="surname">Фамилия</string>
+    <string name="top_surveys">Популярные опросы</string>
+    <string name="cancel">Отмена</string>
+    <string name="all_surveys">Все опросы</string>
+    <string name="add_profile_picture">Добавить фото</string>
+    <string name="about_us">О нас</string>
+    <string name="Password">Пароль</string>
+    <string name="Login">Логин</string>
+    <string name="ConnectionErrorList">Невозможно загрузить опросы. Проблемы соединения.</string>
+    <string name="about_us_text" formatted="false"><![CDATA[
+     <title>Мы <b>независимые</b> разработчики без опыта. </title><br/>
+        Это наш первый настолько большой проект в комманде.<br/>
+        Наша комманда:<br/>
+        <li>
+            &#8226; Android разработчик:<br/>
+                &#8194;&#8194;Павел Кирилин<br/>
+        </li>
+        <li>
+            &#8226; Server Developer:<br/>
+                &#8194;&#8194;Павел Гордеев<br/>
+        </li>
+        <li>
+            &#8226; Разработчики сайта:<br/>
+            <li>
+             &#8194;&#8194;&#8194;&#8194;&#8226;Кирилл Посоха<br/>
+            </li>
+            <li>
+             &#8194;&#8194;&#8194;&#8194;&#8226;Анастасия Жилина<br/>
+            </li>
+        </li>
+        <li>
+            &#8226;Разработчик баз данных:<br/>
+                    &#8194;&#8194;Максим Ждамиров<br/>
+        </li>
+    ]]></string>
+    <string name="succsessfullySent">Успешно отослано на сервер</string>
+    <string name="incorrect_login">Неверный логин</string>
+    <string name="incorrect_password">Неверный пароль</string>
+    <string name="logout_succ">Выход совершён успешно</string>
+    <string name="not_all_fields_filled">Не все поля заполнены</string>
+    <string name="not_all_quest_ans">Не все вопросы отвечены</string>
+    <string name="password_dont_match">Пароли не совпадают</string>
+    <string name="picture_upload_error">Ошибка загрузки фото</string>
+    <string name="please_login_to_create">Пожалуйста войдите, чтобы создать опрос</string>
+    <string name="please_login_to_profile">Пожалуйста зайдите, чтобы открыть профиль</string>
+    <string name="please_wait">Пожалуйста подождите</string>
+    <string name="registration_complete">Регистрация завершена успешно</string>
+    <string name="something_went_wrong">Что-то пошло не так, попробуйте позднее</string>
+    <string name="upload_to_server_error">Ошибка загрузки на сервер</string>
+    <string name="welcome">Добро пожаловать </string>
+    <string name="statistics">Статистика</string>
+    <string name="takenSurveys">Пройденные опросы</string>
+</resources>

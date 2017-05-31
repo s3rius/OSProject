@@ -26,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.s3rius.surveyclient.fragments.AboutUsFragment;
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
@@ -45,6 +47,7 @@ import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAn
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
+import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
@@ -54,15 +57,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
 
 public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String SAVED_USER = "saved_user";
@@ -75,6 +79,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private Bitmap profilePic;
     private ImageView profileIcon;
     private File regPhoto;
+    private int questionsQuan = 0;
 //    private Target picassoTarget = new Target() {
 //        @Override
 //        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -145,10 +150,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //                    }
 //                });
 
-                //Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(avatar);
-                //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
-            }
+            //Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(avatar);
+            //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
         }
+    }
 
     @Override
     public void onBackPressed() {
@@ -167,6 +172,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         int id = item.getItemId();
 
         if (id == R.id.category) {
+            AsyncHttpClient client = new AsyncHttpClient();
             CategoryFragment fragment = new CategoryFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -200,9 +206,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 MenuItem loginItem = menu.findItem(R.id.login);
 
                 // set new title to the MenuItem
-                loginItem.setTitle("Login");
+                loginItem.setTitle(getString(R.string.login));
 
-                Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.logout_succ), Toast.LENGTH_SHORT).show();
                 Top100Fragment fragment = new Top100Fragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
@@ -226,8 +232,22 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 transaction.commit();
                 transaction.addToBackStack(null);
             } else {
-                Toast.makeText(this, "Please login to create a survey.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.please_login_to_create), Toast.LENGTH_LONG).show();
             }
+        } else if (id == R.id.newestSurveys) {
+            TakeSurvey fragment = new TakeSurvey();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+            fragmentTransaction.addToBackStack(null);
+        } else if (id == R.id.aboutUs) {
+            AboutUsFragment fragment = new AboutUsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+            fragmentTransaction.addToBackStack(null);
         }
 //            else if(id==R.id.profile_image){
 //                ProfileFragment fragment = new ProfileFragment();
@@ -258,7 +278,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Toast.makeText(this, "Please login to go to profile.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.please_login_to_profile), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -310,7 +330,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 try {
                     ObjectMapper mapper = new ObjectMapper();
                     user = mapper.readValue(lol, User.class);
-                    Toast.makeText(context, "Welcome " + user.getName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.welcome) + user.getName(), Toast.LENGTH_LONG).show();
                     saveUser();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -319,15 +339,16 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
                 switch (statusCode) {
                     case 404:
-                        Toast.makeText(context, "Incorrect login", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getString(R.string.incorrect_login), Toast.LENGTH_LONG).show();
                         break;
                     case 400:
-                        Toast.makeText(context, "Incorrect password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getString(R.string.incorrect_password), Toast.LENGTH_LONG).show();
                         break;
                     default:
-                        Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -344,11 +365,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     public void onClickSurveyDone(View view) {
-        String answered = "";
+        List<Integer> answered = new ArrayList<>();
         boolean isAllChecked = true;
         boolean isChecked = false;
+        long surveyId;
         Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (surveyFragment instanceof SurveyFragment) {
+            surveyId = ((SurveyFragment) surveyFragment).getSurveyId();
             ListView listView = ((SurveyFragment) surveyFragment).getListView();
             for (int i = 0; i < listView.getChildCount(); i++) {
                 View question = listView.getChildAt(i);
@@ -360,7 +383,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                             View button = group.getChildAt(k);
                             if (button instanceof RadioButton) {
                                 if (((RadioButton) button).isChecked()) {
-                                    answered += k + 1 + " ";
+                                    answered.add(k);
                                     isChecked = true;
                                     break;
                                 }
@@ -375,13 +398,42 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 }
             }
             if (!isAllChecked) {
-                Toast.makeText(this, "not all question is answered.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, answered, Toast.LENGTH_SHORT).show();
-                // TODO: 05.04.17 Make server transaction of done survey.
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("answers", answered);
+                params.put("surveyId", surveyId);
+                if (isUserExist()) {
+                    params.put("login", user.getLogin());
+                }
+                final ProgressDialog[] progressDialog = {new ProgressDialog(this)};
+                client.post(getString(R.string.server) + "doneSurvey/", params, new AsyncHttpResponseHandler() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        progressDialog[0] = new ProgressDialog(Drawer.this);
+                        progressDialog[0].setMessage("Please Wait....");
+                        progressDialog[0].show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        getSupportFragmentManager().popBackStack();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     }
 
     public void onQuestionCancel(View view) {
@@ -404,6 +456,52 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     public void SurveyCreatingDone(View view) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof CreateSurveyFragment) {
+            final Survey doneSurvey = ((CreateSurveyFragment) fragment).getSurvey();
+            LayoutInflater li = LayoutInflater.from(this);
+            View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
+            AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(this);
+            mDialogBuilder.setView(promptsView);
+            final EditText surveyName = (EditText) promptsView.findViewById(R.id.surveyName);
+            mDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //Вводим текст и отображаем в строке ввода на основном экране:
+                                    doneSurvey.setName(surveyName.getText().toString());
+                                    doneSurvey.setCreator(user);
+                                    String createdSurvey = "";
+                                    try {
+                                        createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
+                                    } catch (JsonProcessingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    AsyncHttpClient client = new AsyncHttpClient();
+                                    RequestParams params = new RequestParams();
+                                    params.put("createdSurvey", createdSurvey);
+                                    client.post(getString(R.string.server) + "createdSurvey", params, new AsyncHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                            Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                            Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            })
+                    .setNegativeButton(getString(R.string.cancel),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        }
         // TODO: 14.05.17 Server transaction;
     }
 
@@ -411,35 +509,44 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         Survey survey = null;
         EditText editText = null;
         Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (newQuestion instanceof CreateQuestion) {
-            editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
-            survey = ((CreateQuestion) newQuestion).getSurvey();
-            survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("survey", survey);
-            CreateAnswers createAnswers = new CreateAnswers();
-            createAnswers.setArguments(bundle);
-            getSupportFragmentManager().popBackStack();
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, createAnswers);
-            transaction.commit();
-            transaction.addToBackStack(null);
+        if (questionsQuan < 50) {
+            if (newQuestion instanceof CreateQuestion) {
+                editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
+                survey = ((CreateQuestion) newQuestion).getSurvey();
+                survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("survey", survey);
+                CreateAnswers createAnswers = new CreateAnswers();
+                createAnswers.setArguments(bundle);
+                getSupportFragmentManager().popBackStack();
+                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, createAnswers);
+                transaction.commit();
+                transaction.addToBackStack(null);
+            }
+        } else {
+            Toast.makeText(this, "Maximum quantity of question is reached", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void onOneAnswerCreate(View view) {
         Survey survey = null;
+        int ansQuan = 0;
         EditText editText = null;
         Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (newAnswer instanceof CreateAnswers) {
-            editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
-            if (!editText.getText().toString().equals("")) {
-                survey = ((CreateAnswers) newAnswer).getSurvey();
-                survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
-                editText.setText("");
-            } else
-                Toast.makeText(this, "Please enter the answer", Toast.LENGTH_SHORT).show();
+        if (ansQuan < 50) {
+            if (newAnswer instanceof CreateAnswers) {
+                editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
+                if (!editText.getText().toString().equals("")) {
+                    survey = ((CreateAnswers) newAnswer).getSurvey();
+                    survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
+                    editText.setText("");
+                    ansQuan++;
+                } else
+                    Toast.makeText(this, "Please enter the answer", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Maximum quantity of answers is reached", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -450,6 +557,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         if (newAnswer instanceof CreateAnswers) {
             survey = ((CreateAnswers) newAnswer).getSurvey();
             editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
+            ++questionsQuan;
             if (!editText.getText().toString().equals("")) {
                 survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
             }
@@ -552,6 +660,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 } else {
                     survey.getQuestions().get(num).getAnswers().remove(item);
                     Fragment fragment = null;
+                    --questionsQuan;
                     fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                     final android.support.v4.app.FragmentTransaction transaction =
                             getSupportFragmentManager().beginTransaction();
@@ -656,7 +765,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT);
+                        Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -703,9 +812,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 login.getText().toString().isEmpty() ||
                 pass.getText().toString().isEmpty() ||
                 passRep.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.not_all_fields_filled), Toast.LENGTH_SHORT).show();
         } else if (!pass.getText().toString().equals(passRep.getText().toString())) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.password_dont_match), Toast.LENGTH_SHORT).show();
         } else {
             final User newUser = new User();
             newUser.setName(name.getText().toString());
@@ -726,7 +835,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     @Override
                     public void onStart() {
                         progressDialog[0] = new ProgressDialog(Drawer.this);
-                        progressDialog[0].setMessage("Please Wait....");
+                        progressDialog[0].setMessage(getString(R.string.please_wait));
                         progressDialog[0].show();
                     }
 
@@ -748,25 +857,35 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                     if (progressDialog[0] != null)
                                         progressDialog[0].dismiss();
                                     onBackPressed();
-                                    Toast.makeText(Drawer.this, "Registration complete", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Drawer.this, getString(R.string.registration_complete), Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                     if (progressDialog[0] != null)
                                         progressDialog[0].dismiss();
-                                    Toast.makeText(Drawer.this, "Picture upload error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Drawer.this, getString(R.string.picture_upload_error), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
-                        //        onBackPressed();
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        onBackPressed();
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        if (fragment instanceof LoginFragment) {
+                            EditText login = (EditText) fragment.getView().findViewById(R.id.loginlogin);
+                            EditText pass = (EditText) fragment.getView().findViewById(R.id.passpass);
+                            login.setText(newUser.getLogin());
+                            pass.setText(newUser.getPassword());
+                        }
+
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Drawer.this, getString(R.string.upload_to_server_error), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -785,15 +904,15 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 profilePic = null;
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if(fragment instanceof ProfileFragment){
-                    ImageView profilePic = (ImageView)fragment.getView().findViewById(R.id.profile_pic);
+                if (fragment instanceof ProfileFragment) {
+                    ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
                     profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(Drawer.this, "lol u fucked up", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -29,7 +29,7 @@ public class TakenSurveys extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getActivity().setTitle("Taken Surveys");
+        getActivity().setTitle(getString(R.string.takenSurveys));
         return inflater.inflate(R.layout.fragment_taken_surveys, container, false);
     }
 

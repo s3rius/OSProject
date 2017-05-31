@@ -10,15 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
-import java.io.File;
+import org.apache.http.Header;
 
-import cz.msebera.android.httpclient.Header;
+import java.io.File;
 
 
 /**
@@ -36,7 +35,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // Inflate the layout for this fragment
-        getActivity().setTitle("Profile");
+        getActivity().setTitle(getString(R.string.profile));
         Bundle arguments = getArguments();
         TextView username = (TextView) view.findViewById(R.id.profile_name);
         username.setText(arguments.getString("username"));
@@ -44,18 +43,16 @@ public class ProfileFragment extends Fragment {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         client.get(getString(R.string.server) + "img?id=" + arguments.getString("login"), new FileAsyncHttpResponseHandler(container.getContext()) {
             @Override
-            public void onStart() {
-                super.onStart();
-                progressDialog[0] = new ProgressDialog(container.getContext());
-                progressDialog[0].setMessage("Please Wait....");
-                progressDialog[0].show();
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                progressDialog[0].dismiss();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                progressDialog[0].dismiss();
-                Toast.makeText(container.getContext(), "Error loading profile image", Toast.LENGTH_SHORT).show();
-
+            public void onStart() {
+                super.onStart();
+                progressDialog[0] = new ProgressDialog(container.getContext());
+                progressDialog[0].setMessage(getString(R.string.please_wait));
+                progressDialog[0].show();
             }
 
             @Override

@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Survey Client</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="profile"><b>profile</b></string>
+    <string name="profile"><b>Profile</b></string>
     <string name="cancel">Cancel</string>
     <string name="login">login</string>
-    <string name="password">password</string>
+    <string name="password">Password</string>
     <string name="top_surveys">Top Surveys</string>
     <string name="categories">Categories</string>
     <string name="completed_surveys">Completed madeSurveys</string>
@@ -17,7 +17,7 @@
     <string name="made_surveys">Made madeSurveys</string>
     <string name="new_profile_picture">Upload new profile picture</string>
     <string name="do_not_registered">Do not registered yet?</string>
-    <string name="registration">registration</string>
+    <string name="registration">Registration</string>
     <string name="fill_fields">Please fill in all the fields</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
@@ -28,7 +28,53 @@
     <string name="about_us">About us</string>
     <string name="all_surveys">All surveys</string>
     <string name="add_profile_picture">Add profile picture</string>
-    <string name="server">http://10.0.1.7:8080/survey/client/</string>
+    <!--<string name="about_us_text"><html>
 
-
+        <!-</html>-->
+    <!--</string>-->
+    <string name="about_us_text" formatted="false"><![CDATA[
+     <title>We\'re <b>independent</b> developers with no experience. </title><br/>
+        This is our first so big project in team.<br/>
+        Our team:<br/>
+        <li>
+            &#8226; Android developer:<br/>
+                &#8194;&#8194;Pavel Kirilin<br/>
+        </li>
+        <li>
+            &#8226; Server Developer:<br/>
+                &#8194;&#8194;Pavel Gordeev<br/>
+        </li>
+        <li>
+            &#8226; Site Developers:<br/>
+            <li>
+             &#8194;&#8194;&#8194;&#8194;&#8226;Kirill Posoha<br/>
+            </li>
+            <li>
+             &#8194;&#8194;&#8194;&#8194;&#8226;Anastasia Jilina<br/>
+            </li>
+        </li>
+        <li>
+            &#8226;Database developer:<br/>
+                    &#8194;&#8194;Maksim Jdamirov<br/>
+        </li>
+    ]]></string>
+    <string name="name_of_survey">Enter the name of survey</string>
+    <string name="succsessfullySent">Successfully sent to server</string>
+    <string name="something_went_wrong">Something went wrong, try again later</string>
+    <string name="please_wait">Please Wait....</string>
+    <string name="registration_complete">Registration complete</string>
+    <string name="picture_upload_error">Picture upload error</string>
+    <string name="not_all_fields_filled">Not all fields are filled</string>
+    <string name="password_dont_match">Passwords do not match</string>
+    <string name="upload_to_server_error">Upload to server failed</string>
+    <string name="logout_succ">Logout successfully</string>
+    <string name="please_login_to_create">Please login to create a survey</string>
+    <string name="please_login_to_profile">Please login to go to profile</string>
+    <string name="welcome">Welcome </string>
+    <string name="incorrect_login">Incorrect login</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="not_all_quest_ans">not all question is answered</string>
+    <string name="statistics">Statistics</string>
+    <string name="takenSurveys">Taken Surveys</string>
+    <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
 </resources>

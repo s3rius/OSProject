@@ -33,15 +33,15 @@ dependencies {
     compile files('lib/jackson-core-2.9.0.pr3.jar')
     compile files('lib/jackson-databind-2.9.0.pr3.jar')
     compile files('lib/jackson-annotations-2.9.0.pr3.jar')
+    compile group: 'net.iharder', name: 'base64', version: '2.3.9'
+    compile group: 'com.koushikdutta.urlimageviewhelper', name: 'urlimageviewhelper', version: '1.0.4'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.loopj.android:android-async-http:1.4.7'
     compile 'com.koushikdutta.ion:ion:2.1.9'
-    compile group: 'net.iharder', name: 'base64', version: '2.3.9'
-    compile group: 'com.koushikdutta.urlimageviewhelper', name: 'urlimageviewhelper', version: '1.0.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }
