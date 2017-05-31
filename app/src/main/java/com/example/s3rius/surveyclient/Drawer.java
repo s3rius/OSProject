@@ -302,7 +302,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         fragmentTransaction.commit();
     }
 
-    boolean isUserExist() {
+    public boolean isUserExist() {
         sPref = getPreferences(MODE_PRIVATE);
         String Juser = sPref.getString(SAVED_USER, null);
         if (Juser != null) {
@@ -468,10 +468,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     .setCancelable(false)
                     .setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                                public void onClick(final DialogInterface dialog, int id) {
                                     //Вводим текст и отображаем в строке ввода на основном экране:
                                     doneSurvey.setName(surveyName.getText().toString());
-                                    doneSurvey.setCreator(user);
+                                    doneSurvey.setMadeByUser(user);
                                     String createdSurvey = "";
                                     try {
                                         createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
@@ -485,6 +485,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                         @Override
                                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                             Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
+                                            TakeSurvey fragment = new TakeSurvey();
+                                            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                                    getSupportFragmentManager().beginTransaction();
+                                            fragmentTransaction.replace(R.id.fragment_container, fragment);
+                                            fragmentTransaction.commit();
+                                            fragmentTransaction.addToBackStack(null);
                                         }
 
                                         @Override
@@ -500,9 +506,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                     dialog.cancel();
                                 }
                             });
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            AlertDialog alertDialog = mDialogBuilder.create();
+            alertDialog.show();
         }
-        // TODO: 14.05.17 Server transaction;
     }
 
     public void addQuestion(View view) {
@@ -856,7 +862,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                     if (progressDialog[0] != null)
                                         progressDialog[0].dismiss();
-                                    onBackPressed();
+                                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                                    if (fragment instanceof LoginFragment) {
+                                        EditText login = (EditText) fragment.getView().findViewById(R.id.loginlogin);
+                                        EditText pass = (EditText) fragment.getView().findViewById(R.id.passpass);
+                                        login.setText(newUser.getLogin());
+                                        pass.setText(newUser.getPassword());
+                                    }
                                     Toast.makeText(Drawer.this, getString(R.string.registration_complete), Toast.LENGTH_SHORT).show();
                                 }
 
@@ -878,14 +890,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                             login.setText(newUser.getLogin());
                             pass.setText(newUser.getPassword());
                         }
-
+                        Toast.makeText(Drawer.this, getString(R.string.registration_complete), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        Toast.makeText(Drawer.this, getString(R.string.upload_to_server_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Drawer.this, new String(responseBody), Toast.LENGTH_SHORT).show();
                     }
                 });
 

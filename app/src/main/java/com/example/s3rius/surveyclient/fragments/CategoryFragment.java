@@ -85,6 +85,7 @@ public class CategoryFragment extends ListFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            content.clear();
             progressDialog = new ProgressDialog(container.getContext());
             progressDialog.setMessage("Please Wait....");
             progressDialog.show();

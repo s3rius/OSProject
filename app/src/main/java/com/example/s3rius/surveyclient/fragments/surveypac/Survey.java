@@ -1,34 +1,52 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Survey implements Serializable {
-
+    private Integer id;
     private String name;
     private String comment;
-    private List<Question> questions;
     private List<User> users;
+    private List<Question> questions;
+    private User madeByUser;
+    private Date date;
+    private int usersDone;
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public Date getDate() {
+        return this.date;
     }
 
-    private User creator;
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public Survey() {
-
     }
 
-    public Survey(String name, String comment, List<Question> questions, List<User> users) {
-        this.name = name;
-        this.comment = comment;
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public List<Question> getQuestions() {
+        return this.questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
-        this.users = users;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -36,26 +54,30 @@ public class Survey implements Serializable {
     }
 
     public String getComment() {
-        return comment;
+        return this.comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public Integer getUsersDone() {
+        return Integer.valueOf(this.users.size());
+    }
+
+    public User getMadeByUser() {
+        return this.madeByUser;
+    }
+
+    public void setMadeByUser(User madeByUser) {
+        this.madeByUser = madeByUser;
+    }
+
+    public void setUsersDone(int usersDone) {
+        this.usersDone = usersDone;
     }
 }

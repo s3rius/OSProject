@@ -10,7 +10,7 @@
     <string name="password">Password</string>
     <string name="top_surveys">Top Surveys</string>
     <string name="categories">Categories</string>
-    <string name="completed_surveys">Completed madeSurveys</string>
+    <string name="completed_surveys">Completed Surveys</string>
     <string name="create_survey_string">Create Survey</string>
     <string name="new_question">Please enter new Question</string>
     <string name="new_answer">Please enter new answer</string>
@@ -77,4 +77,6 @@
     <string name="statistics">Statistics</string>
     <string name="takenSurveys">Taken Surveys</string>
     <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
+    <string name="please_login_to_access">Please login to access to surveys</string>
+    <string name="ConnectionErrorList2">Can\'t load categories.\nConnection error</string>
 </resources>

@@ -1,22 +1,37 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Question implements Serializable {
+    private Integer id;
     private String name;
     private List<Answer> answers;
+    private File file;
 
     public Question() {
     }
 
-    public Question(String name, List<Answer> answers) {
+    public Question(String name, ArrayList<Answer> answers) {
         this.name = name;
         this.answers = answers;
     }
 
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -24,10 +39,18 @@ public class Question implements Serializable {
     }
 
     public List<Answer> getAnswers() {
-        return answers;
+        return this.answers;
     }
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public File getFile() {
+        return this.file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

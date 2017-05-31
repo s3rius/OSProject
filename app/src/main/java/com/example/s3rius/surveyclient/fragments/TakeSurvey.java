@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 
 import org.json.JSONArray;
@@ -72,20 +74,24 @@ public class TakeSurvey extends ListFragment {
     }
 
     private void startSurvey(long id) {
-        surveyFragment = new SurveyFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong("id", ids.get((int) id));
-        bundle.putString("title", content.get((int) id));
-        surveyFragment.setArguments(bundle);
-        // Create new fragment and transaction
-        // consider using Java coding conventions (upper first char class names!!!)
-        FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack
-        transaction1.replace(R.id.fragment_container, surveyFragment);
-        transaction1.addToBackStack(null);
-        // Commit the transaction
-        transaction1.commit();
+        if(((Drawer)getActivity()).isUserExist()) {
+            surveyFragment = new SurveyFragment();
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", ids.get((int) id));
+            bundle.putString("title", content.get((int) id));
+            surveyFragment.setArguments(bundle);
+            // Create new fragment and transaction
+            // consider using Java coding conventions (upper first char class names!!!)
+            FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack
+            transaction1.replace(R.id.fragment_container, surveyFragment);
+            transaction1.addToBackStack(null);
+            // Commit the transaction
+            transaction1.commit();
+        }else {
+            Toast.makeText(container.getContext(), getString(R.string.please_login_to_access), Toast.LENGTH_LONG).show();
+        }
     }
 
     public SurveyFragment getSurveyFragment() {
@@ -103,6 +109,8 @@ public class TakeSurvey extends ListFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            content.clear();
+            ids.clear();
             progressDialog = new ProgressDialog(container.getContext());
             progressDialog.setMessage(getString(R.string.please_wait));
             progressDialog.show();
@@ -171,6 +179,8 @@ public class TakeSurvey extends ListFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            content.clear();
+            ids.clear();
             progressDialog = new ProgressDialog(container.getContext());
             progressDialog.setMessage(getString(R.string.please_wait));
             progressDialog.show();
@@ -180,7 +190,7 @@ public class TakeSurvey extends ListFragment {
         protected String doInBackground(Void... params) {
             // получаем данные с внешнего ресурса
             try {
-                URL url = new URL(getString(R.string.server) + "topSurveys?sortBy=time&limit=20");
+                URL url = new URL(getString(R.string.server) + "topSurveys?sortBytime&limit=20");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

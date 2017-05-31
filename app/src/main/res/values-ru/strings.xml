@@ -25,7 +25,7 @@
     <string name="about_us">О нас</string>
     <string name="Password">Пароль</string>
     <string name="Login">Логин</string>
-    <string name="ConnectionErrorList">Невозможно загрузить опросы. Проблемы соединения.</string>
+    <string name="ConnectionErrorList">Невозможно загрузить опросы, проблемы соединения.</string>
     <string name="about_us_text" formatted="false"><![CDATA[
      <title>Мы <b>независимые</b> разработчики без опыта. </title><br/>
         Это наш первый настолько большой проект в комманде.<br/>
@@ -69,4 +69,6 @@
     <string name="welcome">Добро пожаловать </string>
     <string name="statistics">Статистика</string>
     <string name="takenSurveys">Пройденные опросы</string>
+    <string name="ConnectionErrorList2">Невозможно загрузить категории, проблемы соединения.</string>
+    <string name="please_login_to_access">Пожалуйста войдите, чтобы проходить опросы.</string>
 </resources>

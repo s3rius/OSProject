@@ -1,10 +1,13 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class Answer implements Serializable {
+    private Integer id;
     private String name;
     private Integer answered;
+    private File file;
 
     public Answer() {
     }
@@ -13,9 +16,16 @@ public class Answer implements Serializable {
         this.name = name;
         this.answered = answered;
     }
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -23,10 +33,18 @@ public class Answer implements Serializable {
     }
 
     public Integer getAnswered() {
-        return answered;
+        return this.answered;
     }
 
     public void setAnswered(Integer answered) {
         this.answered = answered;
+    }
+
+    public File getFile() {
+        return this.file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -14,12 +14,14 @@ import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -62,7 +64,7 @@ public class SurveyFragment extends ListFragment {
                              Bundle savedInstanceState) {
         if (getArguments() != null) {
             Bundle arguments = getArguments();
-            surveyId = arguments.getLong("surveyId");
+            surveyId = arguments.getLong("id");
             title = arguments.getString("title");
             getActivity().setTitle(title);
         }
@@ -72,7 +74,7 @@ public class SurveyFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        connectURL = getString(R.string.server) + "survey?surveyId=";
+        connectURL = getString(R.string.server) + "survey?id=";
         ParseSurvey parseSurvey;
         parseSurvey = new ParseSurvey(surveyId);
         parseSurvey.execute();
@@ -144,35 +146,41 @@ public class SurveyFragment extends ListFragment {
             Log.d(LOG_TAG, strJson);
             JSONObject dataJsonObj;
             List<Question> questions = new ArrayList<>();
-            //List<User> users = new ArrayList<>();
             try {
-                dataJsonObj = new JSONObject(strJson);
-                String surveyName = dataJsonObj.getString("name");
-                // JSONArray usersArray = dataJsonObj.getJSONArray("users");
-                JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
-//                for (int i = 0; i < usersArray.length(); i++) {
+                Survey survey = new ObjectMapper().readValue(resultJson, Survey.class);
+                setSurvey(survey);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //List<User> users = new ArrayList<>();
+//            try {
+//                dataJsonObj = new JSONObject(strJson);
+//                String surveyName = dataJsonObj.getString("name");
+//                // JSONArray usersArray = dataJsonObj.getJSONArray("users");
+//                JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
+////                for (int i = 0; i < usersArray.length(); i++) {
 //                    User user = new User();
 //                    JSONObject userObj = usersArray.getJSONObject(i);
 //                    user.setName(userObj.getString("name"));
 //                    users.add(user);
 //                }
-                for (int i = 0; i < questionsJson.length(); i++) {
-                    JSONObject question = questionsJson.getJSONObject(i);
-                    String questionName = question.getString("name");
-                    JSONArray answersJson = question.getJSONArray("answers");
-                    List<Answer> answers = new ArrayList<>();
-                    for (int j = 0; j < answersJson.length(); j++) {
-                        JSONObject answer1 = answersJson.getJSONObject(j);
-                        answers.add(new Answer(answer1.getString("name"), null));
-                    }
-                    questions.add(new Question(questionName, answers));
-                }
-                Survey survey1 = new Survey(surveyName, "comment", questions, null);
-                setSurvey(survey1);
+//                for (int i = 0; i < questionsJson.length(); i++) {
+//                    JSONObject question = questionsJson.getJSONObject(i);
+//                    String questionName = question.getString("name");
+//                    JSONArray answersJson = question.getJSONArray("answers");
+//                    List<Answer> answers = new ArrayList<>();
+//                    for (int j = 0; j < answersJson.length(); j++) {
+//                        JSONObject answer1 = answersJson.getJSONObject(j);
+//                        answers.add(new Answer(answer1.getString("name"), null));
+//                    }
+//                    questions.add(new Question(questionName, answers));
+//                }
+//                Survey survey1 = new Survey(surveyName, "comment", questions, null);
+//                setSurvey(survey1);
                 setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), SurveyFragment.getSurvey()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 }
