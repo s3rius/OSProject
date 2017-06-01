@@ -27,7 +27,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 
@@ -76,7 +76,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private User user = null;
     private SharedPreferences sPref;
     private NavigationView navigationView = null;
-    private Bitmap profilePic;
     private ImageView profileIcon;
     private File regPhoto;
     private int questionsQuan = 0;
@@ -119,13 +118,15 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View view = navigationView.getHeaderView(0);
-        profileIcon = (ImageView) view.findViewById(R.id.profile_pic);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_drawer);
+        profileIcon = (ImageView) headerView.findViewById(R.id.profile_image);
         if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
             loginItem.setTitle("Logout");
+            Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+        }
+        navigationView.setNavigationItemSelectedListener(this);
+
 //            if (profilePic != null) {
 //                profileIcon.setImageBitmap(profilePic);
 //            } else {
@@ -150,9 +151,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //                    }
 //                });
 
-            //Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(avatar);
-            //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
-        }
+        //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
+
     }
 
     @Override
@@ -198,23 +198,23 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 Editor ed = sPref.edit();
                 ed.clear();
                 ed.apply();
-
-                // get menu from navigationView
-                Menu menu = navigationView.getMenu();
-
-                // find MenuItem you want to change
-                MenuItem loginItem = menu.findItem(R.id.login);
-
-                // set new title to the MenuItem
-                loginItem.setTitle(getString(R.string.login));
-
                 Toast.makeText(this, getString(R.string.logout_succ), Toast.LENGTH_SHORT).show();
-                Top100Fragment fragment = new Top100Fragment();
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                fragmentTransaction.commit();
-                fragmentTransaction.addToBackStack(null);
+                this.recreate();
+//                // get menu from navigationView
+//                Menu menu = navigationView.getMenu();
+//
+//                // find MenuItem you want to change
+//                MenuItem loginItem = menu.findItem(R.id.login);
+//
+//                // set new title to the MenuItem
+//                loginItem.setTitle(getString(R.string.login));
+//
+//                Top100Fragment fragment = new Top100Fragment();
+//                android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                        getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.fragment_container, fragment);
+//                fragmentTransaction.commit();
+//                fragmentTransaction.addToBackStack(null);
             }
         } else if (id == R.id.top100) {
             Top100Fragment fragment = new Top100Fragment();
@@ -268,7 +268,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             bundle.putString("username", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getName());
             bundle.putString("login", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getLogin());
-//           bundle.putString("username", "Tanana");
             fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -288,18 +287,19 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         String JSONUser = new ObjectMapper().writeValueAsString(this.user);
         ed.putString(SAVED_USER, JSONUser);
         ed.apply();
-        Menu menu = navigationView.getMenu();
-
-        // find MenuItem you want to change
-        MenuItem loginItem = menu.findItem(R.id.login);
-        // set new title to the MenuItem
-        loginItem.setTitle("Logout");
-
-        Top100Fragment fragment = new Top100Fragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+//        Menu menu = navigationView.getMenu();
+//
+//        // find MenuItem you want to change
+//        MenuItem loginItem = menu.findItem(R.id.login);
+//        // set new title to the MenuItem
+//        loginItem.setTitle("Logout");
+//
+//        Top100Fragment fragment = new Top100Fragment();
+//        android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.fragment_container, fragment);
+//        fragmentTransaction.commit();
+        this.recreate();
     }
 
     public boolean isUserExist() {
@@ -897,7 +897,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        Toast.makeText(Drawer.this, new String(responseBody), Toast.LENGTH_SHORT).show();
+                        switch (statusCode) {
+                            case 400:
+                                Toast.makeText(Drawer.this, R.string.login_owned, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
                     }
                 });
 
@@ -914,7 +921,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         client.delete(getString(R.string.server) + "img/delete", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                profilePic = null;
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (fragment instanceof ProfileFragment) {
                     ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);

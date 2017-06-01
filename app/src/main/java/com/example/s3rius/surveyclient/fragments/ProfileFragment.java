@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 
@@ -39,6 +41,9 @@ public class ProfileFragment extends Fragment {
         Bundle arguments = getArguments();
         TextView username = (TextView) view.findViewById(R.id.profile_name);
         username.setText(arguments.getString("username"));
+//        ImageView profilePic = (ImageView)view.findViewById(R.id.profile_pic);
+//        Picasso.with(container.getContext()).load(getString(R.string.server) + "img?id=" + arguments.getString("username")).into(profilePic);
+
         AsyncHttpClient client = new AsyncHttpClient();
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         client.get(getString(R.string.server) + "img?id=" + arguments.getString("login"), new FileAsyncHttpResponseHandler(container.getContext()) {

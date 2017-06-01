@@ -70,7 +70,7 @@
     <string name="logout_succ">Logout successfully</string>
     <string name="please_login_to_create">Please login to create a survey</string>
     <string name="please_login_to_profile">Please login to go to profile</string>
-    <string name="welcome">Welcome </string>
+    <string name="welcome">"Welcome "</string>
     <string name="incorrect_login">Incorrect login</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="not_all_quest_ans">not all question is answered</string>
@@ -79,4 +79,7 @@
     <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
     <string name="please_login_to_access">Please login to access to surveys</string>
     <string name="ConnectionErrorList2">Can\'t load categories.\nConnection error</string>
+    <string name="login_owned">This login is already taken</string>
+    <string name="surveys">Surveys</string>
+    <string name="other">other</string>
 </resources>

@@ -66,9 +66,13 @@
     <string name="registration_complete">Регистрация завершена успешно</string>
     <string name="something_went_wrong">Что-то пошло не так, попробуйте позднее</string>
     <string name="upload_to_server_error">Ошибка загрузки на сервер</string>
-    <string name="welcome">Добро пожаловать </string>
+    <string name="welcome">"Добро пожаловать "</string>
     <string name="statistics">Статистика</string>
     <string name="takenSurveys">Пройденные опросы</string>
     <string name="ConnectionErrorList2">Невозможно загрузить категории, проблемы соединения.</string>
     <string name="please_login_to_access">Пожалуйста войдите, чтобы проходить опросы.</string>
+    <string name="login_owned">Этот логин уже занят</string>
+    <string name="surveys">Опросы</string>
+    <string name="other">Разное</string>
+
 </resources>
