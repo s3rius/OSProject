@@ -82,4 +82,9 @@
     <string name="login_owned">This login is already taken</string>
     <string name="surveys">Surveys</string>
     <string name="other">other</string>
+    <string name="what_want_change">What would you like to change?</string>
+    <string name="add_answers">Please add answers for this question</string>
+    <string name="max_quantity_ans">Maximum quantity of answers is reached</string>
+    <string name="max_quantity_ques">Maximum quantity of question is reached</string>
+    <string name="enterAns">Please enter the answer</string>
 </resources>

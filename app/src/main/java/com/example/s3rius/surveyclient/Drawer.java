@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -414,7 +413,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onStart() {
                         super.onStart();
                         progressDialog[0] = new ProgressDialog(Drawer.this);
-                        progressDialog[0].setMessage("Please Wait....");
+                        progressDialog[0].setMessage(getString(R.string.please_wait));
                         progressDialog[0].show();
                     }
 
@@ -531,7 +530,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 transaction.addToBackStack(null);
             }
         } else {
-            Toast.makeText(this, "Maximum quantity of question is reached", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.max_quantity_ques, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -549,10 +548,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     editText.setText("");
                     ansQuan++;
                 } else
-                    Toast.makeText(this, "Please enter the answer", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.enterAns, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Maximum quantity of answers is reached", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.max_quantity_ans, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -577,7 +576,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 transaction.replace(R.id.fragment_container, createSurveyFragment);
                 transaction.commit();
             } else {
-                Toast.makeText(this, "Please add answers for this question", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.add_answers, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -591,7 +590,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             items[i] = survey.getQuestions().get(i).getName();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What would you like to change?");
+        builder.setTitle(R.string.what_want_change);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 changeChoose(view, item);
@@ -649,7 +648,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What would you like to change?");
+        builder.setTitle(R.string.what_want_change);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 if (!erase) {
@@ -925,6 +924,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 if (fragment instanceof ProfileFragment) {
                     ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
                     profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
+                    Drawer.this.recreate();
                 }
             }
 
