@@ -26,6 +26,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,22 +199,22 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 ed.clear();
                 ed.apply();
                 Toast.makeText(this, getString(R.string.logout_succ), Toast.LENGTH_SHORT).show();
-                this.recreate();
-//                // get menu from navigationView
-//                Menu menu = navigationView.getMenu();
-//
-//                // find MenuItem you want to change
-//                MenuItem loginItem = menu.findItem(R.id.login);
-//
-//                // set new title to the MenuItem
-//                loginItem.setTitle(getString(R.string.login));
-//
-//                Top100Fragment fragment = new Top100Fragment();
-//                android.support.v4.app.FragmentTransaction fragmentTransaction =
-//                        getSupportFragmentManager().beginTransaction();
-//                fragmentTransaction.replace(R.id.fragment_container, fragment);
-//                fragmentTransaction.commit();
-//                fragmentTransaction.addToBackStack(null);
+                profileIcon.setImageBitmap(null);
+                // get menu from navigationView
+                Menu menu = navigationView.getMenu();
+
+                // find MenuItem you want to change
+                MenuItem loginItem = menu.findItem(R.id.login);
+
+                // set new title to the MenuItem
+                loginItem.setTitle(getString(R.string.login));
+
+                Top100Fragment fragment = new Top100Fragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
             }
         } else if (id == R.id.top100) {
             Top100Fragment fragment = new Top100Fragment();
@@ -286,19 +287,19 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         String JSONUser = new ObjectMapper().writeValueAsString(this.user);
         ed.putString(SAVED_USER, JSONUser);
         ed.apply();
-//        Menu menu = navigationView.getMenu();
-//
-//        // find MenuItem you want to change
-//        MenuItem loginItem = menu.findItem(R.id.login);
-//        // set new title to the MenuItem
-//        loginItem.setTitle("Logout");
-//
-//        Top100Fragment fragment = new Top100Fragment();
-//        android.support.v4.app.FragmentTransaction fragmentTransaction =
-//                getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.replace(R.id.fragment_container, fragment);
-//        fragmentTransaction.commit();
-        this.recreate();
+        Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+        Menu menu = navigationView.getMenu();
+
+        // find MenuItem you want to change
+        MenuItem loginItem = menu.findItem(R.id.login);
+        // set new title to the MenuItem
+        loginItem.setTitle("Logout");
+
+        TakeSurvey fragment = new TakeSurvey();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
     public boolean isUserExist() {
@@ -331,6 +332,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     user = mapper.readValue(lol, User.class);
                     Toast.makeText(context, getString(R.string.welcome) + user.getName(), Toast.LENGTH_LONG).show();
                     saveUser();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -401,11 +403,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             } else {
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
-                params.put("answers", answered);
-                params.put("surveyId", surveyId);
-                if (isUserExist()) {
-                    params.put("login", user.getLogin());
+                try {
+                    params.put("answers", new ObjectMapper().writeValueAsString(answered));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
                 }
+                params.put("id", surveyId);
+                params.put("login", user.getLogin());
                 final ProgressDialog[] progressDialog = {new ProgressDialog(this)};
                 client.post(getString(R.string.server) + "doneSurvey/", params, new AsyncHttpResponseHandler() {
 
@@ -471,6 +475,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                     //Вводим текст и отображаем в строке ввода на основном экране:
                                     doneSurvey.setName(surveyName.getText().toString());
                                     doneSurvey.setMadeByUser(user);
+                                    doneSurvey.setUsers(new ArrayList<User>());
                                     String createdSurvey = "";
                                     try {
                                         createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
@@ -480,9 +485,20 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                     AsyncHttpClient client = new AsyncHttpClient();
                                     RequestParams params = new RequestParams();
                                     params.put("createdSurvey", createdSurvey);
-                                    client.post(getString(R.string.server) + "createdSurvey", params, new AsyncHttpResponseHandler() {
+                                    final ProgressDialog[] progressDialog = new ProgressDialog[1];
+                                    client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
+                                        @Override
+                                        public void onStart() {
+                                            super.onStart();
+                                            progressDialog[0] = new ProgressDialog(Drawer.this);
+                                            progressDialog[0].setMessage(getString(R.string.please_wait));
+                                            progressDialog[0].show();
+                                        }
+
                                         @Override
                                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                            if (progressDialog[0] != null)
+                                                progressDialog[0].dismiss();
                                             Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
                                             TakeSurvey fragment = new TakeSurvey();
                                             android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -494,6 +510,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
                                         @Override
                                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                            if (progressDialog[0] != null)
+                                                progressDialog[0].dismiss();
                                             Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                                         }
                                     });
@@ -764,6 +782,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
                         imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                        profileIcon.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                     }
 
                     @Override
@@ -773,7 +792,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -924,7 +942,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 if (fragment instanceof ProfileFragment) {
                     ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
                     profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
-                    Drawer.this.recreate();
+                    profileIcon.setImageBitmap(null);
                 }
             }
 
@@ -934,83 +952,5 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             }
         });
     }
-//
-//    private class UploadPhoto extends AsyncTask<String, Integer, String> {
-//
-//        ProgressDialog progressDialog;
-//        HttpURLConnection urlConnection = null;
-//        BufferedReader reader = null;
-//        String resultJson = "";
-//        long id = 0;
-//        String filepath;
-//        private String surveyJson;
-//        private HashMap<String, String> postDataParams;
-//        Bitmap pictureBitmap;
-//
-//        UploadPhoto(Bitmap bitmap) {
-//            pictureBitmap = bitmap;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressDialog = new ProgressDialog(Drawer.this);
-//            progressDialog.setMessage("Please Wait....");
-//            progressDialog.show();
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... str) {
-//            String line = "";
-//            try {
-//                URL url = new URL(getString(R.string.server) + "/survey/client/upload");
-//
-//                urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("POST");
-//                urlConnection.setUseCaches(false);
-//                urlConnection.setDoOutput(true);
-//
-//                urlConnection.connect();
-//
-//                DataOutputStream request = new DataOutputStream(
-//                        urlConnection.getOutputStream());
-//                byte[] pixels = new byte[pictureBitmap.getWidth() * pictureBitmap.getHeight()];
-//                for (int i = 0; i < pictureBitmap.getWidth(); ++i) {
-//                    for (int j = 0; j < pictureBitmap.getHeight(); ++j) {
-//                        //we're interested only in the MSB of the first byte,
-//                        //since the other 3 bytes are identical for B&W images
-//                        pixels[i + j] = (byte) ((pictureBitmap.getPixel(i, j) & 0x80) >> 7);
-//                    }
-//                }
-//
-//                request.write(pixels);
-//                request.flush();
-//                request.close();
-//
-//
-//                InputStream inputStream = urlConnection.getInputStream();
-//                StringBuffer buffer = new StringBuffer();
-//
-//                reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//
-//                while ((line = reader.readLine()) != null) {
-//                    buffer.append(line);
-//                }
-//                inputStream.close();
-//                urlConnection.disconnect();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return line;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String response) {
-//            super.onPostExecute(response);
-//            if (progressDialog != null)
-//                progressDialog.dismiss();
-//        }
-//    }
 }
 

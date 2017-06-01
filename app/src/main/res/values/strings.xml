@@ -3,6 +3,8 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
+
 
     <string name="profile"><b>Profile</b></string>
     <string name="cancel">Cancel</string>
@@ -76,7 +78,6 @@
     <string name="not_all_quest_ans">not all question is answered</string>
     <string name="statistics">Statistics</string>
     <string name="takenSurveys">Taken Surveys</string>
-    <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
     <string name="please_login_to_access">Please login to access to surveys</string>
     <string name="ConnectionErrorList2">Can\'t load categories.\nConnection error</string>
     <string name="login_owned">This login is already taken</string>

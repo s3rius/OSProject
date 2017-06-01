@@ -9,7 +9,6 @@ public class Question implements Serializable {
     private Integer id;
     private String name;
     private List<Answer> answers;
-    private File file;
 
     public Question() {
     }
@@ -41,13 +40,5 @@ public class Question implements Serializable {
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
-    }
-
-    public File getFile() {
-        return this.file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
     }
 }

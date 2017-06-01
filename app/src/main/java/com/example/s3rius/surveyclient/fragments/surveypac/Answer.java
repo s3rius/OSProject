@@ -6,15 +6,12 @@ import java.io.Serializable;
 public class Answer implements Serializable {
     private Integer id;
     private String name;
-    private Integer answered;
-    private File file;
 
     public Answer() {
     }
 
     public Answer(String name, Integer answered) {
         this.name = name;
-        this.answered = answered;
     }
     public Integer getId() {
         return this.id;
@@ -32,19 +29,4 @@ public class Answer implements Serializable {
         this.name = name;
     }
 
-    public Integer getAnswered() {
-        return this.answered;
-    }
-
-    public void setAnswered(Integer answered) {
-        this.answered = answered;
-    }
-
-    public File getFile() {
-        return this.file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
 }
