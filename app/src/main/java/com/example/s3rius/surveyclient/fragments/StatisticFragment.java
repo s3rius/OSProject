@@ -3,7 +3,7 @@ package com.example.s3rius.surveyclient.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,13 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -29,83 +26,46 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class StatisticFragment extends ListFragment {
 
-public class SurveyFragment extends ListFragment {
-
-    public static String LOG_TAG = "my_log";
-    private static Survey survey;
-    private String[] lol = null;
-
-    public long getSurveyId() {
-        return surveyId;
-    }
-
-    private long surveyId;
-    private String title;
-    private String connectURL = null; // TODO: 22.05.17 Change IP.
-
-
-    public SurveyFragment() {
-        // Required empty public constructor
-    }
-
-    public Survey getSurvey() {
-        return survey;
-    }
-
-
+    Survey survey;
+    int id;
 
     public void setSurvey(Survey survey) {
-        SurveyFragment.survey = survey;
+        this.survey = survey;
+    }
+
+    public StatisticFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            Bundle arguments = getArguments();
-            surveyId = arguments.getLong("id");
-            title = arguments.getString("title");
-            getActivity().setTitle(title);
+        if(getArguments()!=null){
+            id = getArguments().getInt("id");
         }
-        return inflater.inflate(R.layout.fragment_survey, container, false);
+        return inflater.inflate(R.layout.fragment_statistic, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        connectURL = getString(R.string.server) + "survey?id=";
-        ParseSurvey parseSurvey;
-        parseSurvey = new ParseSurvey(surveyId);
-        parseSurvey.execute();
+        ParseStatistics statistics = new ParseStatistics(id);
+        statistics.execute();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-        //ArrayList<String> content = new ArrayList<>(Arrays.asList(lol));
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-        //       android.R.layout.simple_list_item_1, content);
-        //setListAdapter(adapter);
-    }
-
-    @Nullable
-    @Override
-    public View getView() {
-        return super.getView();
-    }
-
-
-    private class ParseSurvey extends AsyncTask<Void, Void, String> {
+    private class ParseStatistics extends AsyncTask<Void, Void, String> {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String resultJson = "";
         long id = 0;
 
-        private ParseSurvey(long id) {
+        private ParseStatistics(long id) {
             this.id = id;
         }
 
@@ -113,7 +73,7 @@ public class SurveyFragment extends ListFragment {
         protected String doInBackground(Void... params) {
             // получаем данные с внешнего ресурса
             try {
-                URL url = new URL(connectURL + id);
+                URL url = new URL(getString(R.string.server) + "survey?id=" + id);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -131,7 +91,6 @@ public class SurveyFragment extends ListFragment {
                 }
 
                 resultJson = buffer.toString();
-//                resultJson = "{\"name\":\"test1\",\"questions\":[{\"name\":\"question1\",\"answers\":[{\"name\":\"answer11\",\"answered\":\"2\"},{\"name\":\"answer12\",\"answered\":\"1\"},{\"name\":\"answer13\",\"answered\":\"2\"},{\"name\":\"answer14\",\"answered\":\"1\"}]},{\"name\":\"question2\",\"answers\":[{\"name\":\"answer21\",\"answered\":\"2\"},{\"name\":\"answer22\",\"answered\":\"1\"},{\"name\":\"answer23\",\"answered\":\"2\"},{\"name\":\"answer24\",\"answered\":\"1\"}]},{\"name\":\"question3\",\"answers\":[{\"name\":\"answer31\",\"answered\":\"2\"},{\"name\":\"answer32\",\"answered\":\"1\"},{\"name\":\"answer33\",\"answered\":\"2\"},{\"name\":\"answer34\",\"answered\":\"1\"}]},{\"name\":\"question4\",\"answers\":[{\"name\":\"answer41\",\"answered\":\"2\"},{\"name\":\"answer42\",\"answered\":\"1\"},{\"name\":\"answer43\",\"answered\":\"2\"},{\"name\":\"answer44\",\"answered\":\"1\"}]}]}";
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,7 +102,7 @@ public class SurveyFragment extends ListFragment {
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
             // выводим целиком полученную json-строку
-            Log.d(LOG_TAG, strJson);
+            Log.d("LOG_TAG", strJson);
             JSONObject dataJsonObj;
             List<Question> questions = new ArrayList<>();
             try {
@@ -177,10 +136,11 @@ public class SurveyFragment extends ListFragment {
 //                }
 //                Survey survey1 = new Survey(surveyName, "comment", questions, null);
 //                setSurvey(survey1);
-                setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey));
+            setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
 //            } catch (JSONException e) {
 //                e.printStackTrace();
 //            }
         }
     }
+
 }

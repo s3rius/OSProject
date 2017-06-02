@@ -42,6 +42,7 @@ import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
+import com.example.s3rius.surveyclient.fragments.StatisticFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
@@ -328,7 +329,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         List<Integer> answered = new ArrayList<>();
         boolean isAllChecked = true;
         boolean isChecked = false;
-        long surveyId;
+        final long surveyId;
         Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (surveyFragment instanceof SurveyFragment) {
             surveyId = ((SurveyFragment) surveyFragment).getSurveyId();
@@ -357,9 +358,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     }
                 }
             }
-            if (!isAllChecked) {
-                Toast.makeText(this, getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
-            } else {
+            if(!(answered.size() == ((SurveyFragment)surveyFragment).getSurvey().getQuestions().size())){
+                Toast.makeText(this,getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
+            }
+             else {
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
                 try {
@@ -384,7 +386,15 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
+                        StatisticFragment statisticFragment = new StatisticFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", (int)surveyId);
+                        statisticFragment.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         getSupportFragmentManager().popBackStack();
+                        transaction.replace(R.id.fragment_container, statisticFragment);
+                        transaction.commit();
+                        transaction.addToBackStack(null);
                     }
 
                     @Override
@@ -1008,6 +1018,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         });
     }
 
-
+    public void surveyReviewComplete(View view) {
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStack();
+    }
 }
 
