@@ -2,7 +2,6 @@ package com.example.s3rius.surveyclient;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -499,16 +498,19 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             if (newQuestion instanceof CreateQuestion) {
                 editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
                 survey = ((CreateQuestion) newQuestion).getSurvey();
-                survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("survey", survey);
-                CreateAnswers createAnswers = new CreateAnswers();
-                createAnswers.setArguments(bundle);
-                getSupportFragmentManager().popBackStack();
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, createAnswers);
-                transaction.commit();
-                transaction.addToBackStack(null);
+                if (editText.getText().toString().isEmpty()) {
+                    survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("survey", survey);
+                    CreateAnswers createAnswers = new CreateAnswers();
+                    createAnswers.setArguments(bundle);
+                    getSupportFragmentManager().popBackStack();
+                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, createAnswers);
+                    transaction.commit();
+                    transaction.addToBackStack(null);
+                } else
+                    Toast.makeText(this, R.string.empty_question, Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, R.string.max_quantity_ques, Toast.LENGTH_SHORT).show();
@@ -581,6 +583,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(Drawer.this);
                     mDialogBuilder.setView(promptsView);
                     final EditText comment = (EditText) promptsView.findViewById(R.id.surveyName);
+                    if (survey.getComment() != null)
+                        comment.setHint(survey.getComment());
                     mDialogBuilder
                             .setCancelable(false)
                             .setPositiveButton("OK",

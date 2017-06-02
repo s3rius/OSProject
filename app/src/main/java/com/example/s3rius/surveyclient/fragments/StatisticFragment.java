@@ -34,18 +34,18 @@ public class StatisticFragment extends ListFragment {
     Survey survey;
     int id;
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-    }
-
     public StatisticFragment() {
         // Required empty public constructor
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(getArguments()!=null){
+        if (getArguments() != null) {
             id = getArguments().getInt("id");
         }
         return inflater.inflate(R.layout.fragment_statistic, container, false);
@@ -111,35 +111,7 @@ public class StatisticFragment extends ListFragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //List<User> users = new ArrayList<>();
-//            try {
-//                dataJsonObj = new JSONObject(strJson);
-//                String surveyName = dataJsonObj.getString("name");
-//                // JSONArray usersArray = dataJsonObj.getJSONArray("users");
-//                JSONArray questionsJson = dataJsonObj.getJSONArray("questions");
-////                for (int i = 0; i < usersArray.length(); i++) {
-//                    User user = new User();
-//                    JSONObject userObj = usersArray.getJSONObject(i);
-//                    user.setName(userObj.getString("name"));
-//                    users.add(user);
-//                }
-//                for (int i = 0; i < questionsJson.length(); i++) {
-//                    JSONObject question = questionsJson.getJSONObject(i);
-//                    String questionName = question.getString("name");
-//                    JSONArray answersJson = question.getJSONArray("answers");
-//                    List<Answer> answers = new ArrayList<>();
-//                    for (int j = 0; j < answersJson.length(); j++) {
-//                        JSONObject answer1 = answersJson.getJSONObject(j);
-//                        answers.add(new Answer(answer1.getString("name"), null));
-//                    }
-//                    questions.add(new Question(questionName, answers));
-//                }
-//                Survey survey1 = new Survey(surveyName, "comment", questions, null);
-//                setSurvey(survey1);
             setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 
