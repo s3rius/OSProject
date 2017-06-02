@@ -26,7 +26,6 @@ public class CreateQuestion extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,18 +34,18 @@ public class CreateQuestion extends Fragment {
         if (getArguments() != null) {
             Bundle arguments = getArguments();
             survey = (Survey) arguments.getSerializable("survey");
-            if(arguments.containsKey("questionInt")){
+            if (arguments.containsKey("questionInt")) {
                 questionInt = arguments.getInt("questionInt");
                 View InputFragmentView = inflater.inflate(R.layout.fragment_create_question, container, false);
-                button = (FloatingActionButton)InputFragmentView.findViewById(R.id.addQuestionDone);
-                question = (EditText)InputFragmentView.findViewById(R.id.newQuestText);
+                button = (FloatingActionButton) InputFragmentView.findViewById(R.id.addQuestionDone);
+                question = (EditText) InputFragmentView.findViewById(R.id.newQuestText);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!question.getText().toString().equals("")) {
                             survey.getQuestions().get(questionInt).setName(question.getText().toString());
                             getFragmentManager().popBackStack();
-                        }else {
+                        } else {
                             Toast.makeText(container.getContext(), "Please enter the question", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -60,5 +59,9 @@ public class CreateQuestion extends Fragment {
 
     public Survey getSurvey() {
         return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 }

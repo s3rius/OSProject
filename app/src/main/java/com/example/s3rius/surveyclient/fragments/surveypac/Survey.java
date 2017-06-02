@@ -66,14 +66,6 @@ public class Survey implements Serializable {
         this.users = users;
     }
 
-    public Integer getUsersDone(){
-        return users.size();
-    }
-
-    public User getMadeByUser(){
-        return madeByUser;
-    }
-
     public void setMadeByUser( User madeByUser ){
         this.madeByUser = madeByUser;
     }

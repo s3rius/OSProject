@@ -62,6 +62,7 @@ public class CategoryFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putString("title", category);
         bundle.putInt("CatInt", id);
+        bundle.putSerializable("act", 0);
         surveyFragment.setArguments(bundle);
         // Create new fragment and transaction
         // consider using Java coding conventions (upper first char class names!!!)

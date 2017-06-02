@@ -2,6 +2,7 @@ package com.example.s3rius.surveyclient;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +19,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -79,21 +79,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private ImageView profileIcon;
     private File regPhoto;
     private int questionsQuan = 0;
-//    private Target picassoTarget = new Target() {
-//        @Override
-//        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//            profilePic = bitmap;
-//        }
-//
-//        @Override
-//        public void onBitmapFailed(Drawable errorDrawable) {
-//
-//        }
-//
-//        @Override
-//        public void onPrepareLoad(Drawable placeHolderDrawable) {
-//        }
-//    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,37 +108,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         profileIcon = (ImageView) headerView.findViewById(R.id.profile_image);
         if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
-            loginItem.setTitle("Logout");
+            loginItem.setTitle(R.string.logout);
             Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
         }
         navigationView.setNavigationItemSelectedListener(this);
-
-//            if (profilePic != null) {
-//                profileIcon.setImageBitmap(profilePic);
-//            } else {
-////                Picasso.with(this)
-////                        .load(getString(R.string.server) + "img?id=" + user.getLogin())
-////                        .centerCrop()
-////                        .into(picassoTarget);
-//
-//                AsyncHttpClient client = new AsyncHttpClient();
-//                client.get(getString(R.string.server) + "img?id=" + user.getLogin(), new FileAsyncHttpResponseHandler(this.getBaseContext()) {
-//                    @Override
-//                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-//                        Toast.makeText(Drawer.this, "Error loading profile image", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(int statusCode, Header[] headers, File file) {
-//                        profilePic = BitmapFactory.decodeFile(file.getPath());
-//                        if (profilePic != null && profileIcon != null)
-//                            profileIcon.setImageBitmap(profilePic);
-//                        Toast.makeText(Drawer.this, "Guttt", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-        //                UrlImageViewHelper.setUrlDrawable(profileIcon, getString(R.string.server) + "img?id=" + user.getLogin()) ;
-
     }
 
     @Override
@@ -361,7 +320,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 
@@ -439,11 +398,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         }
     }
 
-    public void onQuestionCancel(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack();
-    }
-
     public void newSurvey(View view) {
         Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (newSurvey instanceof CreateSurveyFragment) {
@@ -472,7 +426,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     .setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(final DialogInterface dialog, int id) {
-                                    //Вводим текст и отображаем в строке ввода на основном экране:
                                     doneSurvey.setName(surveyName.getText().toString());
                                     doneSurvey.setMadeByUser(user);
                                     doneSurvey.setUsers(new ArrayList<User>());
@@ -601,17 +554,46 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     public void onChangeSurvey(final View view) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         CharSequence[] items;
-        items = new CharSequence[survey.getQuestions().size()];
+        items = new CharSequence[survey.getQuestions().size() + 1];
+        items[0] = getString(R.string.comment);
         for (int i = 0; i < survey.getQuestions().size(); i++) {
-            items[i] = survey.getQuestions().get(i).getName();
+            items[i + 1] = survey.getQuestions().get(i).getName();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.what_want_change);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                changeChoose(view, item);
+                if (item == 0) {
+                    LayoutInflater li = LayoutInflater.from(Drawer.this);
+                    View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
+                    AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(Drawer.this);
+                    mDialogBuilder.setView(promptsView);
+                    final EditText comment = (EditText) promptsView.findViewById(R.id.surveyName);
+                    mDialogBuilder
+                            .setCancelable(false)
+                            .setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(final DialogInterface dialog, int id) {
+                                            if (comment.getText().toString().isEmpty()) {
+                                                Toast.makeText(Drawer.this, R.string.empty_comment, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                survey.setComment(comment.getText().toString());
+                                            }
+                                        }
+                                    })
+                            .setNegativeButton(getString(R.string.cancel),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alertDialog = mDialogBuilder.create();
+                    alertDialog.show();
+                } else {
+                    changeChoose(view, item);
+                }
             }
         });
         AlertDialog alert = builder.create();
@@ -773,7 +755,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     @Override
                     public void onStart() {
                         progressDialog[0] = new ProgressDialog(Drawer.this);
-                        progressDialog[0].setMessage("Please Wait....");
+                        progressDialog[0].setMessage(getString(R.string.please_wait));
                         progressDialog[0].show();
                     }
 
@@ -789,7 +771,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        Toast.makeText(Drawer.this, "Upload to server failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (FileNotFoundException e) {
@@ -952,5 +934,80 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             }
         });
     }
+
+    public void onAnswerBack(View view) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        Survey survey = ((CreateAnswers) fragment).getSurvey();
+        survey.getQuestions().remove(survey.getQuestions().size() - 1);
+        ((CreateAnswers) fragment).setSurvey(survey);
+        getSupportFragmentManager().popBackStack();
+    }
+
+    public void onQuestionBack(View view) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (!((CreateQuestion) fragment).getSurvey().getQuestions().isEmpty()) {
+            if (((CreateQuestion) fragment)
+                    .getSurvey()
+                    .getQuestions()
+                    .get(((CreateQuestion) fragment).getSurvey().getQuestions().size() - 1)
+                    .getAnswers().size() == 0) {
+                ((CreateAnswers) fragment).getSurvey().getQuestions()
+                        .remove(((CreateAnswers) fragment).getSurvey().getQuestions().size() - 1);
+            }
+        }
+        getSupportFragmentManager().popBackStack();
+    }
+
+    public void getCompletedSurveys(View view) {
+        getProfileSurveys("user/doneSurveys");
+    }
+    public void getMadeSurveys(View view) {
+        getProfileSurveys("user/madeSurveys");
+    }
+
+    public void getProfileSurveys(String url){
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("login",user.getLogin());
+        final ProgressDialog[] dialog = {null};
+        client.get(getString(R.string.server) + url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                dialog[0] = new ProgressDialog(Drawer.this);
+                dialog[0].setMessage(getString(R.string.please_wait));
+                dialog[0].show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(dialog[0] !=null)
+                    dialog[0].dismiss();
+                String surveys = new String(responseBody);
+                if(!surveys.equals("null")) {
+                    Bundle bundle = new Bundle();
+                    TakeSurvey fragment = new TakeSurvey();
+                    bundle.putInt("act", 1);
+                    bundle.putString("surveys list", surveys);
+                    fragment.setArguments(bundle);
+                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, fragment);
+                    transaction.commit();
+                    transaction.addToBackStack(null);
+                }else {
+                    Toast.makeText(Drawer.this, R.string.no_done_surveys, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(dialog[0] !=null)
+                    dialog[0].dismiss();
+                Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }
 

@@ -41,7 +41,7 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
-        android:onClick="onQuestionCancel"
+        android:onClick="onAnswerBack"
         android:src="@drawable/arrow_back"
         app:layout_anchorGravity="bottom|right|end" />
 

@@ -38,20 +38,20 @@ public class CreateAnswers extends Fragment {
         if (getArguments() != null) {
             Bundle arguments = getArguments();
             survey = (Survey) arguments.getSerializable("survey");
-            if(arguments.containsKey("questInt")){
+            if (arguments.containsKey("questInt")) {
                 questInt = arguments.getInt("questInt");
                 ansInt = arguments.getInt("ansInt");
                 View InputFragmentView = inflater.inflate(R.layout.fragment_create_answers, container, false);
-                button = (FloatingActionButton)InputFragmentView.findViewById(R.id.addAnsButtonDone);
-                addMore = (FloatingActionButton)InputFragmentView.findViewById(R.id.addOneAnsButtonDone);
-                answer = (EditText)InputFragmentView.findViewById(R.id.new_Answer);
+                button = (FloatingActionButton) InputFragmentView.findViewById(R.id.addAnsButtonDone);
+                addMore = (FloatingActionButton) InputFragmentView.findViewById(R.id.addOneAnsButtonDone);
+                answer = (EditText) InputFragmentView.findViewById(R.id.new_Answer);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!answer.getText().toString().equals("")) {
+                        if (!answer.getText().toString().equals("")) {
                             survey.getQuestions().get(questInt).getAnswers().get(ansInt).setName(answer.getText().toString());
                             getFragmentManager().popBackStack();
-                        }else {
+                        } else {
                             Toast.makeText(container.getContext(), "Please enter the answer", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -59,11 +59,10 @@ public class CreateAnswers extends Fragment {
                 addMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!answer.getText().toString().equals("")) {
+                        if (!answer.getText().toString().equals("")) {
                             survey.getQuestions().get(questInt).getAnswers().add(new Answer(answer.getText().toString(), 0));
                             getFragmentManager().popBackStack();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(container.getContext(), "Please enter the answer", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -77,5 +76,9 @@ public class CreateAnswers extends Fragment {
 
     public Survey getSurvey() {
         return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 }

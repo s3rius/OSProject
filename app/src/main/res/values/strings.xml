@@ -16,7 +16,7 @@
     <string name="create_survey_string">Create Survey</string>
     <string name="new_question">Please enter new Question</string>
     <string name="new_answer">Please enter new answer</string>
-    <string name="made_surveys">Made madeSurveys</string>
+    <string name="made_surveys">Made Surveys</string>
     <string name="new_profile_picture">Upload new profile picture</string>
     <string name="do_not_registered">Do not registered yet?</string>
     <string name="registration">Registration</string>
@@ -88,4 +88,9 @@
     <string name="max_quantity_ans">Maximum quantity of answers is reached</string>
     <string name="max_quantity_ques">Maximum quantity of question is reached</string>
     <string name="enterAns">Please enter the answer</string>
+    <string name="logout">logout</string>
+    <string name="comment">Comment this survey</string>
+    <string name="empty_comment">Please enter the comment</string>
+    <string name="no_done_surveys">You\'ve not complete any survey yet</string>
+    <string name="inSurveyComment">Comment:\n\t\t</string>
 </resources>

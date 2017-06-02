@@ -74,5 +74,11 @@
     <string name="login_owned">Этот логин уже занят</string>
     <string name="surveys">Опросы</string>
     <string name="other">Разное</string>
+    <string name="add_answers">Пожалуйста добавьте ответов к вопросу</string>
+    <string name="enterAns">Пожалуйста введите ответ</string>
+    <string name="max_quantity_ans">Достигнуто максимальное количество ответов</string>
+    <string name="max_quantity_ques">Сделанные опросы</string>
+    <string name="what_want_change">Что бы вы хотели изменить?</string>
+    <string name="logout">выйти</string>
 
 </resources>
