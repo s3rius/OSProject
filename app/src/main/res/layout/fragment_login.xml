@@ -54,14 +54,16 @@
         android:layout_marginTop="41dp"
         android:text="@string/do_not_registered"
         android:layout_below="@+id/buttonOkLogin"
-        android:layout_alignStart="@+id/buttonCancelLogin" />
+        android:layout_centerHorizontal="true"
+         />
     <TextView
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
         android:text="@string/registration"
         android:textColor="#173b9f"
         android:onClick="onRegistration"
-        android:layout_alignBaseline="@+id/textView"
-        android:layout_alignBottom="@+id/textView"
-        android:layout_alignEnd="@+id/buttonOkLogin" />
+        android:layout_centerHorizontal="true"
+         />
 </RelativeLayout>

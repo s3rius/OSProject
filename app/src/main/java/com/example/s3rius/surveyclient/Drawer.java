@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -42,6 +43,7 @@ import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticFragment;
+import com.example.s3rius.surveyclient.fragments.StatisticListAdapter;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
@@ -425,68 +427,72 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment instanceof CreateSurveyFragment) {
             final Survey doneSurvey = ((CreateSurveyFragment) fragment).getSurvey();
-            LayoutInflater li = LayoutInflater.from(this);
-            View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
-            AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(this);
-            mDialogBuilder.setView(promptsView);
-            final EditText surveyName = (EditText) promptsView.findViewById(R.id.surveyName);
-            mDialogBuilder
-                    .setCancelable(false)
-                    .setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(final DialogInterface dialog, int id) {
-                                    doneSurvey.setName(surveyName.getText().toString());
-                                    doneSurvey.setMadeByUser(user);
-                                    doneSurvey.setUsers(new ArrayList<User>());
-                                    String createdSurvey = "";
-                                    try {
-                                        createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
-                                    } catch (JsonProcessingException e) {
-                                        e.printStackTrace();
+            if (!(doneSurvey.getQuestions().size() == 0)) {
+                LayoutInflater li = LayoutInflater.from(this);
+                View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
+                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(this);
+                mDialogBuilder.setView(promptsView);
+                final EditText surveyName = (EditText) promptsView.findViewById(R.id.surveyName);
+                mDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(final DialogInterface dialog, int id) {
+                                        doneSurvey.setName(surveyName.getText().toString());
+                                        doneSurvey.setMadeByUser(user);
+                                        doneSurvey.setUsers(new ArrayList<User>());
+                                        String createdSurvey = "";
+                                        try {
+                                            createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
+                                        } catch (JsonProcessingException e) {
+                                            e.printStackTrace();
+                                        }
+                                        AsyncHttpClient client = new AsyncHttpClient();
+                                        RequestParams params = new RequestParams();
+                                        params.put("createdSurvey", createdSurvey);
+                                        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+                                        client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
+                                            @Override
+                                            public void onStart() {
+                                                super.onStart();
+                                                progressDialog[0] = new ProgressDialog(Drawer.this);
+                                                progressDialog[0].setMessage(getString(R.string.please_wait));
+                                                progressDialog[0].show();
+                                            }
+
+                                            @Override
+                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                if (progressDialog[0] != null)
+                                                    progressDialog[0].dismiss();
+                                                Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
+                                                TakeSurvey fragment = new TakeSurvey();
+                                                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                                        getSupportFragmentManager().beginTransaction();
+                                                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                                                fragmentTransaction.commit();
+                                                fragmentTransaction.addToBackStack(null);
+                                            }
+
+                                            @Override
+                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                if (progressDialog[0] != null)
+                                                    progressDialog[0].dismiss();
+                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
-                                    AsyncHttpClient client = new AsyncHttpClient();
-                                    RequestParams params = new RequestParams();
-                                    params.put("createdSurvey", createdSurvey);
-                                    final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                                    client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
-                                        @Override
-                                        public void onStart() {
-                                            super.onStart();
-                                            progressDialog[0] = new ProgressDialog(Drawer.this);
-                                            progressDialog[0].setMessage(getString(R.string.please_wait));
-                                            progressDialog[0].show();
-                                        }
-
-                                        @Override
-                                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                            if (progressDialog[0] != null)
-                                                progressDialog[0].dismiss();
-                                            Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
-                                            TakeSurvey fragment = new TakeSurvey();
-                                            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                                                    getSupportFragmentManager().beginTransaction();
-                                            fragmentTransaction.replace(R.id.fragment_container, fragment);
-                                            fragmentTransaction.commit();
-                                            fragmentTransaction.addToBackStack(null);
-                                        }
-
-                                        @Override
-                                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                            if (progressDialog[0] != null)
-                                                progressDialog[0].dismiss();
-                                            Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            })
-                    .setNegativeButton(getString(R.string.cancel),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            AlertDialog alertDialog = mDialogBuilder.create();
-            alertDialog.show();
+                                })
+                        .setNegativeButton(getString(R.string.cancel),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alertDialog = mDialogBuilder.create();
+                alertDialog.show();
+            }else {
+                Toast.makeText(this, getString(R.string.survey_is_empty), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -498,7 +504,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             if (newQuestion instanceof CreateQuestion) {
                 editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
                 survey = ((CreateQuestion) newQuestion).getSurvey();
-                if (editText.getText().toString().isEmpty()) {
+                if (!editText.getText().toString().equals("")) {
                     survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("survey", survey);
@@ -606,7 +612,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     AlertDialog alertDialog = mDialogBuilder.create();
                     alertDialog.show();
                 } else {
-                    changeChoose(view, item);
+                    changeChoose(view, item - 1);
                 }
             }
         });
@@ -616,7 +622,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     public void changeChoose(final View view, final int num) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        CharSequence[] which = {"Change Question", "Change or add Answer", "Delete question", "Delete answer"};
+        CharSequence[] which = {"Change Question", "Change Answer", "Add answer", "Delete question", "Delete answer"};
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("What would you like to do?");
@@ -634,9 +640,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     transaction.addToBackStack(null);
                 }
                 if (item == 1) {
-                    changeAns(view, num, false);
+                    changeAns(view, num, false, 0);
                 }
-                if (item == 2) {
+                if(item ==2){
+                    changeAns(view, num, false, 1);
+                }
+                if (item == 3) {
                     survey.getQuestions().remove(num);
                     final android.support.v4.app.FragmentTransaction transaction =
                             getSupportFragmentManager().beginTransaction();
@@ -644,8 +653,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     transaction.attach(surveyFrag);
                     transaction.commit();
                 }
-                if (item == 3) {
-                    changeAns(view, num, true);
+                if (item == 4) {
+                    changeAns(view, num, true, -1);
                 }
             }
         });
@@ -653,44 +662,58 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         alert.show();
     }
 
-    public void changeAns(final View view, final int num, final boolean erase) {
+    public void changeAns(final View view, final int num, final boolean erase, final int act) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
-        CharSequence[] items;
-        items = new CharSequence[survey.getQuestions().get(num).getAnswers().size()];
-        for (int i = 0; i < survey.getQuestions().get(num).getAnswers().size(); i++) {
-            items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
-        }
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.what_want_change);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (!erase) {
-                    CreateAnswers createQuestion = new CreateAnswers();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("survey", survey);
-                    bundle.putInt("questInt", num);
-                    bundle.putInt("ansInt", item);
-                    createQuestion.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, createQuestion);
-                    transaction.commit();
-                    transaction.addToBackStack(null);
-                } else {
-                    survey.getQuestions().get(num).getAnswers().remove(item);
-                    Fragment fragment = null;
-                    --questionsQuan;
-                    fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    final android.support.v4.app.FragmentTransaction transaction =
-                            getSupportFragmentManager().beginTransaction();
-                    transaction.detach(fragment);
-                    transaction.attach(fragment);
-                    transaction.commit();
-                }
+        if (act == 1) {
+            CreateAnswers createAnswers = new CreateAnswers();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("survey", survey);
+            bundle.putInt("act", act);
+            bundle.putInt("questInt", num);
+            createAnswers.setArguments(bundle);
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, createAnswers);
+            transaction.commit();
+            transaction.addToBackStack(null);
+        } else {
+            CharSequence[] items;
+            items = new CharSequence[survey.getQuestions().get(num).getAnswers().size()];
+            for (int i = 0; i < survey.getQuestions().get(num).getAnswers().size(); i++) {
+                items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
             }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.what_want_change);
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    if (!erase) {
+                        CreateAnswers createAnswers = new CreateAnswers();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("survey", survey);
+                        bundle.putInt("act", act);
+                        bundle.putInt("questInt", num);
+                        bundle.putInt("ansInt", item);
+                        createAnswers.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, createAnswers);
+                        transaction.commit();
+                        transaction.addToBackStack(null);
+                    } else {
+                        survey.getQuestions().get(num).getAnswers().remove(item);
+                        Fragment fragment = null;
+                        --questionsQuan;
+                        fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        final android.support.v4.app.FragmentTransaction transaction =
+                                getSupportFragmentManager().beginTransaction();
+                        transaction.detach(fragment);
+                        transaction.attach(fragment);
+                        transaction.commit();
+                    }
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     public void uploadNewProfilePhoto(View view) {
@@ -975,6 +998,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     public void getCompletedSurveys(View view) {
         getProfileSurveys("user/doneSurveys");
     }
+
     public void getMadeSurveys(View view) {
         getProfileSurveys("user/madeSurveys");
     }
@@ -1022,9 +1046,5 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         });
     }
 
-    public void surveyReviewComplete(View view) {
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().popBackStack();
-    }
 }
 

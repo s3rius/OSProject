@@ -12,13 +12,4 @@
         android:layout_marginTop="58dp">
     </ListView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="62dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:onClick="surveyReviewComplete"
-        android:src="@drawable/continue_arrow"
-        app:layout_anchorGravity="bottom|right|end" />
-
 </android.support.design.widget.CoordinatorLayout>

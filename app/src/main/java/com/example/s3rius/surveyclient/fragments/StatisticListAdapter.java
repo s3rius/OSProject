@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.s3rius.surveyclient.R;
@@ -16,6 +17,8 @@ import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
+
+import java.util.Collections;
 
 
 public class StatisticListAdapter extends ArrayAdapter<Question> {
@@ -37,13 +40,36 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.statistic_rowlayout, null);
         TextView questionName = (TextView)v.findViewById(R.id.StatQuestionText);
-        PieChart pieChart = (PieChart)v.findViewById(R.id.graph);
+        final PieChart pieChart = (PieChart)v.findViewById(R.id.graph);
         questionName.setText(getSurvey().getQuestions().get(position).getName());
+        Button nextAnswer = (Button)v.findViewById(R.id.nextReview);
+        nextAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    pieChart.setCurrentItem(pieChart.getCurrentItem() - 1);
+                }catch (IndexOutOfBoundsException e){
+                    pieChart.setCurrentItem(getSurvey().getQuestions().get(position).getAnswers().size() - 1);
+                }
+
+            }
+        });
+        Button prevAnswer = (Button)v.findViewById(R.id.prevReview);
+        prevAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    pieChart.setCurrentItem(pieChart.getCurrentItem() + 1);
+                }catch (IndexOutOfBoundsException e){
+                    pieChart.setCurrentItem(0);
+                }
+            }
+        });
         boolean good = true;
         int[] colors = new int[5];
         colors[0] = Color.parseColor("#FE6DA8");
@@ -52,6 +78,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         colors[3] = Color.parseColor("#FED70E");
         colors[4] = Color.parseColor("#FF8F8F8F");
         int other = 0;
+        Collections.sort(getSurvey().getQuestions().get(position).getAnswers());
         for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
             if(i < 4)
             pieChart.addPieSlice(new PieModel(
@@ -66,6 +93,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             pieChart.addPieSlice(new PieModel(context.getResources().getString(R.string.other),
                     other, colors[4]));
         pieChart.startAnimation();
+        pieChart.setUsePieRotation(false);
        return v;
     }
 

@@ -1,9 +1,11 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import android.support.annotation.NonNull;
+
 import java.io.File;
 import java.io.Serializable;
 
-public class Answer implements Serializable {
+public class Answer implements Serializable, Comparable<Answer> {
     private Integer id;
     private String name;
 
@@ -29,4 +31,8 @@ public class Answer implements Serializable {
         this.name = name;
     }
 
+    @Override
+    public int compareTo(@NonNull Answer o) {
+    return id > o.getId()? 1: id < o.getId()? -1: 0;
+    }
 }

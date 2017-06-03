@@ -95,6 +95,8 @@
     <string name="inSurveyComment">Comment:\n\t\t</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_question">Please enter the question</string>
+    <string name="next_answer">Next answer</string>
+    <string name="prew_answer">Previous answer</string>
+    <string name="survey_is_empty">The survey is empty</string>
 </resources>

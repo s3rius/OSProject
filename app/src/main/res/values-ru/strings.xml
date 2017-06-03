@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Survey Client</string>
+    <string name="app_name">Клиент опросов</string>
     <string name="categories">Категории</string>
     <string name="completed_surveys">Пройденные опросы</string>
     <string name="create_survey_string">Создать опрос</string>
@@ -80,5 +80,13 @@
     <string name="max_quantity_ques">Сделанные опросы</string>
     <string name="what_want_change">Что бы вы хотели изменить?</string>
     <string name="logout">выйти</string>
+    <string name="comment">Прокомментировать опрос</string>
+    <string name="empty_comment">Пожалуйста введите комментарий</string>
+    <string name="empty_question">Пожалуйста введите вопрос</string>
+    <string name="inSurveyComment">Комментарйи:</string>
+    <string name="next_answer">Следующий ответ</string>
+    <string name="no_done_surveys">Вы не прошли ни одного опроса</string>
+    <string name="prew_answer">Предыдущий ответ</string>
+    <string name="survey_is_empty">Опрос пуст</string>
 
 </resources>
