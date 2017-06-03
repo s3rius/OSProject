@@ -26,6 +26,7 @@ public class AboutUsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle(R.string.about_us);
         View view = inflater.inflate(R.layout.fragment_about_us, container, false);
         TextView aboutUs = (TextView)view.findViewById(R.id.textAboutUs);
         String text = getString(R.string.about_us_text);

@@ -53,7 +53,7 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("New Surveys");
+        getActivity().setTitle(R.string.takeSurveys);
         this.container = container;
         if (getArguments() != null) {
             if (getArguments().getInt("act") == 0) {

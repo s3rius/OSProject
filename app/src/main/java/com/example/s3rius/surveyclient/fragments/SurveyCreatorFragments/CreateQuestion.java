@@ -30,7 +30,7 @@ public class CreateQuestion extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        getActivity().setTitle("new Question");
+        getActivity().setTitle(R.string.new_question);
         if (getArguments() != null) {
             Bundle arguments = getArguments();
             survey = (Survey) arguments.getSerializable("survey");

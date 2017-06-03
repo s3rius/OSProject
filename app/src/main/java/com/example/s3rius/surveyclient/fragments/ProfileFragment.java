@@ -1,8 +1,11 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -61,12 +64,26 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, File file) {
+            public void onSuccess(int statusCode, Header[] headers, final File file) {
                 progressDialog[0].dismiss();
                 ImageView pic = (ImageView) view.findViewById(R.id.profile_pic);
                 pic.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FullscreenImageFragment fullscreen = new FullscreenImageFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("imagePath", file.getPath());
+                        fullscreen.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, fullscreen);
+                        transaction.commit();
+                        transaction.addToBackStack(null);
+                    }
+                });
             }
         });
+
         return view;
     }
 }

@@ -23,6 +23,7 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.registration);
         return inflater.inflate(R.layout.fragment_registration, container, false);
     }
 

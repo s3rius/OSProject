@@ -45,6 +45,7 @@ public class StatisticFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.statistics);
         if (getArguments() != null) {
             id = getArguments().getInt("id");
         }

@@ -39,7 +39,7 @@ public class CategoryFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getActivity().setTitle("Categories");
+        getActivity().setTitle(R.string.categories);
         this.container = container;
         return inflater.inflate(R.layout.fragment_category, container, false);
     }

@@ -34,7 +34,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
 
     @Override
     public int getCount() {
-            return getSurvey().getQuestions().size();
+        return getSurvey().getQuestions().size();
 
     }
 
@@ -44,32 +44,36 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.statistic_rowlayout, null);
-        TextView questionName = (TextView)v.findViewById(R.id.StatQuestionText);
-        final PieChart pieChart = (PieChart)v.findViewById(R.id.graph);
+        TextView questionName = (TextView) v.findViewById(R.id.StatQuestionText);
+        final PieChart pieChart = (PieChart) v.findViewById(R.id.graph);
         questionName.setText(getSurvey().getQuestions().get(position).getName());
-        Button nextAnswer = (Button)v.findViewById(R.id.nextReview);
+        Button nextAnswer = (Button) v.findViewById(R.id.nextReview);
         nextAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     pieChart.setCurrentItem(pieChart.getCurrentItem() - 1);
-                }catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e) {
                     pieChart.setCurrentItem(getSurvey().getQuestions().get(position).getAnswers().size() - 1);
                 }
 
             }
         });
-        Button prevAnswer = (Button)v.findViewById(R.id.prevReview);
+        Button prevAnswer = (Button) v.findViewById(R.id.prevReview);
         prevAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     pieChart.setCurrentItem(pieChart.getCurrentItem() + 1);
-                }catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e) {
                     pieChart.setCurrentItem(0);
                 }
             }
         });
+        if (getSurvey().getQuestions().get(position).getAnswers().size() == 1) {
+            nextAnswer.setVisibility(View.GONE);
+            prevAnswer.setVisibility(View.GONE);
+        }
         boolean good = true;
         int[] colors = new int[5];
         colors[0] = Color.parseColor("#FE6DA8");
@@ -80,21 +84,21 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         int other = 0;
         Collections.sort(getSurvey().getQuestions().get(position).getAnswers());
         for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
-            if(i < 4)
-            pieChart.addPieSlice(new PieModel(
-                    getSurvey().getQuestions().get(position).getAnswers().get(i).getName(),
-                    getSurvey().getQuestions().get(position).getAnswers().get(i).getId(),colors[i]));
+            if (i < 4)
+                pieChart.addPieSlice(new PieModel(
+                        getSurvey().getQuestions().get(position).getAnswers().get(i).getName(),
+                        getSurvey().getQuestions().get(position).getAnswers().get(i).getId(), colors[i]));
             else {
                 good = false;
                 other += getSurvey().getQuestions().get(position).getAnswers().get(i).getId();
             }
         }
-        if(!good)
+        if (!good)
             pieChart.addPieSlice(new PieModel(context.getResources().getString(R.string.other),
                     other, colors[4]));
         pieChart.startAnimation();
         pieChart.setUsePieRotation(false);
-       return v;
+        return v;
     }
 
     public Survey getSurvey() {

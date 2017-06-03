@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="58dp"
         android:gravity="start"
-        android:hint="@string/new_question" />
+        android:hint="@string/enter_new_question" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addQuestionDone"

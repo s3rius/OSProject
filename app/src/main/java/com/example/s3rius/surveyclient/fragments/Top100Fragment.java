@@ -61,7 +61,7 @@ public class Top100Fragment extends ListFragment {
                              Bundle savedInstanceState) {
         this.container = container;
         // Inflate the layout for this fragment
-        getActivity().setTitle("Top surveys");
+        getActivity().setTitle(R.string.top_surveys);
         return inflater.inflate(R.layout.fragment_top100, container, false);
     }
 

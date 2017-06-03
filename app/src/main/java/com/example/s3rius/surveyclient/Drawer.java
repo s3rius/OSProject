@@ -2,6 +2,7 @@ package com.example.s3rius.surveyclient;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -800,8 +801,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
-                        imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                        //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                         profileIcon.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                        Fragment profile = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        android.support.v4.app.FragmentTransaction transaction
+                                = getSupportFragmentManager().beginTransaction();
+                        transaction.detach(profile);
+                        transaction.attach(profile);
+                        transaction.commit();
                     }
 
                     @Override

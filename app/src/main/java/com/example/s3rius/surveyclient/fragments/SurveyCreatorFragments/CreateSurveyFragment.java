@@ -53,7 +53,7 @@ public class CreateSurveyFragment extends ListFragment {
         View view = inflater.inflate(R.layout.fragment_create_survey, container, false);
         FloatingActionButton completeButton = (FloatingActionButton) view.findViewById(R.id.commitSurvey);
         FloatingActionButton changeButton = (FloatingActionButton) view.findViewById(R.id.changeSurvey);
-        getActivity().setTitle("new Survey");
+        getActivity().setTitle(R.string.new_survey);
         completeButton.setVisibility(View.GONE);
         changeButton.setVisibility(View.GONE);
         if (getArguments() != null) {

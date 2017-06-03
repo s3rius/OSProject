@@ -10,9 +10,9 @@
     <string name="made_surveys">Сделанные опросы</string>
     <string name="name">Имя</string>
     <string name="name_of_survey">Введите название опроса</string>
-    <string name="new_answer">Введите новый ответ</string>
+    <string name="enter_new_answer">Введите новый ответ</string>
     <string name="new_profile_picture">Загрузить новое изображение профиля</string>
-    <string name="new_question">Введите новый вопрос</string>
+    <string name="enter_new_question">Введите новый вопрос</string>
     <string name="password">Пароль</string>
     <string name="profile"><b>Профиль</b></string>
     <string name="registration">Регистрация</string>
@@ -83,10 +83,17 @@
     <string name="comment">Прокомментировать опрос</string>
     <string name="empty_comment">Пожалуйста введите комментарий</string>
     <string name="empty_question">Пожалуйста введите вопрос</string>
-    <string name="inSurveyComment">Комментарйи:</string>
+    <string name="inSurveyComment">Комментарйи:\n\t\t</string>
     <string name="next_answer">Следующий ответ</string>
     <string name="no_done_surveys">Вы не прошли ни одного опроса</string>
     <string name="prew_answer">Предыдущий ответ</string>
     <string name="survey_is_empty">Опрос пуст</string>
+    <string name="newest_surveys">Новейшие опросы</string>
+    <string name="delete_profile_picture">Удалить фото профиля</string>
+    <string name="profile_picture">Изображение профиля</string>
+    <string name="takeSurveys">Пройти опрос</string>
+    <string name="new_answer">новый ответ</string>
+    <string name="new_question">новый вопрос</string>
+    <string name="new_survey">новый опрос</string>
 
 </resources>

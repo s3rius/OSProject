@@ -18,7 +18,7 @@
                 <item
                     android:id="@+id/newestSurveys"
                     android:icon="@drawable/newest_surveys"
-                    android:title="Newest surveys"
+                    android:title="@string/newest_surveys"
                     />
             </group>
         </menu>

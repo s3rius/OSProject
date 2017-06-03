@@ -14,8 +14,8 @@
     <string name="categories">Categories</string>
     <string name="completed_surveys">Completed Surveys</string>
     <string name="create_survey_string">Create Survey</string>
-    <string name="new_question">Please enter new Question</string>
-    <string name="new_answer">Please enter new answer</string>
+    <string name="enter_new_question">Please enter new Question</string>
+    <string name="enter_new_answer">Please enter new answer</string>
     <string name="made_surveys">Made Surveys</string>
     <string name="new_profile_picture">Upload new profile picture</string>
     <string name="do_not_registered">Do not registered yet?</string>
@@ -30,10 +30,6 @@
     <string name="about_us">About us</string>
     <string name="all_surveys">All surveys</string>
     <string name="add_profile_picture">Add profile picture</string>
-    <!--<string name="about_us_text"><html>
-
-        <!-</html>-->
-    <!--</string>-->
     <string name="about_us_text" formatted="false"><![CDATA[
      <title>We\'re <b>independent</b> developers with no experience. </title><br/>
         This is our first so big project in team.<br/>
@@ -93,10 +89,15 @@
     <string name="empty_comment">Please enter the comment</string>
     <string name="no_done_surveys">You\'ve not complete any survey yet</string>
     <string name="inSurveyComment">Comment:\n\t\t</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="empty_question">Please enter the question</string>
     <string name="next_answer">Next answer</string>
     <string name="prew_answer">Previous answer</string>
     <string name="survey_is_empty">The survey is empty</string>
+    <string name="newest_surveys">Newest surveys</string>
+    <string name="delete_profile_picture">Delete profile picture</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="takeSurveys">Take a survey</string>
+    <string name="new_answer">new answer</string>
+    <string name="new_question">new question</string>
+    <string name="new_survey">new survey</string>
 </resources>
