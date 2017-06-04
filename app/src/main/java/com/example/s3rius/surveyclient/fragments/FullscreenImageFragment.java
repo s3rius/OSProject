@@ -4,6 +4,7 @@ package com.example.s3rius.surveyclient.fragments;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class FullscreenImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fullscreen_image, container, false);
         // Inflate the layout for this fragment
         getActivity().setTitle(getString(R.string.profile_picture));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if(getArguments()!=null){
             String filePath = getArguments().getString("imagePath");
             SubsamplingScaleImageView image = (SubsamplingScaleImageView)view.findViewById(R.id.fullscreenImage);
@@ -38,4 +40,9 @@ public class FullscreenImageFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
 }

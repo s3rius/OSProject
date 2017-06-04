@@ -969,6 +969,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
                     profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
                     profileIcon.setImageBitmap(null);
+                    profilePic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 }
             }
 
