@@ -95,5 +95,11 @@
     <string name="new_answer">новый ответ</string>
     <string name="new_question">новый вопрос</string>
     <string name="new_survey">новый опрос</string>
+    <string name="add_answer">Добавить ответ</string>
+    <string name="change_answer">Изменить ответ</string>
+    <string name="change_question">Изменить вопрос</string>
+    <string name="delete_answer">Удалить ответ</string>
+    <string name="delete_question">Удалить вопрос</string>
+    <string name="what_want_do">Что бы вы хотели сделать?</string>
 
 </resources>

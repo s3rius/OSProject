@@ -623,10 +623,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     public void changeChoose(final View view, final int num) {
         final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        CharSequence[] which = {"Change Question", "Change Answer", "Add answer", "Delete question", "Delete answer"};
+        CharSequence[] which = {getString(R.string.change_question), getString(R.string.change_answer), getString(R.string.add_answer), getString(R.string.delete_question), getString(R.string.delete_answer)};
         final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What would you like to do?");
+        builder.setTitle(getString(R.string.what_want_do));
         builder.setItems(which, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
