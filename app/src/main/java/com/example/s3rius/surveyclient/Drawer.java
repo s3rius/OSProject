@@ -2,7 +2,6 @@ package com.example.s3rius.surveyclient;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,13 +28,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.AboutUsFragment;
@@ -44,7 +38,6 @@ import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticFragment;
-import com.example.s3rius.surveyclient.fragments.StatisticListAdapter;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
@@ -72,7 +65,7 @@ import java.util.List;
 
 
 public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String SAVED_USER = "saved_user";
+    private static final String SAVED_USER = "saved_user";
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private final int NEW_PROFILE_PICTURE = 1;
     private final int REGISTRATION_NEW_PIC = 2;
@@ -323,7 +316,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 
@@ -335,7 +328,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (surveyFragment instanceof SurveyFragment) {
             surveyId = ((SurveyFragment) surveyFragment).getSurveyId();
-            Survey survey = ((SurveyFragment)surveyFragment).getSurvey();
+            Survey survey = ((SurveyFragment) surveyFragment).getSurvey();
 //            ListView listView = ((SurveyFragment) surveyFragment).getListView();
 //            for (int i = 0; i < listView.getChildCount(); i++) {
 //                View question = listView.getChildAt(i);
@@ -361,13 +354,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //                    }
 //                }
 //            }
-            if(!survey.isAllAnswered()){
-                Toast.makeText(this,getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
-            }
-             else {
+            if (!survey.isAllAnswered()) {
+                Toast.makeText(this, getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
+            } else {
                 for (int i = 0; i < survey.getQuestions().size(); i++) {
                     for (int j = 0; j < survey.getQuestions().get(i).getAnswers().size(); j++) {
-                        if(survey.getQuestions().get(i).getAnswers().get(j).isAnswered()){
+                        if (survey.getQuestions().get(i).getAnswers().get(j).isAnswered()) {
                             answered.add(j);
                         }
                     }
@@ -398,7 +390,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                             progressDialog[0].dismiss();
                         StatisticFragment statisticFragment = new StatisticFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("id", (int)surveyId);
+                        bundle.putInt("id", (int) surveyId);
                         statisticFragment.setArguments(bundle);
                         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         getSupportFragmentManager().popBackStack();
@@ -499,7 +491,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                 });
                 AlertDialog alertDialog = mDialogBuilder.create();
                 alertDialog.show();
-            }else {
+            } else {
                 Toast.makeText(this, getString(R.string.survey_is_empty), Toast.LENGTH_SHORT).show();
             }
         }
@@ -651,7 +643,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 if (item == 1) {
                     changeAns(view, num, false, 0);
                 }
-                if(item ==2){
+                if (item == 2) {
                     changeAns(view, num, false, 1);
                 }
                 if (item == 3) {
@@ -1024,10 +1016,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         getProfileSurveys("user/madeSurveys");
     }
 
-    public void getProfileSurveys(String url){
+    public void getProfileSurveys(String url) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("login",user.getLogin());
+        params.put("login", user.getLogin());
         final ProgressDialog[] dialog = {null};
         client.get(getString(R.string.server) + url, params, new AsyncHttpResponseHandler() {
             @Override
@@ -1040,10 +1032,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(dialog[0] !=null)
+                if (dialog[0] != null)
                     dialog[0].dismiss();
                 String surveys = new String(responseBody);
-                if(!surveys.equals("null")) {
+                if (!surveys.equals("null")) {
                     Bundle bundle = new Bundle();
                     TakeSurvey fragment = new TakeSurvey();
                     bundle.putInt("act", 1);
@@ -1053,14 +1045,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     transaction.replace(R.id.fragment_container, fragment);
                     transaction.commit();
                     transaction.addToBackStack(null);
-                }else {
+                } else {
                     Toast.makeText(Drawer.this, R.string.no_done_surveys, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(dialog[0] !=null)
+                if (dialog[0] != null)
                     dialog[0].dismiss();
                 Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
