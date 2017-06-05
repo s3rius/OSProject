@@ -3,70 +3,74 @@ package com.example.s3rius.surveyclient.fragments.surveypac;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Survey implements Serializable {
 
-    private Integer        id;
-    private String         name;
-    private String         comment;
-    private List<User>     users;
+    private Integer id;
+    private String name;
+    private String comment;
+    private List<User> users;
     private List<Question> questions;
-    private User           madeByUser;
-    private Date           date;
+    private User madeByUser;
+    private Date date;
 
-    public Date getDate(){
+    public Survey() {
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate( Date date ){
+    public void setDate(Date date) {
         this.date = date;
     }
 
-
-    public Survey(){
-    }
-
-
-    public Integer getId(){
+    public Integer getId() {
         return id;
     }
 
-    public List<Question> getQuestions(){
-        return questions;
-    }
-
-    public void setQuestions( List<Question> questions ){
-        this.questions = questions;
-    }
-
-    public void setId( Integer id ){
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName(){
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void setName( String name ){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getComment(){
+    public String getComment() {
         return comment;
     }
 
-    public void setComment( String comment ){
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public void setUsers( List<User> users ){
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public void setMadeByUser( User madeByUser ){
+    public void setMadeByUser(User madeByUser) {
         this.madeByUser = madeByUser;
+    }
+
+    public boolean isAllAnswered() {
+        for (int i = 0; i < questions.size(); i++) {
+            if(!questions.get(i).isAllAnswered()){
+                return false;
+            }
+        }
+        return true;
     }
 }

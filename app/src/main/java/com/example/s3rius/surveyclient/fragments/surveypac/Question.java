@@ -10,6 +10,7 @@ public class Question implements Serializable {
     private String name;
     private List<Answer> answers;
 
+
     public Question() {
     }
 
@@ -26,6 +27,11 @@ public class Question implements Serializable {
         this.id = id;
     }
 
+    public void uncheck(){
+        for (int i = 0; i < answers.size(); i++) {
+            answers.get(i).setAnswered(false);
+        }
+    }
     public String getName() {
         return this.name;
     }
@@ -40,5 +46,14 @@ public class Question implements Serializable {
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public boolean isAllAnswered(){
+        for (int i = 0; i < answers.size(); i++) {
+            if(answers.get(i).isAnswered()){
+                return true;
+            }
+        }
+        return false;
     }
 }

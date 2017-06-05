@@ -335,35 +335,43 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         Fragment surveyFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (surveyFragment instanceof SurveyFragment) {
             surveyId = ((SurveyFragment) surveyFragment).getSurveyId();
-            ListView listView = ((SurveyFragment) surveyFragment).getListView();
-            for (int i = 0; i < listView.getChildCount(); i++) {
-                View question = listView.getChildAt(i);
-                for (int j = 0; j < ((ViewGroup) question).getChildCount(); j++) {
-                    View child = ((ViewGroup) question).getChildAt(j);
-                    if (child instanceof RadioGroup) {
-                        RadioGroup group = (RadioGroup) child;
-                        for (int k = 0; k < group.getChildCount(); k++) {
-                            View button = group.getChildAt(k);
-                            if (button instanceof RadioButton) {
-                                if (((RadioButton) button).isChecked()) {
-                                    answered.add(k);
-                                    isChecked = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!isChecked) {
-                            isAllChecked = false;
-                            break;
-                        }
-                        isChecked = false;
-                    }
-                }
-            }
-            if(!(answered.size() == ((SurveyFragment)surveyFragment).getSurvey().getQuestions().size())){
+            Survey survey = ((SurveyFragment)surveyFragment).getSurvey();
+//            ListView listView = ((SurveyFragment) surveyFragment).getListView();
+//            for (int i = 0; i < listView.getChildCount(); i++) {
+//                View question = listView.getChildAt(i);
+//                for (int j = 0; j < ((ViewGroup) question).getChildCount(); j++) {
+//                    View child = ((ViewGroup) question).getChildAt(j);
+//                    if (child instanceof RadioGroup) {
+//                        RadioGroup group = (RadioGroup) child;
+//                        for (int k = 0; k < group.getChildCount(); k++) {
+//                            View button = group.getChildAt(k);
+//                            if (button instanceof RadioButton) {
+//                                if (((RadioButton) button).isChecked()) {
+//                                    answered.add(k);
+//                                    isChecked = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        if (!isChecked) {
+//                            isAllChecked = false;
+//                            break;
+//                        }
+//                        isChecked = false;
+//                    }
+//                }
+//            }
+            if(!survey.isAllAnswered()){
                 Toast.makeText(this,getString(R.string.not_all_quest_ans), Toast.LENGTH_SHORT).show();
             }
              else {
+                for (int i = 0; i < survey.getQuestions().size(); i++) {
+                    for (int j = 0; j < survey.getQuestions().get(i).getAnswers().size(); j++) {
+                        if(survey.getQuestions().get(i).getAnswers().get(j).isAnswered()){
+                            answered.add(j);
+                        }
+                    }
+                }
                 AsyncHttpClient client = new AsyncHttpClient();
                 RequestParams params = new RequestParams();
                 try {

@@ -2,6 +2,7 @@ package com.example.s3rius.surveyclient.fragments;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -42,38 +43,66 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.survey_rowlayout, null);
-       if (nocomment){
-               TextView surveytext = (TextView) v.findViewById(R.id.questionText);
-               RadioGroup answers = (RadioGroup) v.findViewById(R.id.surveyRadioG);
-               surveytext.setText(getSurvey().getQuestions().get(position).getName());
-               for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
-                   RadioButton radioButton = new RadioButton(context);
-                   radioButton.setText(getSurvey().getQuestions().get(position).getAnswers().get(i).getName());
-                   answers.addView(radioButton);
-               }
-               return v;
-       }
-       else {
-           if(position != 0) {
-               TextView surveytext = (TextView) v.findViewById(R.id.questionText);
-               RadioGroup answers = (RadioGroup) v.findViewById(R.id.surveyRadioG);
-               surveytext.setText(getSurvey().getQuestions().get(position - 1).getName());
-               for (int i = 0; i < getSurvey().getQuestions().get(position - 1).getAnswers().size(); i++) {
-                   RadioButton radioButton = new RadioButton(context);
-                   radioButton.setText(getSurvey().getQuestions().get(position - 1).getAnswers().get(i).getName());
-                   answers.addView(radioButton);
-               }
-               return v;
-           }else{
-               TextView comment = (TextView)v.findViewById(R.id.questionText);
-               comment.setText(context.getString(R.string.inSurveyComment) + survey.getComment());
-               return v;
-           }
-       }
+        if (nocomment){
+            TextView surveytext = (TextView) v.findViewById(R.id.questionText);
+            RadioGroup answers = (RadioGroup) v.findViewById(R.id.surveyRadioG);
+            surveytext.setText(getSurvey().getQuestions().get(position).getName());
+            for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
+                RadioButton radioButton = new RadioButton(context);
+                radioButton.setText(getSurvey().getQuestions().get(position).getAnswers().get(i).getName());
+                if(survey.getQuestions().get(position).getAnswers().get(i).isAnswered())
+                    radioButton.setChecked(true);
+                answers.addView(radioButton);
+            }
+            answers.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    for (int i = 0; i < group.getChildCount(); i++) {
+                        if(((RadioButton)group.getChildAt(i)).isChecked()){
+                            survey.getQuestions().get(position).uncheck();
+                            survey.getQuestions().get(position).getAnswers().get(i).setAnswered(true);
+                            break;
+                        }
+                    }
+                }
+            });
+            return v;
+        }
+        else {
+            if(position != 0) {
+                TextView surveytext = (TextView) v.findViewById(R.id.questionText);
+                RadioGroup answers = (RadioGroup) v.findViewById(R.id.surveyRadioG);
+                surveytext.setText(getSurvey().getQuestions().get(position - 1).getName());
+                for (int i = 0; i < getSurvey().getQuestions().get(position - 1).getAnswers().size(); i++) {
+                    RadioButton radioButton = new RadioButton(context);
+                    radioButton.setText(getSurvey().getQuestions().get(position - 1).getAnswers().get(i).getName());
+                    if(survey.getQuestions().get(position - 1).getAnswers().get(i).isAnswered())
+                        radioButton.setChecked(true);
+                    answers.addView(radioButton);
+                }
+                answers.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        for (int i = 0; i < group.getChildCount(); i++) {
+                            if(((RadioButton)group.getChildAt(i)).isChecked()){
+                                survey.getQuestions().get(position-1).uncheck();
+                                survey.getQuestions().get(position -1).getAnswers().get(i).setAnswered(true);
+                                break;
+                            }
+                        }
+                    }
+                });
+                return v;
+            }else{
+                TextView comment = (TextView)v.findViewById(R.id.questionText);
+                comment.setText(context.getString(R.string.inSurveyComment) + survey.getComment());
+                return v;
+            }
+        }
     }
 
     public Survey getSurvey() {
