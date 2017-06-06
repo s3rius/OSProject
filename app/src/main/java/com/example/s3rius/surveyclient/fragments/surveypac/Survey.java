@@ -1,5 +1,7 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -65,9 +67,10 @@ public class Survey implements Serializable {
         this.madeByUser = madeByUser;
     }
 
+    @JsonIgnore
     public boolean isAllAnswered() {
         for (int i = 0; i < questions.size(); i++) {
-            if(!questions.get(i).isAllAnswered()){
+            if (!questions.get(i).isAllAnswered()) {
                 return false;
             }
         }

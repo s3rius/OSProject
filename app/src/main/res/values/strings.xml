@@ -106,4 +106,6 @@
     <string name="add_answer">Add answer</string>
     <string name="delete_question">Delete question</string>
     <string name="delete_answer">Delete answer</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="delete_profile_succ">Profile deleted succsessfully</string>
 </resources>

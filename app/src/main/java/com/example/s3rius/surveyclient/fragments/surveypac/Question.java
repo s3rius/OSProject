@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
-import java.io.File;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,12 @@ public class Question implements Serializable {
         this.id = id;
     }
 
-    public void uncheck(){
+    public void uncheck() {
         for (int i = 0; i < answers.size(); i++) {
             answers.get(i).setAnswered(false);
         }
     }
+
     public String getName() {
         return this.name;
     }
@@ -48,9 +50,10 @@ public class Question implements Serializable {
         this.answers = answers;
     }
 
-    public boolean isAllAnswered(){
+    @JsonIgnore
+    public boolean isAllAnswered() {
         for (int i = 0; i < answers.size(); i++) {
-            if(answers.get(i).isAnswered()){
+            if (answers.get(i).isAnswered()) {
                 return true;
             }
         }

@@ -1059,5 +1059,54 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         });
     }
 
+    public void deleteProfile(View view) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("login", user.getLogin());
+        final ProgressDialog[] progressDialog = {null};
+        client.delete(getString(R.string.server) + "deleteProfile/", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                progressDialog[0] = new ProgressDialog(Drawer.this);
+                progressDialog[0].setMessage(getString(R.string.please_wait));
+                progressDialog[0].show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(progressDialog[0]!= null)
+                    progressDialog[0].dismiss();
+                sPref = getPreferences(MODE_PRIVATE);
+                Editor ed = sPref.edit();
+                ed.clear();
+                ed.apply();
+                Toast.makeText(Drawer.this, getString(R.string.delete_profile_succ), Toast.LENGTH_SHORT).show();
+                profileIcon.setImageBitmap(null);
+                // get menu from navigationView
+                Menu menu = navigationView.getMenu();
+
+                // find MenuItem you want to change
+                MenuItem loginItem = menu.findItem(R.id.login);
+
+                // set new title to the MenuItem
+                loginItem.setTitle(getString(R.string.login));
+
+                Top100Fragment fragment = new Top100Fragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(progressDialog[0]!= null)
+                    progressDialog[0].dismiss();
+                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
 
