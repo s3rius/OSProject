@@ -28,6 +28,7 @@ public class Question implements Serializable {
         this.id = id;
     }
 
+    @JsonIgnore
     public void uncheck() {
         for (int i = 0; i < answers.size(); i++) {
             answers.get(i).setAnswered(false);

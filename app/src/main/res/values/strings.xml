@@ -108,4 +108,5 @@
     <string name="delete_answer">Delete answer</string>
     <string name="delete_profile">Delete profile</string>
     <string name="delete_profile_succ">Profile deleted succsessfully</string>
+    <string name="chooseCat">Choose category for your survey</string>
 </resources>

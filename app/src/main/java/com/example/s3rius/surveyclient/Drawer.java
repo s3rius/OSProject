@@ -56,6 +56,9 @@ import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -442,42 +445,76 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                         doneSurvey.setName(surveyName.getText().toString());
                                         doneSurvey.setMadeByUser(user);
                                         doneSurvey.setUsers(new ArrayList<User>());
-                                        String createdSurvey = "";
-                                        try {
-                                            createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
-                                        } catch (JsonProcessingException e) {
-                                            e.printStackTrace();
-                                        }
-                                        AsyncHttpClient client = new AsyncHttpClient();
-                                        RequestParams params = new RequestParams();
-                                        params.put("createdSurvey", createdSurvey);
-                                        final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                                        client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
-                                            @Override
-                                            public void onStart() {
-                                                super.onStart();
-                                                progressDialog[0] = new ProgressDialog(Drawer.this);
-                                                progressDialog[0].setMessage(getString(R.string.please_wait));
-                                                progressDialog[0].show();
-                                            }
-
+                                        final AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
+                                        final String[][] cats = new String[1][1];
+                                        AsyncHttpClient client1 = new AsyncHttpClient();
+                                        client1.get(getString(R.string.server) + "topics/", new AsyncHttpResponseHandler() {
                                             @Override
                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                if (progressDialog[0] != null)
-                                                    progressDialog[0].dismiss();
-                                                Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
-                                                TakeSurvey fragment = new TakeSurvey();
-                                                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                                                        getSupportFragmentManager().beginTransaction();
-                                                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                                                fragmentTransaction.commit();
-                                                fragmentTransaction.addToBackStack(null);
+                                                String responce = new String(responseBody);
+                                                JSONArray dataJsonObj = null;
+                                                try {
+                                                    dataJsonObj = new JSONArray(responce);
+                                                    cats[0] = new String[dataJsonObj.length()];
+                                                    for (int i = 0; i < dataJsonObj.length(); i++) {
+                                                        JSONObject obj = null;
+                                                        obj = dataJsonObj.getJSONObject(i);
+                                                        cats[0][i] = (obj.get("name").toString());
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                builder.setTitle(getString(R.string.chooseCat));
+                                                builder.setItems(cats[0], new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        doneSurvey.setCategory(cats[0][which]);
+                                                        String createdSurvey = "";
+                                                        try {
+                                                            createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
+                                                        } catch (JsonProcessingException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        AsyncHttpClient client = new AsyncHttpClient();
+                                                        RequestParams params = new RequestParams();
+                                                        params.put("createdSurvey", createdSurvey);
+                                                        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+                                                        client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
+                                                            @Override
+                                                            public void onStart() {
+                                                                super.onStart();
+                                                                progressDialog[0] = new ProgressDialog(Drawer.this);
+                                                                progressDialog[0].setMessage(getString(R.string.please_wait));
+                                                                progressDialog[0].show();
+                                                            }
+
+                                                            @Override
+                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                if (progressDialog[0] != null)
+                                                                    progressDialog[0].dismiss();
+                                                                Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
+                                                                TakeSurvey fragment = new TakeSurvey();
+                                                                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                                                        getSupportFragmentManager().beginTransaction();
+                                                                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                                                                fragmentTransaction.commit();
+                                                                fragmentTransaction.addToBackStack(null);
+                                                            }
+                                                            @Override
+                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                if (progressDialog[0] != null)
+                                                                    progressDialog[0].dismiss();
+                                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                                AlertDialog dialog1 = builder.create();
+                                                dialog1.show();
                                             }
 
                                             @Override
                                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                if (progressDialog[0] != null)
-                                                    progressDialog[0].dismiss();
                                                 Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -1075,7 +1112,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(progressDialog[0]!= null)
+                if (progressDialog[0] != null)
                     progressDialog[0].dismiss();
                 sPref = getPreferences(MODE_PRIVATE);
                 Editor ed = sPref.edit();
@@ -1102,7 +1139,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(progressDialog[0]!= null)
+                if (progressDialog[0] != null)
                     progressDialog[0].dismiss();
                 Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }

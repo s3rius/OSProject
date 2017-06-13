@@ -15,8 +15,13 @@ public class Survey implements Serializable {
     private List<Question> questions;
     private User madeByUser;
     private Date date;
+    private String category;
 
     public Survey() {
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Date getDate() {

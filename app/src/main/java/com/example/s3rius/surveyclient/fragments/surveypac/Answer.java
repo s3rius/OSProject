@@ -2,11 +2,15 @@ package com.example.s3rius.surveyclient.fragments.surveypac;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 public class Answer implements Serializable, Comparable<Answer> {
     private Integer id;
     private String name;
+
+    @JsonIgnore
     private boolean answered = false;
 
     public Answer(){
@@ -16,11 +20,13 @@ public class Answer implements Serializable, Comparable<Answer> {
         this.name = name;
     }
 
+    @JsonIgnore
     public boolean isAnswered() {
 
         return answered;
     }
 
+    @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
     }

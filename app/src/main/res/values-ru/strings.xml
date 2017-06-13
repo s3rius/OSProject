@@ -101,5 +101,8 @@
     <string name="delete_answer">Удалить ответ</string>
     <string name="delete_question">Удалить вопрос</string>
     <string name="what_want_do">Что бы вы хотели сделать?</string>
+    <string name="chooseCat">Выберите категорию под ваш опрос</string>
+    <string name="delete_profile">Удалить профиль</string>
+    <string name="delete_profile_succ">Профиль удалён успешно</string>
 
 </resources>
