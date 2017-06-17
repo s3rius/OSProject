@@ -87,7 +87,7 @@
     <string name="logout">logout</string>
     <string name="comment">Comment this survey</string>
     <string name="empty_comment">Please enter the comment</string>
-    <string name="no_done_surveys">You\'ve not complete any survey yet</string>
+    <string name="no_done_surveys">You\'ve not complete or made any survey yet</string>
     <string name="inSurveyComment">Comment:\n\t\t</string>
     <string name="empty_question">Please enter the question</string>
     <string name="next_answer">Next answer</string>
@@ -109,4 +109,5 @@
     <string name="delete_profile">Delete profile</string>
     <string name="delete_profile_succ">Profile deleted succsessfully</string>
     <string name="chooseCat">Choose category for your survey</string>
+    <string name="made_by_text">Survey made by:</string>
 </resources>

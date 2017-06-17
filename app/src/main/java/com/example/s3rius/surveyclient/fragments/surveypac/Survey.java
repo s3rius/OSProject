@@ -81,4 +81,8 @@ public class Survey implements Serializable {
         }
         return true;
     }
+
+    public User getMadeByUser() {
+        return madeByUser;
+    }
 }

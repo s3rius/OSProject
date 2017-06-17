@@ -1,30 +1,30 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.s3rius.surveyclient.R;
-import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
-import org.json.JSONObject;
+import org.apache.http.Header;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +33,7 @@ public class StatisticFragment extends ListFragment {
 
     Survey survey;
     int id;
+    ViewGroup container;
 
     public StatisticFragment() {
         // Required empty public constructor
@@ -45,6 +46,7 @@ public class StatisticFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.container = container;
         getActivity().setTitle(R.string.statistics);
         if (getArguments() != null) {
             id = getArguments().getInt("id");
@@ -102,13 +104,26 @@ public class StatisticFragment extends ListFragment {
         @Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
-            // выводим целиком полученную json-строку
-            Log.d("LOG_TAG", strJson);
-            JSONObject dataJsonObj;
-            List<Question> questions = new ArrayList<>();
             try {
                 Survey survey = new ObjectMapper().readValue(resultJson, Survey.class);
                 setSurvey(survey);
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get(getString(R.string.server) + "img?id=" + survey.getMadeByUser().getLogin(), new FileAsyncHttpResponseHandler(container.getContext()) {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, final File file) {
+                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, BitmapFactory.decodeFile(file.getPath())));
+                    }
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }

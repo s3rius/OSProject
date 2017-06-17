@@ -1045,56 +1045,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         getSupportFragmentManager().popBackStack();
     }
 
-    public void getCompletedSurveys(View view) {
-        getProfileSurveys("user/doneSurveys");
-    }
-
-    public void getMadeSurveys(View view) {
-        getProfileSurveys("user/madeSurveys");
-    }
-
-    public void getProfileSurveys(String url) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.put("login", user.getLogin());
-        final ProgressDialog[] dialog = {null};
-        client.get(getString(R.string.server) + url, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                dialog[0] = new ProgressDialog(Drawer.this);
-                dialog[0].setMessage(getString(R.string.please_wait));
-                dialog[0].show();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (dialog[0] != null)
-                    dialog[0].dismiss();
-                String surveys = new String(responseBody);
-                if (!surveys.equals("null")) {
-                    Bundle bundle = new Bundle();
-                    TakeSurvey fragment = new TakeSurvey();
-                    bundle.putInt("act", 1);
-                    bundle.putString("surveys list", surveys);
-                    fragment.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, fragment);
-                    transaction.commit();
-                    transaction.addToBackStack(null);
-                } else {
-                    Toast.makeText(Drawer.this, R.string.no_done_surveys, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if (dialog[0] != null)
-                    dialog[0].dismiss();
-                Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public void deleteProfile(View view) {
         AsyncHttpClient client = new AsyncHttpClient();
