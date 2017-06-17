@@ -1,6 +1,4 @@
 # Survey app client on android.
-
-We have a lot of bugs. Everytime i fix it, i make new bugs to fix. Ironically.
 ![App icon](https://pp.userapi.com/c639230/v639230316/24dd0/tmABY5SBIts.jpg)
 
 ## About that app.
