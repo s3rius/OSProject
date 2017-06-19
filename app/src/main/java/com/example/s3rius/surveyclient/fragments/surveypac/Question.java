@@ -31,7 +31,7 @@ public class Question implements Serializable {
     @JsonIgnore
     public void uncheck() {
         for (int i = 0; i < answers.size(); i++) {
-            answers.get(i).setAnswered(false);
+            answers.get(i).setIsAnswered(false);
         }
     }
 
@@ -54,7 +54,7 @@ public class Question implements Serializable {
     @JsonIgnore
     public boolean isAllAnswered() {
         for (int i = 0; i < answers.size(); i++) {
-            if (answers.get(i).isAnswered()) {
+            if (answers.get(i).isIsAnswered()) {
                 return true;
             }
         }

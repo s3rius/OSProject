@@ -19,8 +19,6 @@ import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
-import com.example.s3rius.surveyclient.fragments.surveypac.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
@@ -103,7 +101,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                 if (i < 4)
                     pieChart.addPieSlice(new PieModel(
                             getSurvey().getQuestions().get(position).getAnswers().get(i).getName(),
-                            getSurvey().getQuestions().get(position).getAnswers().get(i).getId(), colors[i]));
+                            getSurvey().getQuestions().get(position).getAnswers().get(i).getUsersAnswered(), colors[i]));
                 else {
                     good = false;
                     other += getSurvey().getQuestions().get(position).getAnswers().get(i).getId();
@@ -121,7 +119,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                 profilePic.setImageBitmap(madeByPic);
             }
             TextView name = (TextView)v.findViewById(R.id.made_by_name);
-            name.setText(survey.getMadeByUser().getName());
+            name.setText(survey.getCreator().getName());
             RelativeLayout paragraph = (RelativeLayout)v.findViewById(R.id.made_by_layout);
             paragraph.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,8 +127,8 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                     ProfileFragment fragment = new ProfileFragment();
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("username", survey.getMadeByUser().getName());
-                    bundle.putString("login", survey.getMadeByUser().getLogin());
+                    bundle.putString("username", survey.getCreator().getName());
+                    bundle.putString("login", survey.getCreator().getLogin());
                     fragment.setArguments(bundle);
                     android.support.v4.app.FragmentTransaction fragmentTransaction = ((Drawer)context).getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.fragment_container, fragment);

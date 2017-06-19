@@ -9,26 +9,34 @@ import java.io.Serializable;
 public class Answer implements Serializable, Comparable<Answer> {
     private Integer id;
     private String name;
-
+    private Integer usersAnswered = 0;
     @JsonIgnore
-    private boolean answered = false;
+    private boolean isAnswered = false;
 
-    public Answer(){
+    public Answer() {
     }
 
-    public Answer(String name, Integer answered) {
+    public Answer(String name, Integer isAnswered) {
         this.name = name;
     }
 
-    @JsonIgnore
-    public boolean isAnswered() {
+    public Integer getUsersAnswered() {
+        return usersAnswered;
+    }
 
-        return answered;
+    public void setUsersAnswered(Integer usersAnswered) {
+        this.usersAnswered = usersAnswered;
     }
 
     @JsonIgnore
-    public void setAnswered(boolean answered) {
-        this.answered = answered;
+    public boolean isIsAnswered() {
+
+        return isAnswered;
+    }
+
+    @JsonIgnore
+    public void setIsAnswered(boolean answered) {
+        this.isAnswered = answered;
     }
 
     public Integer getId() {
@@ -49,6 +57,6 @@ public class Answer implements Serializable, Comparable<Answer> {
 
     @Override
     public int compareTo(@NonNull Answer o) {
-        return id > o.getId() ? 1 : id < o.getId() ? -1 : 0;
+        return usersAnswered > o.usersAnswered ? 1 : usersAnswered < o.usersAnswered ? -1 : 0;
     }
 }

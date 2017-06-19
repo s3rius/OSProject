@@ -13,15 +13,11 @@ public class Survey implements Serializable {
     private String comment;
     private List<User> users;
     private List<Question> questions;
-    private User madeByUser;
+    private User creator;
     private Date date;
-    private String category;
+    private Category category;
 
     public Survey() {
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public Date getDate() {
@@ -68,10 +64,6 @@ public class Survey implements Serializable {
         this.users = users;
     }
 
-    public void setMadeByUser(User madeByUser) {
-        this.madeByUser = madeByUser;
-    }
-
     @JsonIgnore
     public boolean isAllAnswered() {
         for (int i = 0; i < questions.size(); i++) {
@@ -82,7 +74,19 @@ public class Survey implements Serializable {
         return true;
     }
 
-    public User getMadeByUser() {
-        return madeByUser;
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

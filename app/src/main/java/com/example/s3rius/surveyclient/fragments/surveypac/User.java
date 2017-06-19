@@ -1,6 +1,8 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class User implements Serializable {
     private String password;
     private List<Survey> madeSurveys;
     private UserRoles role;
+    @JsonIgnore
     private List<Survey> doneSurveys;
 
     public User() {

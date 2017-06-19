@@ -1,8 +1,6 @@
 package com.example.s3rius.surveyclient.fragments;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -54,7 +52,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
             for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
                 RadioButton radioButton = new RadioButton(context);
                 radioButton.setText(getSurvey().getQuestions().get(position).getAnswers().get(i).getName());
-                if(survey.getQuestions().get(position).getAnswers().get(i).isAnswered())
+                if(survey.getQuestions().get(position).getAnswers().get(i).isIsAnswered())
                     radioButton.setChecked(true);
                 answers.addView(radioButton);
             }
@@ -64,7 +62,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
                     for (int i = 0; i < group.getChildCount(); i++) {
                         if(((RadioButton)group.getChildAt(i)).isChecked()){
                             survey.getQuestions().get(position).uncheck();
-                            survey.getQuestions().get(position).getAnswers().get(i).setAnswered(true);
+                            survey.getQuestions().get(position).getAnswers().get(i).setIsAnswered(true);
                             break;
                         }
                     }
@@ -80,7 +78,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
                 for (int i = 0; i < getSurvey().getQuestions().get(position - 1).getAnswers().size(); i++) {
                     RadioButton radioButton = new RadioButton(context);
                     radioButton.setText(getSurvey().getQuestions().get(position - 1).getAnswers().get(i).getName());
-                    if(survey.getQuestions().get(position - 1).getAnswers().get(i).isAnswered())
+                    if(survey.getQuestions().get(position - 1).getAnswers().get(i).isIsAnswered())
                         radioButton.setChecked(true);
                     answers.addView(radioButton);
                 }
@@ -90,7 +88,7 @@ public class SurveyListAdapter extends ArrayAdapter<Question> {
                         for (int i = 0; i < group.getChildCount(); i++) {
                             if(((RadioButton)group.getChildAt(i)).isChecked()){
                                 survey.getQuestions().get(position-1).uncheck();
-                                survey.getQuestions().get(position -1).getAnswers().get(i).setAnswered(true);
+                                survey.getQuestions().get(position -1).getAnswers().get(i).setIsAnswered(true);
                                 break;
                             }
                         }

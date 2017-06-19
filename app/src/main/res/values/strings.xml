@@ -71,7 +71,7 @@
     <string name="welcome">"Welcome "</string>
     <string name="incorrect_login">Incorrect login</string>
     <string name="incorrect_password">Incorrect password</string>
-    <string name="not_all_quest_ans">not all question is answered</string>
+    <string name="not_all_quest_ans">not all question is isAnswered</string>
     <string name="statistics">Statistics</string>
     <string name="takenSurveys">Taken Surveys</string>
     <string name="please_login_to_access">Please login to access to surveys</string>
@@ -110,4 +110,8 @@
     <string name="delete_profile_succ">Profile deleted succsessfully</string>
     <string name="chooseCat">Choose category for your survey</string>
     <string name="made_by_text">Survey made by:</string>
+    <string name="survey_already_complete">That survey is already complete</string>
+    <string name="alert">Alert</string>
+    <string name="save_new_answers">Save new answers</string>
+    <string name="leave_old_answers">Leave old answers</string>
 </resources>

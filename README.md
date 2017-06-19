@@ -30,7 +30,7 @@ At the top of the screen you can see name of current screen.
  And if you choose and complete any survey.
  You can see a statistic screen.
  That will shows you how people answer on questions.
- If you want to see how many people answered on question with another answer
+ If you want to see how many people isAnswered on question with another answer
  just tap "Next answer" or "Previous answer".
  
  ![Statistics](https://pp.userapi.com/c639230/v639230316/24e0e/_dslEV4A1WM.jpg)
