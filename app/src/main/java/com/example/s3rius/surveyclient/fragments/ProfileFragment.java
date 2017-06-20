@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,23 +67,25 @@ public class ProfileFragment extends Fragment {
             newImg.setVisibility(View.GONE);
             deletePrfl.setVisibility(View.GONE);
         }
-        Button completedSurveysButton = (Button)view.findViewById(R.id.completed_surveys_prof);
-        Button madeSurveysButton= (Button)view.findViewById(R.id.made_surveys);
+        Button completedSurveysButton = (Button) view.findViewById(R.id.completed_surveys_prof);
+        Button madeSurveysButton = (Button) view.findViewById(R.id.made_surveys);
         completedSurveysButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getProfileSurveys("user/doneSurveys", arguments.getString("login"));
+                getProfileSurveys("user/doneSurveys", arguments.getString("login"), getString(R.string.done_surveys));
             }
         });
         madeSurveysButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getProfileSurveys("user/madeSurveys", arguments.getString("login"));
+                getProfileSurveys("user/madeSurveys", arguments.getString("login"), getString(R.string.made_surveys));
             }
         });
 
         TextView username = (TextView) view.findViewById(R.id.profile_name);
+        TextView userSurname = (TextView) view.findViewById(R.id.profile_surname);
         username.setText(arguments.getString("username"));
+        userSurname.setText(arguments.getString("surname"));
 //        ImageView profilePic = (ImageView)view.findViewById(R.id.profile_pic);
 //        Picasso.with(container.getContext()).load(getString(R.string.server) + "img?id=" + arguments.getString("username")).into(profilePic);
 
@@ -128,11 +129,12 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    public void getProfileSurveys(String url , String login) {
+    public void getProfileSurveys(String url, String login, final String title) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("login", login);
         final ProgressDialog[] dialog = {null};
+        client.setResponseTimeout(20000);
         client.get(getString(R.string.server) + url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -147,18 +149,22 @@ public class ProfileFragment extends Fragment {
                 if (dialog[0] != null)
                     dialog[0].dismiss();
                 String surveys = new String(responseBody);
-                if (!surveys.equals("null")) {
+                if (!surveys.equals("[]")) {
                     Bundle bundle = new Bundle();
                     TakeSurvey fragment = new TakeSurvey();
                     bundle.putInt("act", 1);
                     bundle.putString("surveys list", surveys);
+                    bundle.putString("title", title);
                     fragment.setArguments(bundle);
                     android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, fragment);
                     transaction.commit();
                     transaction.addToBackStack(null);
                 } else {
-                    Toast.makeText(container.getContext(), R.string.no_done_surveys, Toast.LENGTH_SHORT).show();
+                    if (title.equals(getString(R.string.done_surveys)))
+                        Toast.makeText(container.getContext(), R.string.no_done_surveys, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(container.getContext(), R.string.no_made_surveys, Toast.LENGTH_SHORT).show();
                 }
             }
 

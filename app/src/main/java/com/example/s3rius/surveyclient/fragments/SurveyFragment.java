@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
+import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
+import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -20,6 +23,8 @@ import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class SurveyFragment extends ListFragment {
@@ -30,7 +35,7 @@ public class SurveyFragment extends ListFragment {
     private long surveyId;
     private String title;
     private ViewGroup container;
-    private String connectURL = null; // TODO: 22.05.17 Change IP.
+    private String connectURL = null;
 
     public SurveyFragment() {
         // Required empty public constructor
@@ -78,6 +83,20 @@ public class SurveyFragment extends ListFragment {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     Survey survey = new ObjectMapper().readValue(new String(responseBody), Survey.class);
+                    Collections.sort(survey.getQuestions(), new Comparator<Question>() {
+                        @Override
+                        public int compare(Question o1, Question o2) {
+                            return Integer.compare( o1.getId() , o2.getId() );
+                        }
+                    });
+                    for ( Question question : survey.getQuestions() ) {
+                        Collections.sort(question.getAnswers(), new Comparator<Answer>() {
+                            @Override
+                            public int compare(Answer o1, Answer o2) {
+                                return Integer.compare( o1.getId() , o2.getId() );
+                            }
+                        });
+                    }
                     setSurvey(survey);
                     setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey));
                 } catch (IOException e) {

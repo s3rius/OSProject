@@ -87,7 +87,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         setContentView(R.layout.activity_drawer);
 
         //setting up the fragments
-        Top100Fragment fragment = new Top100Fragment();
+        TakeSurvey fragment = new TakeSurvey();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -131,7 +131,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         int id = item.getItemId();
 
         if (id == R.id.category) {
-            AsyncHttpClient client = new AsyncHttpClient();
             CategoryFragment fragment = new CategoryFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -224,9 +223,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         if (isUserExist()) {
             ProfileFragment fragment = new ProfileFragment();
             Bundle bundle = new Bundle();
-
-            bundle.putString("username", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getName());
-            bundle.putString("login", new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class).getLogin());
+            User user = new ObjectMapper().readValue(sPref.getString(SAVED_USER, null), User.class);
+            bundle.putString("username", user.getName());
+            bundle.putString("login", user.getLogin());
+            bundle.putString("surname", user.getLastName());
             fragment.setArguments(bundle);
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -282,6 +282,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
         String url = String.format("%slogin?login=%s&password=%s", getString(R.string.server), username, password); // TODO: 22.05.17 Change IP
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setResponseTimeout(20000);
         client.post(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -370,6 +371,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     }
                 }
                 AsyncHttpClient client = new AsyncHttpClient();
+                client.setResponseTimeout(20000);
                 final RequestParams params = new RequestParams();
                 try {
                     params.put("answers", new ObjectMapper().writeValueAsString(answered));
@@ -418,6 +420,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                         public void onClick(final DialogInterface dialog, int which) {
                                             final ProgressDialog[] progressDialog1 = {null};
                                             AsyncHttpClient httpClient = new AsyncHttpClient();
+                                            httpClient.setResponseTimeout(20000);
                                             RequestParams rParams = new RequestParams();
                                             rParams.put("id", surveyId);
                                             rParams.put("login", user.getLogin());
@@ -433,6 +436,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                                 @Override
                                                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                     AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+                                                    asyncHttpClient.setResponseTimeout(20000);
                                                     RequestParams requestParams = new RequestParams();
                                                     try {
                                                         requestParams.put("answers", new ObjectMapper().writeValueAsString(answered));
@@ -466,7 +470,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                                                 }
                                                             }
                                                     );
-                                                    }
+                                                }
 
                                                 @Override
                                                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -480,7 +484,16 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
+                                            StatisticFragment statisticFragment = new StatisticFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putInt("id", (int) surveyId);
+                                            statisticFragment.setArguments(bundle);
+                                            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                             getSupportFragmentManager().popBackStack();
+                                            transaction.replace(R.id.fragment_container, statisticFragment);
+                                            transaction.commit();
+                                            transaction.addToBackStack(null);
+//                                            getSupportFragmentManager().popBackStack();
                                         }
                                     }).setIcon(R.drawable.alert);
                             AlertDialog alert = builder.create();
@@ -529,6 +542,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                         final String[][] cats = new String[1][1];
                                         AsyncHttpClient client1 = new AsyncHttpClient();
                                         final ProgressDialog[] progressDialog = {null};
+                                        client1.setResponseTimeout(20000);
                                         client1.get(getString(R.string.server) + "topics/", new AsyncHttpResponseHandler() {
                                             @Override
                                             public void onStart() {
@@ -567,6 +581,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                                             e.printStackTrace();
                                                         }
                                                         AsyncHttpClient client = new AsyncHttpClient();
+                                                        client.setResponseTimeout(20000);
                                                         RequestParams params = new RequestParams();
                                                         params.put("createdSurvey", createdSurvey);
                                                         final ProgressDialog[] progressDialog = new ProgressDialog[1];
@@ -911,7 +926,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             final ImageView imageView = (ImageView) findViewById(R.id.profile_pic);
 
             AsyncHttpClient client = new AsyncHttpClient();
-
+            client.setResponseTimeout(20000);
             File uploadImg = new File(picturePath);
             RequestParams params = new RequestParams();
             try {
@@ -1003,7 +1018,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             newUser.setPassword(pass.getText().toString());
 
             AsyncHttpClient client = new AsyncHttpClient();
-
+            client.setResponseTimeout(20000);
             RequestParams params = new RequestParams();
 
             try {
@@ -1022,7 +1037,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         AsyncHttpClient client = new AsyncHttpClient();
-
+                        client.setResponseTimeout(20000);
                         RequestParams params = new RequestParams();
                         if (regPhoto != null) {
                             try {
@@ -1089,31 +1104,50 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     public void deleteProfilePicture(View view) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.put("login", user.getLogin());
-        client.delete(getString(R.string.server) + "img/delete", params, new AsyncHttpResponseHandler() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
+        builder.setIcon(R.drawable.alert)
+                .setTitle(getString(R.string.alert))
+                .setMessage(getString(R.string.sure_deletePicture))
+                .setCancelable(true)
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if (fragment instanceof ProfileFragment) {
-                    ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
-                    profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
-                    profileIcon.setImageBitmap(null);
-                    profilePic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.setResponseTimeout(20000);
+                RequestParams params = new RequestParams();
+                params.put("login", user.getLogin());
+                client.delete(getString(R.string.server) + "img/delete", params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        if (fragment instanceof ProfileFragment) {
+                            ImageView profilePic = (ImageView) fragment.getView().findViewById(R.id.profile_pic);
+                            profilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
+                            profileIcon.setImageBitmap(null);
+                            profilePic.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
+                                }
+                            });
                         }
-                    });
-                }
-            }
+                    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
     public void onAnswerBack(View view) {
@@ -1139,55 +1173,72 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         getSupportFragmentManager().popBackStack();
     }
 
-
     public void deleteProfile(View view) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.put("login", user.getLogin());
-        final ProgressDialog[] progressDialog = {null};
-        client.delete(getString(R.string.server) + "deleteProfile/", params, new AsyncHttpResponseHandler() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
+        builder.setIcon(R.drawable.alert)
+                .setTitle(getString(R.string.alert))
+                .setMessage(getString(R.string.sure_deleteProfile))
+                .setCancelable(true)
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
-            public void onStart() {
-                super.onStart();
-                progressDialog[0] = new ProgressDialog(Drawer.this);
-                progressDialog[0].setMessage(getString(R.string.please_wait));
-                progressDialog[0].show();
-            }
+            public void onClick(DialogInterface dialog, int which) {
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.setResponseTimeout(20000);
+                RequestParams params = new RequestParams();
+                params.put("login", user.getLogin());
+                final ProgressDialog[] progressDialog = {null};
+                client.delete(getString(R.string.server) + "user/", params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        progressDialog[0] = new ProgressDialog(Drawer.this);
+                        progressDialog[0].setMessage(getString(R.string.please_wait));
+                        progressDialog[0].show();
+                    }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (progressDialog[0] != null)
-                    progressDialog[0].dismiss();
-                sPref = getPreferences(MODE_PRIVATE);
-                Editor ed = sPref.edit();
-                ed.clear();
-                ed.apply();
-                Toast.makeText(Drawer.this, getString(R.string.delete_profile_succ), Toast.LENGTH_SHORT).show();
-                profileIcon.setImageBitmap(null);
-                // get menu from navigationView
-                Menu menu = navigationView.getMenu();
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        sPref = getPreferences(MODE_PRIVATE);
+                        Editor ed = sPref.edit();
+                        ed.clear();
+                        ed.apply();
+                        Toast.makeText(Drawer.this, getString(R.string.delete_profile_succ), Toast.LENGTH_SHORT).show();
+                        profileIcon.setImageBitmap(null);
+                        // get menu from navigationView
+                        Menu menu = navigationView.getMenu();
 
-                // find MenuItem you want to change
-                MenuItem loginItem = menu.findItem(R.id.login);
+                        // find MenuItem you want to change
+                        MenuItem loginItem = menu.findItem(R.id.login);
 
-                // set new title to the MenuItem
-                loginItem.setTitle(getString(R.string.login));
+                        // set new title to the MenuItem
+                        loginItem.setTitle(getString(R.string.login));
 
-                Top100Fragment fragment = new Top100Fragment();
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                fragmentTransaction.commit();
-                fragmentTransaction.addToBackStack(null);
-            }
+                        Top100Fragment fragment = new Top100Fragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragment);
+                        fragmentTransaction.commit();
+                        fragmentTransaction.addToBackStack(null);
+                    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if (progressDialog[0] != null)
-                    progressDialog[0].dismiss();
-                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        if (progressDialog[0] != null)
+                            progressDialog[0].dismiss();
+                        Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
 

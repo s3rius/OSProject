@@ -18,10 +18,22 @@
     <TextView
 
         android:id="@+id/profile_name"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/profile_pic"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="20dp"
+        />
+    <TextView
+
+        android:id="@+id/profile_surname"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profile_pic"
+        android:layout_below="@id/profile_name"
         android:textStyle="bold"
         android:gravity="center"
         android:textSize="20dp"

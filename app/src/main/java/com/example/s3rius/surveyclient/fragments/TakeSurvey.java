@@ -53,18 +53,18 @@ public class TakeSurvey extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.takeSurveys);
+        getActivity().setTitle(R.string.newest_surveys);
         this.container = container;
         if (getArguments() != null) {
             if (getArguments().getInt("act") == 0) {
                 act = 0;
-                getActivity().setTitle(getArguments().getString("title"));
                 categoryNo = getArguments().getInt("CatInt");
             }
             if (getArguments().getInt("act") == 1) {
                 act = 1;
                 surveys = getArguments().getString("surveys list");
             }
+            getActivity().setTitle(getArguments().getString("title"));
         }
         return inflater.inflate(R.layout.fragment_take_survey, container, false);
     }
@@ -75,10 +75,11 @@ public class TakeSurvey extends ListFragment {
         if (act == 0) {
             GetCatSurveys getCatSurveys = new GetCatSurveys();
             getCatSurveys.execute();
-        }
-        if (act == 1) {
+        }else if (act == 1) {
             try {
                 ArrayList<Survey> surveys = new ObjectMapper().readValue(this.surveys, new TypeReference<List<Survey>>() {});
+                content.clear();
+                ids.clear();
                 for (int i = 0; i <surveys.size() ; i++) {
                     content.add(surveys.get(i).getName());
                     ids.add(surveys.get(i).getId());
@@ -89,8 +90,7 @@ public class TakeSurvey extends ListFragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             GetNewSurveys getNewSurveys = new GetNewSurveys();
             getNewSurveys.execute();
         }
@@ -121,10 +121,6 @@ public class TakeSurvey extends ListFragment {
         } else {
             Toast.makeText(container.getContext(), getString(R.string.please_login_to_access), Toast.LENGTH_LONG).show();
         }
-    }
-
-    public SurveyFragment getSurveyFragment() {
-        return surveyFragment;
     }
 
     private class GetCatSurveys extends AsyncTask<Void, Void, String> {
@@ -183,6 +179,8 @@ public class TakeSurvey extends ListFragment {
             try {
                 dataJsonObj = new JSONArray(resultJson);
                 JSONArray surveys = dataJsonObj.getJSONObject(categoryNo).getJSONArray("surveys");
+                content.clear();
+                ids.clear();
                 for (int i = 0; i < surveys.length(); i++) {
                     JSONObject obj = surveys.getJSONObject(i);
                     content.add(obj.get("name").toString());
@@ -252,6 +250,8 @@ public class TakeSurvey extends ListFragment {
             JSONArray dataJsonObj;
             try {
                 dataJsonObj = new JSONArray(resultJson);
+                content.clear();
+                ids.clear();
                 for (int i = 0; i < dataJsonObj.length(); i++) {
                     JSONObject obj = dataJsonObj.getJSONObject(i);
                     content.add(obj.get("name").toString());

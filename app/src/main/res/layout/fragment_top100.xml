@@ -5,17 +5,16 @@
     tools:context="com.example.s3rius.surveyclient.fragments.Top100Fragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:id="@android:id/empty"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="100pt"
-    android:layout_marginLeft="20px"
-    android:layout_marginRight="20px"
-    android:gravity="center"
-    android:textColor="#6b6a6a"
-    android:textSize="7pt"
-    android:singleLine="false"
-    android:text="@string/ConnectionErrorList" />
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/ConnectionErrorList"
+        android:textColor="#6b6a6a"
+        android:textSize="7pt" />
 
     <ListView
         android:id="@android:id/list"

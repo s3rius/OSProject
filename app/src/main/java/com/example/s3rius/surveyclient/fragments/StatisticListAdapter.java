@@ -24,6 +24,7 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
 import java.util.Collections;
+import java.util.Comparator;
 
 
 public class StatisticListAdapter extends ArrayAdapter<Question> {
@@ -42,13 +43,18 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
+        Collections.sort(this.survey.getQuestions(), new Comparator<Question>() {
+            @Override
+            public int compare(Question o1, Question o2) {
+                return Integer.compare( o1.getId() , o2.getId() );
+            }
+        });
         this.madeByPic = madeByPic;
     }
 
     @Override
     public int getCount() {
         return getSurvey().getQuestions().size() + 1;
-
     }
 
     @NonNull
@@ -119,6 +125,8 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                 profilePic.setImageBitmap(madeByPic);
             }
             TextView name = (TextView)v.findViewById(R.id.made_by_name);
+            TextView surname = (TextView)v.findViewById(R.id.made_by_surname);
+            surname.setText(survey.getCreator().getLastName());
             name.setText(survey.getCreator().getName());
             RelativeLayout paragraph = (RelativeLayout)v.findViewById(R.id.made_by_layout);
             paragraph.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +134,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                 public void onClick(View v) {
                     ProfileFragment fragment = new ProfileFragment();
                     Bundle bundle = new Bundle();
-
+                    bundle.putString("surname", survey.getCreator().getName());
                     bundle.putString("username", survey.getCreator().getName());
                     bundle.putString("login", survey.getCreator().getLogin());
                     fragment.setArguments(bundle);

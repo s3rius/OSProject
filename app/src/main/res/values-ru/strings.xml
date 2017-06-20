@@ -85,7 +85,7 @@
     <string name="empty_question">Пожалуйста введите вопрос</string>
     <string name="inSurveyComment">Комментарйи:\n\t\t</string>
     <string name="next_answer">Следующий ответ</string>
-    <string name="no_done_surveys">Вы не прошли или не создали ни одного опроса</string>
+    <string name="no_done_surveys">Вы не прошли ни одного опроса</string>
     <string name="prew_answer">Предыдущий ответ</string>
     <string name="survey_is_empty">Опрос пуст</string>
     <string name="newest_surveys">Новейшие опросы</string>

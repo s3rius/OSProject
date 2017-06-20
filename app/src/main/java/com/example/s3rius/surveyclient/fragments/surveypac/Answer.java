@@ -57,6 +57,6 @@ public class Answer implements Serializable, Comparable<Answer> {
 
     @Override
     public int compareTo(@NonNull Answer o) {
-        return usersAnswered > o.usersAnswered ? 1 : usersAnswered < o.usersAnswered ? -1 : 0;
+        return usersAnswered < o.usersAnswered ? 1 : usersAnswered > o.usersAnswered ? -1 : 0;
     }
 }

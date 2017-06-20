@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
+    <string name="server" translatable="false">http://46.0.193.227:8080/surveys/client/</string>
 
 
     <string name="profile"><b>Profile</b></string>
@@ -87,7 +87,7 @@
     <string name="logout">logout</string>
     <string name="comment">Comment this survey</string>
     <string name="empty_comment">Please enter the comment</string>
-    <string name="no_done_surveys">You\'ve not complete or made any survey yet</string>
+    <string name="no_done_surveys">You\'ve not complete any survey yet</string>
     <string name="inSurveyComment">Comment:\n\t\t</string>
     <string name="empty_question">Please enter the question</string>
     <string name="next_answer">Next answer</string>
@@ -113,5 +113,11 @@
     <string name="survey_already_complete">That survey is already complete</string>
     <string name="alert">Alert</string>
     <string name="save_new_answers">Save new answers</string>
-    <string name="leave_old_answers">Leave old answers</string>
+    <string name="leave_old_answers">Watch statistic with old answers</string>
+    <string name="done_surveys">Done surveys</string>
+    <string name="sure_deletePicture">Are you sure want to delete profile picture?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="sure_deleteProfile">Are you sure want to delete profile?</string>
+    <string name="no_made_surveys">You\'ve not made any survey yet</string>
 </resources>
