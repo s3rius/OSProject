@@ -104,5 +104,23 @@
     <string name="chooseCat">Выберите категорию под ваш опрос</string>
     <string name="delete_profile">Удалить профиль</string>
     <string name="delete_profile_succ">Профиль удалён успешно</string>
+    <string name="alert">Внимание</string>
+    <string name="done_surveys">Пройденные опросы</string>
+    <string name="leave_old_answers">Посмотреть статистику со старыми ответами</string>
+    <string name="made_by_text">Опрос создан :</string>
+    <string name="no">Нет</string>
+    <string name="no_made_surveys">Вы не создали ни одного опроса</string>
+    <string name="save_new_answers">Сохранить новые ответы</string>
+    <string name="sure_deletePicture">Вы действительно хотите удалить фото профиля?</string>
+    <string name="sure_deleteProfile">Вы действительно хотите удалить профиль?</string>
+    <string name="survey_already_complete">Опрос уже пройден вами</string>
+    <string name="yes">Да</string>
+    <string name="change_name">Сменить имя</string>
+    <string name="change_surname">Сменить фамилию</string>
+    <string name="profile_icon_not_downloaded">Иконка профиля не загружена</string>
+    <string name="open_statistics_without_survey">Открыть статистику</string>
+    <string name="survey_look">Ваш опрос будет выглядить так :</string>
+    <string name="add_question">Добавить вопрос</string>
+    <string name="creation_complete">Создание опроса завершено</string>
 
 </resources>

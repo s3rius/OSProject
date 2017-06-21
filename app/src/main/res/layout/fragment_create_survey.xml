@@ -8,9 +8,9 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="18dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="58dp"
-        android:text="Your survey will look like this" />
+        android:text="@string/survey_look" />
 
     <ListView
         android:id="@android:id/list"

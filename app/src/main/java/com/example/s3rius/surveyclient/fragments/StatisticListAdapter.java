@@ -29,9 +29,9 @@ import java.util.Comparator;
 
 public class StatisticListAdapter extends ArrayAdapter<Question> {
 
+    Bitmap madeByPic = null;
     private Context context;
     private Survey survey;
-    Bitmap madeByPic = null;
 
     StatisticListAdapter(Context context, Survey survey) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
@@ -46,7 +46,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         Collections.sort(this.survey.getQuestions(), new Comparator<Question>() {
             @Override
             public int compare(Question o1, Question o2) {
-                return Integer.compare( o1.getId() , o2.getId() );
+                return Integer.compare(o1.getId(), o2.getId());
             }
         });
         this.madeByPic = madeByPic;
@@ -62,7 +62,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if(position < getSurvey().getQuestions().size()) {
+        if (position < getSurvey().getQuestions().size()) {
             v = inflater.inflate(R.layout.statistic_rowlayout, null);
             TextView questionName = (TextView) v.findViewById(R.id.StatQuestionText);
             final PieChart pieChart = (PieChart) v.findViewById(R.id.graph);
@@ -71,11 +71,14 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             nextAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
+//                    try {
+                    if (pieChart.getCurrentItem() - 1 < 0)
+                        pieChart.setCurrentItem(pieChart.getData().size() - 1);
+                    else
                         pieChart.setCurrentItem(pieChart.getCurrentItem() - 1);
-                    } catch (IndexOutOfBoundsException e) {
-                        pieChart.setCurrentItem(getSurvey().getQuestions().get(position).getAnswers().size() - 1);
-                    }
+//                    } catch (IndexOutOfBoundsException e) {
+//                        pieChart.setCurrentItem(getSurvey().getQuestions().get(position).getAnswers().size() - 1);
+//                    }
 
                 }
             });
@@ -83,11 +86,16 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             prevAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        pieChart.setCurrentItem(pieChart.getCurrentItem() + 1);
-                    } catch (IndexOutOfBoundsException e) {
+//                    try {
+                    if (pieChart.getCurrentItem() + 1 == pieChart.getData().size())
                         pieChart.setCurrentItem(0);
-                    }
+                    else
+                        pieChart.setCurrentItem(pieChart.getCurrentItem() + 1);
+
+
+//                    } catch (IndexOutOfBoundsException e) {
+//                        pieChart.setCurrentItem(0);
+//                    }
                 }
             });
             if (getSurvey().getQuestions().get(position).getAnswers().size() == 1) {
@@ -104,41 +112,64 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             int other = 0;
             Collections.sort(getSurvey().getQuestions().get(position).getAnswers());
             for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
-                if (i < 4)
-                    pieChart.addPieSlice(new PieModel(
-                            getSurvey().getQuestions().get(position).getAnswers().get(i).getName(),
-                            getSurvey().getQuestions().get(position).getAnswers().get(i).getUsersAnswered(), colors[i]));
-                else {
+                if (i < 4) {
+                    if (getSurvey().getQuestions().get(position).getAnswers().get(i).getUsersAnswered() != 0) {
+
+//                        pieChart.addPieSlice(new PieModel(
+//                                getSurvey().getQuestions().get(position).getAnswers()
+//                                        .get(getSurvey().getQuestions().get(position).getAnswers().size() - 1 - i)
+//                                        .getName(),
+//
+//                                getSurvey().getQuestions().get(position).getAnswers().
+//                                        get(getSurvey().getQuestions().get(position).getAnswers().size() - 1 - i)
+//                                        .getUsersAnswered(),
+//                                colors[i]));
+                        pieChart.addPieSlice(new PieModel(
+                                getSurvey().getQuestions().get(position).getAnswers()
+                                        .get(i)
+                                        .getName(),
+
+                                getSurvey().getQuestions().get(position).getAnswers().
+                                        get(i)
+                                        .getUsersAnswered(),
+                                colors[i]));
+                    }
+                } else {
                     good = false;
-                    other += getSurvey().getQuestions().get(position).getAnswers().get(i).getId();
+                    other += getSurvey().getQuestions().get(position).getAnswers().
+                            get(i).getUsersAnswered();
                 }
             }
-            if (!good)
+            if (!good && other != 0)
                 pieChart.addPieSlice(new PieModel(context.getResources().getString(R.string.other),
                         other, colors[4]));
+            if (pieChart.getData().size() == 1){
+                nextAnswer.setVisibility(View.GONE);
+                prevAnswer.setVisibility(View.GONE);
+            }
             pieChart.startAnimation();
             pieChart.setUsePieRotation(false);
-        }else {
+        } else {
             v = inflater.inflate(R.layout.made_by_rowlayout, null);
-            if(madeByPic != null) {
+            if (madeByPic != null) {
                 ImageView profilePic = (ImageView) v.findViewById(R.id.made_by_pic);
                 profilePic.setImageBitmap(madeByPic);
             }
-            TextView name = (TextView)v.findViewById(R.id.made_by_name);
-            TextView surname = (TextView)v.findViewById(R.id.made_by_surname);
+            TextView name = (TextView) v.findViewById(R.id.made_by_name);
+            TextView surname = (TextView) v.findViewById(R.id.made_by_surname);
             surname.setText(survey.getCreator().getLastName());
             name.setText(survey.getCreator().getName());
-            RelativeLayout paragraph = (RelativeLayout)v.findViewById(R.id.made_by_layout);
+            RelativeLayout paragraph = (RelativeLayout) v.findViewById(R.id.made_by_layout);
             paragraph.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ProfileFragment fragment = new ProfileFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("surname", survey.getCreator().getName());
+                    bundle.putString("surname", survey.getCreator().getLastName());
                     bundle.putString("username", survey.getCreator().getName());
                     bundle.putString("login", survey.getCreator().getLogin());
                     fragment.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = ((Drawer)context).getSupportFragmentManager().beginTransaction();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = ((Drawer) context).getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.fragment_container, fragment);
                     fragmentTransaction.commit();
                     fragmentTransaction.addToBackStack(null);

@@ -1,8 +1,9 @@
 package com.example.s3rius.surveyclient.fragments.surveypac;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Category{
+public class Category implements Serializable {
 
     private String       name;
     private List<Survey> surveys;

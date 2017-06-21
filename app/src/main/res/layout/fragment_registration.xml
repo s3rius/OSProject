@@ -78,6 +78,15 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/reg_profile_pic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/newPhotoReg"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FF000000"/>
+
     <android.support.design.widget.FloatingActionButton
         android:layout_width="70dp"
         android:layout_height="70dp"

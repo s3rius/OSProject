@@ -46,7 +46,8 @@ public class Top100Fragment extends ListFragment {
         urlOfSurveys = getString(R.string.server) + "topSurveys";
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("sortBy", "USERS");
+        params.put("sortBy", "users");
+        params.put("limit", 20);
         client.get(urlOfSurveys, params, new AsyncHttpResponseHandler() {
             ProgressDialog progressDialog = null;
 

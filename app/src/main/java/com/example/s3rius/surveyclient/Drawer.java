@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -41,6 +42,7 @@ import com.example.s3rius.surveyclient.fragments.StatisticFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
+import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyReborn;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
@@ -53,6 +55,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
@@ -109,7 +112,22 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         if (isUserExist()) {
             MenuItem loginItem = navigationView.getMenu().findItem(R.id.login);
             loginItem.setTitle(R.string.logout);
-            Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+//            Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("id", user.getLogin());
+            client.setResponseTimeout(15000);
+            client.get(getString(R.string.server) + "img", params, new FileAsyncHttpResponseHandler(Drawer.this) {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                    Toast.makeText(Drawer.this, getString(R.string.profile_icon_not_downloaded), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, File file) {
+                    profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                }
+            });
         }
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -167,7 +185,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 // set new title to the MenuItem
                 loginItem.setTitle(getString(R.string.login));
 
-                Top100Fragment fragment = new Top100Fragment();
+                TakeSurvey fragment = new TakeSurvey();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -183,7 +201,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             fragmentTransaction.addToBackStack(null);
         } else if (id == R.id.createSurvey) {
             if (isUserExist()) {
-                CreateSurveyFragment fragment = new CreateSurveyFragment();
+//                CreateSurveyFragment fragment = new CreateSurveyFragment();
+//                android.support.v4.app.FragmentTransaction transaction =
+//                        getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container, fragment);
+//                transaction.commit();
+//                transaction.addToBackStack(null);
+                // TODO: 21.06.17 New create survey test
+                CreateSurveyReborn fragment = new CreateSurveyReborn();
                 android.support.v4.app.FragmentTransaction transaction =
                         getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, fragment);
@@ -246,7 +271,22 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         String JSONUser = new ObjectMapper().writeValueAsString(this.user);
         ed.putString(SAVED_USER, JSONUser);
         ed.apply();
-        Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+//        Picasso.with(this).load(getString(R.string.server) + "img?id=" + user.getLogin()).into(profileIcon);
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("id", user.getLogin());
+        client.setResponseTimeout(15000);
+        client.get(getString(R.string.server) + "img", params, new FileAsyncHttpResponseHandler(Drawer.this) {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                Toast.makeText(Drawer.this, getString(R.string.profile_icon_not_downloaded), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, File file) {
+                profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+            }
+        });
         Menu menu = navigationView.getMenu();
 
         // find MenuItem you want to change
@@ -254,7 +294,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         // set new title to the MenuItem
         loginItem.setTitle("Logout");
 
-        Top100Fragment fragment = new Top100Fragment();
+        TakeSurvey fragment = new TakeSurvey();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -970,6 +1010,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         }
         if (requestCode == REGISTRATION_NEW_PIC && resultCode == RESULT_OK && null != data) {
+
+            Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -978,6 +1021,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             final String picturePath = cursor.getString(columnIndex);
+
+            ImageView view = (ImageView)loginFragment.getView().findViewById(R.id.reg_profile_pic);
+            view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             cursor.close();
             regPhoto = new File(picturePath);
         }
@@ -1220,7 +1266,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         // set new title to the MenuItem
                         loginItem.setTitle(getString(R.string.login));
 
-                        Top100Fragment fragment = new Top100Fragment();
+                        TakeSurvey fragment = new TakeSurvey();
                         android.support.v4.app.FragmentTransaction fragmentTransaction =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, fragment);

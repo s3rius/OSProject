@@ -63,10 +63,15 @@ public class ProfileFragment extends Fragment {
             Button deleteImg = (Button) view.findViewById(R.id.delete_profile_pic);
             Button newImg = (Button) view.findViewById(R.id.newPhoto);
             Button deletePrfl = (Button) view.findViewById(R.id.delete_profile);
+            Button changeName = (Button)view.findViewById(R.id.changeName);
+            Button changeSurname = (Button)view.findViewById(R.id.changeSurname);
             deleteImg.setVisibility(View.GONE);
+            changeName.setVisibility(View.GONE);
+            changeSurname.setVisibility(View.GONE);
             newImg.setVisibility(View.GONE);
             deletePrfl.setVisibility(View.GONE);
         }
+
         Button completedSurveysButton = (Button) view.findViewById(R.id.completed_surveys_prof);
         Button madeSurveysButton = (Button) view.findViewById(R.id.made_surveys);
         completedSurveysButton.setOnClickListener(new View.OnClickListener() {
@@ -177,5 +182,8 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public void changeUser(TextView view, int act) {
+
+    }
 }
 

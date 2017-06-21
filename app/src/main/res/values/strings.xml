@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="server" translatable="false">http://46.0.193.227:8080/surveys/client/</string>
+    <string name="server" translatable="false">http://46.0.193.227:8080/survey/client/</string>
 
 
     <string name="profile"><b>Profile</b></string>
@@ -110,14 +110,31 @@
     <string name="delete_profile_succ">Profile deleted succsessfully</string>
     <string name="chooseCat">Choose category for your survey</string>
     <string name="made_by_text">Survey made by:</string>
-    <string name="survey_already_complete">That survey is already complete</string>
+    <string name="survey_already_complete">You already complete that survey</string>
     <string name="alert">Alert</string>
     <string name="save_new_answers">Save new answers</string>
     <string name="leave_old_answers">Watch statistic with old answers</string>
-    <string name="done_surveys">Done surveys</string>
+    <string name="done_surveys">Completed surveys</string>
     <string name="sure_deletePicture">Are you sure want to delete profile picture?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="sure_deleteProfile">Are you sure want to delete profile?</string>
     <string name="no_made_surveys">You\'ve not made any survey yet</string>
+    <string name="change_name">Change name</string>
+    <string name="change_surname">Change surname</string>
+    <string name="profile_icon_not_downloaded">Profile photo not downloaded</string>
+    <string name="open_statistics_without_survey">Open statictics</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="survey_look">Your survey will look like this :</string>
+    <string name="add_question">Add new Question</string>
+    <string name="creation_complete">Survey creation complete</string>
+    <string name="question">question</string>
+    <string name="is_empty">is empty </string>
+    <string name="answer">answer</string>
+    <string name="in">in</string>
+    <string name="commentSurvey">Do you want to comment that survey?</string>
+    <string name="commentThisSurvey">Enter comment of this survey</string>
+    <string name="field_is_empty">Field is empty</string>
+    <string name="orMissingAnswers">or missing answers</string>
 </resources>

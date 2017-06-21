@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.ProgressDialog;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -70,8 +71,20 @@ public class StatisticFragment extends ListFragment {
             e.printStackTrace();
         }
         client.get(getString(R.string.server) + "survey", params, new AsyncHttpResponseHandler() {
+            ProgressDialog progressDialog = null;
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                progressDialog = new ProgressDialog(container.getContext());
+                progressDialog.setMessage(getString(R.string.please_wait));
+                progressDialog.show();
+            }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(progressDialog!=null)
+                    progressDialog.dismiss();
 //                try {
 //                    Survey survey = new ObjectMapper().readValue(new String(responseBody), Survey.class);
 //                    setSurvey(survey);
@@ -87,18 +100,26 @@ public class StatisticFragment extends ListFragment {
                 AsyncHttpClient client = new AsyncHttpClient();
 
                 client.get(getString(R.string.server) + "img?id=" + survey.getCreator().getLogin(), new FileAsyncHttpResponseHandler(container.getContext()) {
+                    ProgressDialog progressDialog = null;
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                        if(progressDialog!=null)
+                            progressDialog.dismiss();
                         setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
                     }
 
                     @Override
                     public void onStart() {
                         super.onStart();
+                        progressDialog = new ProgressDialog(container.getContext());
+                        progressDialog.setMessage(getString(R.string.please_wait));
+                        progressDialog.show();
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, final File file) {
+                        if(progressDialog!=null)
+                            progressDialog.dismiss();
                         setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, BitmapFactory.decodeFile(file.getPath())));
                     }
                 });
@@ -110,6 +131,8 @@ public class StatisticFragment extends ListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(progressDialog!=null)
+                    progressDialog.dismiss();
                 Toast.makeText(container.getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 getFragmentManager().popBackStack();
             }

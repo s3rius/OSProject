@@ -1,6 +1,7 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -21,8 +22,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -82,7 +87,7 @@ public class SurveyFragment extends ListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
-                    Survey survey = new ObjectMapper().readValue(new String(responseBody), Survey.class);
+                    final Survey survey = new ObjectMapper().readValue(new String(responseBody), Survey.class);
                     Collections.sort(survey.getQuestions(), new Comparator<Question>() {
                         @Override
                         public int compare(Question o1, Question o2) {
@@ -98,7 +103,51 @@ public class SurveyFragment extends ListFragment {
                         });
                     }
                     setSurvey(survey);
-                    setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey));
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    RequestParams params = new RequestParams();
+                    params.put("login", survey.getCreator().getLogin());
+                    final ProgressDialog[] dialog = {null};
+                    client.setResponseTimeout(20000);
+                    client.get(getString(R.string.server) + "user/doneSurveys", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                            dialog[0] = new ProgressDialog(container.getContext());
+                            dialog[0].setMessage(getString(R.string.please_wait));
+                            dialog[0].show();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if (dialog[0] != null)
+                                dialog[0].dismiss();
+                            String surveys = new String(responseBody);
+                            if (!surveys.equals("[]")) {
+                                JSONArray array;
+                                try {
+                                    array = new JSONArray(surveys);
+                                    for (int i = 0; i < array.length(); i++) {
+                                        JSONObject Jsurvey = array.getJSONObject(i);
+                                        if (Jsurvey.getInt("id") == survey.getId()){
+                                            setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey, true));
+                                            break;
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey, false));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            if (dialog[0] != null)
+                                dialog[0].dismiss();
+                            Toast.makeText(container.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } catch (IOException e) {
                     Toast.makeText(container.getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     getFragmentManager().popBackStack();
