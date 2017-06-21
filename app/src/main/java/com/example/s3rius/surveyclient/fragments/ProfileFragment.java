@@ -1,8 +1,10 @@
 package com.example.s3rius.surveyclient.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -34,22 +38,25 @@ import java.io.IOException;
  */
 public class ProfileFragment extends Fragment {
 
-    ViewGroup container;
+    private ViewGroup container;
+    private LayoutInflater inflater;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         this.container = container;
+        this.inflater = inflater;
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // Inflate the layout for this fragment
         getActivity().setTitle(getString(R.string.profile));
         final Bundle arguments = getArguments();
         SharedPreferences sPref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         User savedUser = null;
+
         String Juser = sPref.getString("saved_user", null);
         if (Juser != null) {
             try {
@@ -59,12 +66,14 @@ public class ProfileFragment extends Fragment {
             }
         }
 
+        Button deleteImg = (Button) view.findViewById(R.id.delete_profile_pic);
+        Button newImg = (Button) view.findViewById(R.id.newPhoto);
+        Button deletePrfl = (Button) view.findViewById(R.id.delete_profile);
+        Button changeName = (Button) view.findViewById(R.id.changeName);
+        Button changeSurname = (Button) view.findViewById(R.id.changeSurname);
+        Button completedSurveysButton = (Button) view.findViewById(R.id.completed_surveys_prof);
+        Button madeSurveysButton = (Button) view.findViewById(R.id.made_surveys);
         if (!savedUser.getLogin().equals(arguments.getString("login"))) {
-            Button deleteImg = (Button) view.findViewById(R.id.delete_profile_pic);
-            Button newImg = (Button) view.findViewById(R.id.newPhoto);
-            Button deletePrfl = (Button) view.findViewById(R.id.delete_profile);
-            Button changeName = (Button)view.findViewById(R.id.changeName);
-            Button changeSurname = (Button)view.findViewById(R.id.changeSurname);
             deleteImg.setVisibility(View.GONE);
             changeName.setVisibility(View.GONE);
             changeSurname.setVisibility(View.GONE);
@@ -72,8 +81,12 @@ public class ProfileFragment extends Fragment {
             deletePrfl.setVisibility(View.GONE);
         }
 
-        Button completedSurveysButton = (Button) view.findViewById(R.id.completed_surveys_prof);
-        Button madeSurveysButton = (Button) view.findViewById(R.id.made_surveys);
+        changeSurname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         completedSurveysButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,10 +100,25 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        TextView username = (TextView) view.findViewById(R.id.profile_name);
-        TextView userSurname = (TextView) view.findViewById(R.id.profile_surname);
+
+        final TextView username = (TextView) view.findViewById(R.id.profile_name);
+        final TextView userSurname = (TextView) view.findViewById(R.id.profile_surname);
         username.setText(arguments.getString("username"));
         userSurname.setText(arguments.getString("surname"));
+
+        changeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeNameOrUsername("user/changeName", "newName", username);
+            }
+        });
+
+        changeSurname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeNameOrUsername("user/changeSurname", "newSurname", userSurname);
+            }
+        });
 //        ImageView profilePic = (ImageView)view.findViewById(R.id.profile_pic);
 //        Picasso.with(container.getContext()).load(getString(R.string.server) + "img?id=" + arguments.getString("username")).into(profilePic);
 
@@ -130,6 +158,7 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+
 
         return view;
     }
@@ -182,8 +211,88 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void changeUser(TextView view, int act) {
 
+    public void changeNameOrUsername(final String url, final String paramName, final TextView textView) {
+        View changeNameProps = inflater.inflate(R.layout.custom_alert_done_survey, null);
+        final EditText newNameText = (EditText) changeNameProps.findViewById(R.id.surveyName);
+        TextView text = (TextView) changeNameProps.findViewById(R.id.tv);
+        if (paramName.equals("newName"))
+            text.setText(getString(R.string.enter_new_name));
+        else
+            text.setText(getString(R.string.enter_new_surname));
+        AlertDialog.Builder changeBuilder = new AlertDialog.Builder(container.getContext());
+        changeBuilder.setView(changeNameProps).setCancelable(true)
+                .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!newNameText.getText().toString().trim().isEmpty()) {
+                            AsyncHttpClient client = new AsyncHttpClient();
+                            RequestParams params = new RequestParams();
+                            params.put("login", getArguments().getString("login"));
+                            params.put(paramName, newNameText.getText().toString());
+                            client.post(getString(R.string.server) + url, params, new AsyncHttpResponseHandler() {
+                                ProgressDialog progressDialog = null;
+
+                                @Override
+                                public void onStart() {
+                                    super.onStart();
+                                    progressDialog = new ProgressDialog(container.getContext());
+                                    progressDialog.setMessage(getString(R.string.please_wait));
+                                    progressDialog.show();
+                                }
+
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                    if (progressDialog != null)
+                                        progressDialog.dismiss();
+                                    textView.setText(newNameText.getText().toString());
+                                    SharedPreferences sPref = ProfileFragment.this.getActivity().getPreferences(Context.MODE_PRIVATE);
+                                    String Juser = sPref.getString("saved_user", null);
+                                    User savedUser = null;
+                                    if (Juser != null) {
+                                        try {
+                                            savedUser = new ObjectMapper().readValue(Juser, User.class);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    if (paramName.equals("newName"))
+                                        savedUser.setName(newNameText.getText().toString());
+                                    else
+                                        savedUser.setLastName(newNameText.getText().toString());
+                                    SharedPreferences.Editor ed = sPref.edit();
+                                    String JSONUser = null;
+                                    try {
+                                        JSONUser = new ObjectMapper().writeValueAsString(savedUser);
+                                    } catch (JsonProcessingException e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(container.getContext(), getString(R.string.error_saving_user), Toast.LENGTH_SHORT).show();
+                                    }
+                                    ed.putString("saved_user", JSONUser);
+                                    ed.apply();
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                    if (progressDialog != null)
+                                        progressDialog.dismiss();
+                                    Toast.makeText(container.getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(container.getContext(), getString(R.string.field_is_empty), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog changeDialog = changeBuilder.create();
+        changeDialog.show();
     }
 }
+
 

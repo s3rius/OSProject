@@ -122,5 +122,18 @@
     <string name="survey_look">Ваш опрос будет выглядить так :</string>
     <string name="add_question">Добавить вопрос</string>
     <string name="creation_complete">Создание опроса завершено</string>
+    <string name="answer">ответ</string>
+    <string name="commentSurvey">Хотите ли вы прокомментировать этот опрос?</string>
+    <string name="commentThisSurvey">Введите комментарий к опросу</string>
+    <string name="enter_new_name">Пожалуйста, введите новое имя</string>
+    <string name="enter_new_surname">Пожлуйста, введите новую фамилию</string>
+    <string name="field_is_empty">Поле пусто</string>
+    <string name="in">в</string>
+    <string name="is_empty">пуст</string>
+    <string name="question">вопрос</string>
+    <string name="save">Сохранить</string>
+    <string name="orMissingAnswers">или отсутствуют ответы</string>
+    <string name="question1">вопросе</string>
+    <string name="error_saving_user">Ошибка сохраниния пользователя</string>
 
 </resources>

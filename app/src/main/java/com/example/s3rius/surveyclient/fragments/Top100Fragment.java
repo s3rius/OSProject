@@ -33,8 +33,6 @@ public class Top100Fragment extends ListFragment {
     ArrayList<String> surveyNames = new ArrayList<>();
     ArrayList<Integer> surveIds = new ArrayList<>();
     private ViewGroup container;
-    private String urlOfSurveys = null; // TODO: 21.05.17 IP CHANGER
-    private SurveyFragment surveyFragment;
 
     public Top100Fragment() {
         // Required empty public constructor
@@ -43,7 +41,7 @@ public class Top100Fragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        urlOfSurveys = getString(R.string.server) + "topSurveys";
+        String urlOfSurveys = getString(R.string.server) + "topSurveys";
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("sortBy", "users");
@@ -115,7 +113,7 @@ public class Top100Fragment extends ListFragment {
 
     private void startSurvey(long id) {
         if (((Drawer) getActivity()).isUserExist()) {
-            surveyFragment = new SurveyFragment();
+            SurveyFragment surveyFragment = new SurveyFragment();
             Bundle bundle = new Bundle();
             bundle.putLong("id", surveIds.get((int) id));
             bundle.putString("title", surveyNames.get((int) id));

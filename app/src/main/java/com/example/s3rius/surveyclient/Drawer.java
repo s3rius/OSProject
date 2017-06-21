@@ -207,7 +207,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //                transaction.replace(R.id.fragment_container, fragment);
 //                transaction.commit();
 //                transaction.addToBackStack(null);
-                // TODO: 21.06.17 New create survey test
                 CreateSurveyReborn fragment = new CreateSurveyReborn();
                 android.support.v4.app.FragmentTransaction transaction =
                         getSupportFragmentManager().beginTransaction();
@@ -265,7 +264,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         }
     }
 
-    void saveUser() throws JsonProcessingException {
+    private void saveUser() throws JsonProcessingException {
         sPref = getPreferences(MODE_PRIVATE);
         Editor ed = sPref.edit();
         String JSONUser = new ObjectMapper().writeValueAsString(this.user);
@@ -320,7 +319,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         final Context context = this;
         final String username = ((EditText) findViewById(R.id.loginlogin)).getText().toString();
         String password = ((EditText) findViewById(R.id.passpass)).getText().toString();
-        String url = String.format("%slogin?login=%s&password=%s", getString(R.string.server), username, password); // TODO: 22.05.17 Change IP
+        String url = String.format("%slogin?login=%s&password=%s", getString(R.string.server), username, password);
         AsyncHttpClient client = new AsyncHttpClient();
         client.setResponseTimeout(20000);
         client.post(url, new AsyncHttpResponseHandler() {
@@ -974,7 +973,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 params.put("userLogin", user.getLogin());
 
                 final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                client.post(getString(R.string.server) + "/img/upload/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
+                client.post(getString(R.string.server) + "/img/upload/", params, new AsyncHttpResponseHandler() {
 
                     @Override
                     public void onStart() {
@@ -1048,11 +1047,11 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         login = (EditText) findViewById(R.id.newLogin);
         pass = (EditText) findViewById(R.id.newPassword);
         passRep = (EditText) findViewById(R.id.newPasswordRepeat);
-        if (name.getText().toString().isEmpty() ||
-                surname.getText().toString().isEmpty() ||
-                login.getText().toString().isEmpty() ||
-                pass.getText().toString().isEmpty() ||
-                passRep.getText().toString().isEmpty()) {
+        if (isOnlySpacesOrEmpty(name.getText().toString() )||
+                isOnlySpacesOrEmpty(surname.getText().toString()) ||
+                isOnlySpacesOrEmpty(login.getText().toString())||
+                isOnlySpacesOrEmpty(pass.getText().toString()) ||
+                isOnlySpacesOrEmpty(passRep.getText().toString())) {
             Toast.makeText(this, getString(R.string.not_all_fields_filled), Toast.LENGTH_SHORT).show();
         } else if (!pass.getText().toString().equals(passRep.getText().toString())) {
             Toast.makeText(this, getString(R.string.password_dont_match), Toast.LENGTH_SHORT).show();
@@ -1071,7 +1070,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 params.put("newUser", new ObjectMapper().writeValueAsString(newUser));
 
                 final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                client.post(getString(R.string.server) + "registration/", params, new AsyncHttpResponseHandler() { // TODO: 26.05.17 IP CHANGE
+                client.post(getString(R.string.server) + "registration/", params, new AsyncHttpResponseHandler() {
 
                     @Override
                     public void onStart() {
@@ -1285,6 +1284,21 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public boolean isOnlySpacesOrEmpty(CharSequence sequence) {
+        if (sequence != null) {
+            if(!sequence.toString().trim().isEmpty()){
+                return false;
+            }
+            else
+                return true;
+        } else
+            return true;
+    }
+
+    public void onLoginBack(View view) {
+        getSupportFragmentManager().popBackStack();
     }
 }
 

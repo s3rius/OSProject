@@ -1,113 +1,130 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.s3rius.surveyclient.fragments.RegistrationFragment">
 
-    <TextView
-        android:id="@+id/fillText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fill_fields"
-        android:textSize="19sp"
-        android:layout_marginTop="83dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newName"
-        android:hint="@string/name"
-        android:layout_below="@+id/fillText"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_marginTop="13dp"
-        android:layout_alignEnd="@+id/fillText"
-        android:inputType="textPersonName"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newSurname"
-        android:hint="@string/surname"
-        android:layout_below="@+id/newName"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_marginTop="13dp"
-        android:layout_alignEnd="@+id/fillText"
-        android:inputType="textPersonName"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newLogin"
-        android:hint="@string/Login"
-        android:layout_below="@+id/newSurname"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_marginTop="13dp"
-        android:layout_alignEnd="@+id/fillText"
-        android:inputType="textPersonName"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newPassword"
-        android:hint="@string/Password"
-        android:layout_below="@+id/newLogin"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_marginTop="13dp"
-        android:layout_alignEnd="@+id/fillText"
-        android:inputType="textPassword" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newPasswordRepeat"
-        android:hint="@string/repeatPassword"
-        android:layout_below="@+id/newPassword"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_marginTop="13dp"
-        android:layout_alignEnd="@+id/fillText"
-        android:inputType="textPassword" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
+        android:fillViewport="true">
 
-    <Button
-        android:layout_marginTop="13dp"
-        android:id="@+id/newPhotoReg"
-        android:text="@string/add_profile_picture"
-        android:layout_width="wrap_content"
-        android:onClick="registrationPhoto"
-        android:layout_height="40dp"
-        android:layout_below="@id/newPasswordRepeat"
-        android:layout_alignStart="@+id/fillText"
-        android:layout_alignEnd="@+id/fillText"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/reg_profile_pic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/newPhotoReg"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#FF000000"/>
+            <TextView
+                android:id="@+id/fillText"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/fill_fields"
+                android:textSize="19sp" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:onClick="onRegistrationDone"
-        android:src="@drawable/survey_done"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+            <EditText
+                android:id="@+id/newName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@+id/fillText"
+                android:layout_marginTop="13dp"
+                android:hint="@string/name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/newSurname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@+id/newName"
+                android:layout_marginTop="13dp"
+                android:hint="@string/surname"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/newLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@+id/newSurname"
+                android:layout_marginTop="13dp"
+                android:hint="@string/Login"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/newPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@+id/newLogin"
+                android:layout_marginTop="13dp"
+                android:hint="@string/Password"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/newPasswordRepeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@+id/newPassword"
+                android:layout_marginTop="13dp"
+                android:hint="@string/repeatPassword"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/newPhotoReg"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/fillText"
+                android:layout_alignStart="@+id/fillText"
+                android:layout_below="@id/newPasswordRepeat"
+                android:layout_marginTop="13dp"
+                android:onClick="registrationPhoto"
+                android:text="@string/add_profile_picture" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/reg_profile_pic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_below="@id/newPhotoReg"
+                android:layout_centerHorizontal="true"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="1dp" />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingBack"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom|right"
-        android:onClick="onQuestionCancel"
-        android:src="@drawable/arrow_back"
-        app:layout_anchorGravity="bottom|right|end"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:onClick="onRegistrationDone"
+                android:src="@drawable/survey_done" />
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingBack"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="bottom|right"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:onClick="onLoginBack"
+                android:src="@drawable/arrow_back"
+                app:layout_anchorGravity="bottom|right|end" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

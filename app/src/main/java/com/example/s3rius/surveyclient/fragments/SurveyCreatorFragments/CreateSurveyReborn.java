@@ -76,6 +76,8 @@ public class CreateSurveyReborn extends Fragment {
 //        final Button addAnswer = (Button)view.findViewById(R.id.addAnswer);
         Button addQuestion = (Button) view.findViewById(R.id.addQuestion);
         final Button creationComplete = (Button) view.findViewById(R.id.creationComplete);
+        creationComplete.setVisibility(View.GONE);
+        final boolean visible = false;
 //        addAnswer.setVisibility(View.GONE);
 //        creationComplete.setVisibility(View.GONE);
         creationComplete.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +91,9 @@ public class CreateSurveyReborn extends Fragment {
                             setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    if(newSurvey.getComment()!=null){
+                                        newSurvey.setComment(null);
+                                    }
                                     enterNameUploadSurvey(newSurvey);
                                 }
                             }).
@@ -101,16 +106,19 @@ public class CreateSurveyReborn extends Fragment {
                                     TextView title = (TextView) commentView.findViewById(R.id.tv);
                                     title.setText(getString(R.string.commentThisSurvey));
                                     final EditText comment = (EditText) commentView.findViewById(R.id.surveyName);
+                                    if(newSurvey.getComment()!=null){
+                                        comment.setHint(newSurvey.getComment());
+                                    }
                                     commentSurvey.setView(commentView);
                                     commentSurvey.setCancelable(false)
                                             .setPositiveButton("OK",
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(final DialogInterface dialog, int id) {
-                                                            if (isOnlySpacesOrEmpty(comment.getText().toString())) {
+                                                            if (!isOnlySpacesOrEmpty(comment.getText().toString())) {
                                                                 newSurvey.setComment(comment.getText().toString());
                                                                 enterNameUploadSurvey(newSurvey);
                                                             } else
-                                                                Toast.makeText(container.getContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(container.getContext(), getString(R.string.field_is_empty), Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
                                             .setNegativeButton(getString(R.string.cancel),
@@ -132,6 +140,9 @@ public class CreateSurveyReborn extends Fragment {
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!visible){
+                    creationComplete.setVisibility(View.VISIBLE);
+                }
                 final View newQuestion = inflater.inflate(R.layout.new_question_reborn_rowlayout, null);
                 newSurvey.getQuestions().add(new Question("", new ArrayList<Answer>()));
                 Button addAnswer = (Button) newQuestion.findViewById(R.id.addAnswer);
@@ -145,13 +156,11 @@ public class CreateSurveyReborn extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (!isOnlySpacesOrEmpty(s)) {
-                            View questionId = (RelativeLayout) questionText.getParent();
-                            for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
-                                if (questionLayout.getChildAt(i).equals(questionId)) {
-                                    newSurvey.getQuestions().get(i).setName(s.toString());
-                                    break;
-                                }
+                        View questionId = (RelativeLayout) questionText.getParent();
+                        for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
+                            if (questionLayout.getChildAt(i).equals(questionId)) {
+                                newSurvey.getQuestions().get(i).setName(s.toString());
+                                break;
                             }
                         }
                     }
@@ -196,22 +205,21 @@ public class CreateSurveyReborn extends Fragment {
 
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                if (!isOnlySpacesOrEmpty(s)) {
-//                                    EditText question = (EditText) ((RelativeLayout) answerText.getParent().getParent().getParent()).getChildAt(0);
+                                //                                    EditText question = (EditText) ((RelativeLayout) answerText.getParent().getParent().getParent()).getChildAt(0);
 //                                    if (!isOnlySpacesOrEmpty(s)) {
 //                                        creationComplete.setVisibility(View.VISIBLE);
 //                                    } else {
 //                                        LinearLayout layout = ((LinearLayout) (((RelativeLayout) answerText.getParent().getParent().getParent()).getParent()));
 //                                      }
-                                    for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
-                                        if (questionLayout.getChildAt(i).equals(v.getParent())) {
-                                            for (int j = 0, size1 = ((RelativeLayout) questionLayout.getChildAt(i)).getChildCount(); j < size1; j++) {
-                                                if (((LinearLayout)((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).equals(answerText))
-                                                    newSurvey.getQuestions().get(i).getAnswers().get(j).setName(s.toString());
+                                for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
+                                    if (questionLayout.getChildAt(i).equals(((LinearLayout)((RelativeLayout)v.getParent()).getParent()).getParent())) {
+                                        for (int j = 0, size1 = ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildCount(); j < size1; j++) {
+                                            if ((((RelativeLayout) ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildAt(j))).equals(answerText.getParent())) {
+                                                newSurvey.getQuestions().get(i).getAnswers().get(j).setName(s.toString());
                                                 break;
                                             }
-                                            break;
                                         }
+                                        break;
                                     }
                                 }
                             }
@@ -225,12 +233,13 @@ public class CreateSurveyReborn extends Fragment {
                         deleteAnswer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RelativeLayout myQuestion = (RelativeLayout) v.getParent().getParent().getParent();
                                 for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
-                                    if (questionLayout.getChildAt(i).equals(myQuestion)) {
-                                        for (int j = 0, size1 = ((RelativeLayout) questionLayout.getChildAt(i)).getChildCount(); j < size1; j++) {
-                                            newSurvey.getQuestions().get(i).getAnswers().remove(j);
-                                            break;
+                                    if (questionLayout.getChildAt(i).equals(((LinearLayout)((RelativeLayout)v.getParent()).getParent()).getParent())) {
+                                        for (int j = 0, size1 = ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildCount(); j < size1; j++) {
+                                            if ((((RelativeLayout) ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildAt(j))).equals(answerText.getParent())) {
+                                                newSurvey.getQuestions().get(i).getAnswers().remove(j);
+                                                break;
+                                            }
                                         }
                                         break;
                                     }
@@ -250,13 +259,12 @@ public class CreateSurveyReborn extends Fragment {
     }
 
     public boolean isOnlySpacesOrEmpty(CharSequence sequence) {
-        if (sequence != null && !sequence.toString().isEmpty()) {
-            for (int i = 0, length = sequence.length(); i < length; i++) {
-                if (sequence.toString().charAt(i) != ' ') {
-                    return false;
-                }
+        if (sequence != null) {
+            if(!sequence.toString().trim().isEmpty()){
+                return false;
             }
-            return true;
+            else
+                return true;
         } else
             return true;
     }
@@ -276,7 +284,7 @@ public class CreateSurveyReborn extends Fragment {
             if (!isOnlySpacesOrEmpty(survey.getQuestions().get(i).getName()) && survey.getQuestions().get(i).getAnswers().size() != 0) {
                 for (int j = 0, ansSize = survey.getQuestions().get(i).getAnswers().size(); j < ansSize; j++) {
                     if (isOnlySpacesOrEmpty(survey.getQuestions().get(i).getAnswers().get(j).getName())) {
-                        Toast.makeText(container.getContext(), getString(R.string.answer) + " " + (j + 1) + " " + getString(R.string.in) + " " + getString(R.string.question) + " " + (i + 1) + " " + getString(R.string.is_empty), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(container.getContext(), getString(R.string.answer) + " " + (j + 1) + " " + getString(R.string.in) + " " + getString(R.string.question1) + " " + (i + 1) + " " + getString(R.string.is_empty), Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 }
@@ -297,7 +305,7 @@ public class CreateSurveyReborn extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!isOnlySpacesOrEmpty(surveyNameText.getText().toString())) {
-                    survey.setName(surveyNameText.toString());
+                    survey.setName(surveyNameText.getText().toString());
                     final AlertDialog.Builder builder = new AlertDialog.Builder(container.getContext());
                     final String[][] cats = new String[1][1];
                     AsyncHttpClient client1 = new AsyncHttpClient();
@@ -400,6 +408,7 @@ public class CreateSurveyReborn extends Fragment {
                 dialog.cancel();
             }
         });
-
+        AlertDialog dialog = surveyName.create();
+        dialog.show();
     }
 }

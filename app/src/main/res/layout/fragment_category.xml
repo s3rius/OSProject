@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.s3rius.surveyclient.fragments.CategoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView android:id="@android:id/empty"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

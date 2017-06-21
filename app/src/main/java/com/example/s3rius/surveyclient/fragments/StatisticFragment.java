@@ -66,7 +66,7 @@ public class StatisticFragment extends ListFragment {
         RequestParams params = new RequestParams();
         try {
             params.put("id", id);
-            params.put("options", new ObjectMapper().writeValueAsString(new String[]{"USERS", "QUESTIONS", "CREATOR", "CATEGORY"}));
+            params.put("options", new ObjectMapper().writeValueAsString(new String[]{"USERS", "QUESTIONS", "CREATOR", "CATEGORY", "STATISTICS"}));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

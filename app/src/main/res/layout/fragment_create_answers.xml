@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers">
 
-    <!-- TODO: Update blank fragment layout -->
 
 
     <EditText

@@ -2,6 +2,8 @@ package com.example.s3rius.surveyclient.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -14,9 +16,9 @@ import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -27,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -41,6 +42,7 @@ public class SurveyFragment extends ListFragment {
     private String title;
     private ViewGroup container;
     private String connectURL = null;
+    private String userLogin;
 
     public SurveyFragment() {
         // Required empty public constructor
@@ -68,6 +70,14 @@ public class SurveyFragment extends ListFragment {
             surveyId = arguments.getLong("id");
             title = arguments.getString("title");
             getActivity().setTitle(title);
+            SharedPreferences sPref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+            User savedUser = null;
+            String Juser = sPref.getString("saved_user", null);
+            try {
+                userLogin = new JSONObject(Juser).getString("login");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return inflater.inflate(R.layout.fragment_survey, container, false);
     }
@@ -91,21 +101,21 @@ public class SurveyFragment extends ListFragment {
                     Collections.sort(survey.getQuestions(), new Comparator<Question>() {
                         @Override
                         public int compare(Question o1, Question o2) {
-                            return Integer.compare( o1.getId() , o2.getId() );
+                            return Integer.compare(o1.getId(), o2.getId());
                         }
                     });
-                    for ( Question question : survey.getQuestions() ) {
+                    for (Question question : survey.getQuestions()) {
                         Collections.sort(question.getAnswers(), new Comparator<Answer>() {
                             @Override
                             public int compare(Answer o1, Answer o2) {
-                                return Integer.compare( o1.getId() , o2.getId() );
+                                return Integer.compare(o1.getId(), o2.getId());
                             }
                         });
                     }
                     setSurvey(survey);
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
-                    params.put("login", survey.getCreator().getLogin());
+                    params.put("login", userLogin);
                     final ProgressDialog[] dialog = {null};
                     client.setResponseTimeout(20000);
                     client.get(getString(R.string.server) + "user/doneSurveys", params, new AsyncHttpResponseHandler() {
@@ -126,13 +136,17 @@ public class SurveyFragment extends ListFragment {
                                 JSONArray array;
                                 try {
                                     array = new JSONArray(surveys);
+                                    boolean done = false;
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject Jsurvey = array.getJSONObject(i);
-                                        if (Jsurvey.getInt("id") == survey.getId()){
+                                        if (Jsurvey.getInt("id") == survey.getId()) {
+                                            done = true;
                                             setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey, true));
                                             break;
                                         }
                                     }
+                                    if (!done)
+                                        setListAdapter(new SurveyListAdapter(SurveyFragment.this.getContext(), survey, false));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

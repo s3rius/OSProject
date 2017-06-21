@@ -124,8 +124,6 @@
     <string name="change_surname">Change surname</string>
     <string name="profile_icon_not_downloaded">Profile photo not downloaded</string>
     <string name="open_statistics_without_survey">Open statictics</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="survey_look">Your survey will look like this :</string>
     <string name="add_question">Add new Question</string>
     <string name="creation_complete">Survey creation complete</string>
@@ -137,4 +135,9 @@
     <string name="commentThisSurvey">Enter comment of this survey</string>
     <string name="field_is_empty">Field is empty</string>
     <string name="orMissingAnswers">or missing answers</string>
+    <string name="enter_new_name">Please enter new name</string>
+    <string name="save">Save</string>
+    <string name="enter_new_surname">Please enter new surname</string>
+    <string name="question1">question</string>
+    <string name="error_saving_user">Error saving user</string>
 </resources>
