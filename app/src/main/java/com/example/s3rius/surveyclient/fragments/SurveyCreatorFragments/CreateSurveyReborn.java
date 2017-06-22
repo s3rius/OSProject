@@ -212,7 +212,7 @@ public class CreateSurveyReborn extends Fragment {
 //                                        LinearLayout layout = ((LinearLayout) (((RelativeLayout) answerText.getParent().getParent().getParent()).getParent()));
 //                                      }
                                 for (int i = 0, size = questionLayout.getChildCount(); i < size; i++) {
-                                    if (questionLayout.getChildAt(i).equals(((LinearLayout)((RelativeLayout)v.getParent()).getParent()).getParent())) {
+                                    if (questionLayout.getChildAt(i).equals(((RelativeLayout)v.getParent()))) {
                                         for (int j = 0, size1 = ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildCount(); j < size1; j++) {
                                             if ((((RelativeLayout) ((LinearLayout) ((RelativeLayout) questionLayout.getChildAt(i)).getChildAt(1)).getChildAt(j))).equals(answerText.getParent())) {
                                                 newSurvey.getQuestions().get(i).getAnswers().get(j).setName(s.toString());

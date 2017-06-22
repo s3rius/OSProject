@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.fragments.AboutUsFragment;
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
+import com.example.s3rius.surveyclient.fragments.FullscreenImageFragment;
 import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
@@ -1010,7 +1011,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         }
         if (requestCode == REGISTRATION_NEW_PIC && resultCode == RESULT_OK && null != data) {
 
-            Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            final Fragment loginFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -1021,10 +1022,49 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             final String picturePath = cursor.getString(columnIndex);
 
-            ImageView view = (ImageView)loginFragment.getView().findViewById(R.id.reg_profile_pic);
+            final ImageView view = (ImageView)loginFragment.getView().findViewById(R.id.reg_profile_pic);
             view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             cursor.close();
             regPhoto = new File(picturePath);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
+                    builder.setTitle(getString(R.string.chooseAct))
+                            .setItems(new String[]{getString(R.string.open_in_fullscreen), getString(R.string.delete_profile_picture)}, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case 0 :
+                                            ((RegistrationFragment)loginFragment).setFilePath(picturePath);
+                                            FullscreenImageFragment fullscreen = new FullscreenImageFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("imagePath", picturePath);
+                                            fullscreen.setArguments(bundle);
+                                            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.fragment_container, fullscreen);
+                                            transaction.commit();
+                                            transaction.addToBackStack(null);
+                                        case 1 :
+                                            view.setImageBitmap(null);
+                                            view.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                }
+                                            });
+                                    }
+                                }
+                            }).setCancelable(true).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
         }
     }
 

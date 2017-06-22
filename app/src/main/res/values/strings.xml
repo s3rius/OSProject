@@ -140,4 +140,6 @@
     <string name="enter_new_surname">Please enter new surname</string>
     <string name="question1">question</string>
     <string name="error_saving_user">Error saving user</string>
+    <string name="chooseAct">Choose action</string>
+    <string name="open_in_fullscreen">Open picture in fullscreen</string>
 </resources>

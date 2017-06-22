@@ -135,5 +135,7 @@
     <string name="orMissingAnswers">или отсутствуют ответы</string>
     <string name="question1">вопросе</string>
     <string name="error_saving_user">Ошибка сохраниния пользователя</string>
+    <string name="chooseAct">Выберите действие</string>
+    <string name="open_in_fullscreen">Открыть изображение на весь экран</string>
 
 </resources>
