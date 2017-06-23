@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
+import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 
@@ -25,6 +26,7 @@ import org.eazegraph.lib.models.PieModel;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 
 public class StatisticListAdapter extends ArrayAdapter<Question> {
@@ -32,17 +34,20 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
     Bitmap madeByPic = null;
     private Context context;
     private Survey survey;
+    List<Integer> answers;
 
-    StatisticListAdapter(Context context, Survey survey) {
+    StatisticListAdapter(Context context, Survey survey, List<Integer> answers) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
+        this.answers = answers;
     }
 
-    StatisticListAdapter(Context context, Survey survey, Bitmap madeByPic) {
+    StatisticListAdapter(Context context, Survey survey, Bitmap madeByPic, List<Integer> answers) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
+        this.answers = answers;
         Collections.sort(this.survey.getQuestions(), new Comparator<Question>() {
             @Override
             public int compare(Question o1, Question o2) {
@@ -61,6 +66,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
+
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (position < getSurvey().getQuestions().size()) {
             v = inflater.inflate(R.layout.statistic_rowlayout, null);
@@ -68,6 +74,8 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             final PieChart pieChart = (PieChart) v.findViewById(R.id.graph);
             questionName.setText(getSurvey().getQuestions().get(position).getName());
             Button nextAnswer = (Button) v.findViewById(R.id.nextReview);
+            TextView yourAnswer = (TextView)v.findViewById(R.id.yourAnswer);
+
             nextAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -110,7 +118,20 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             colors[3] = Color.parseColor("#FED70E");
             colors[4] = Color.parseColor("#FF8F8F8F");
             int other = 0;
+            Collections.sort(getSurvey().getQuestions().get(position).getAnswers(), new Comparator<Answer>() {
+                @Override
+                public int compare(Answer o1, Answer o2) {
+                    return o1.getId() > o2.getId() ? 1 : o1.getId() < o2.getId() ? -1 : 0;
+                }
+            });
+            if(answers!=null) {
+                String yourAnswerText = context.getString(R.string.your_answer) + getSurvey().getQuestions().get(position).getAnswers()
+                        .get(answers.get(position))
+                        .getName() + "\"";
+                yourAnswer.setText(yourAnswerText);
+            }
             Collections.sort(getSurvey().getQuestions().get(position).getAnswers());
+
             for (int i = 0; i < getSurvey().getQuestions().get(position).getAnswers().size(); i++) {
                 if (i < 4) {
                     if (getSurvey().getQuestions().get(position).getAnswers().get(i).getUsersAnswered() != 0) {
@@ -124,7 +145,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
 //                                        get(getSurvey().getQuestions().get(position).getAnswers().size() - 1 - i)
 //                                        .getUsersAnswered(),
 //                                colors[i]));
-                        pieChart.addPieSlice(new PieModel(
+                        PieModel model = new PieModel(
                                 getSurvey().getQuestions().get(position).getAnswers()
                                         .get(i)
                                         .getName(),
@@ -132,7 +153,8 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
                                 getSurvey().getQuestions().get(position).getAnswers().
                                         get(i)
                                         .getUsersAnswered(),
-                                colors[i]));
+                                colors[i]);
+                        pieChart.addPieSlice(model);
                     }
                 } else {
                     good = false;

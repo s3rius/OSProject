@@ -2,6 +2,8 @@ package com.example.s3rius.surveyclient.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.example.s3rius.surveyclient.fragments.surveypac.User;
+import com.example.s3rius.surveyclient.fragments.surveypac.UserAnswer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,6 +34,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +45,7 @@ public class StatisticFragment extends ListFragment {
     Survey survey;
     int id;
     ViewGroup container;
+    User user;
 
     public StatisticFragment() {
         // Required empty public constructor
@@ -64,10 +71,13 @@ public class StatisticFragment extends ListFragment {
         super.onStart();
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
+        SharedPreferences sharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+
         try {
+            user = new ObjectMapper().readValue(sharedPreferences.getString("saved_user", null), User.class);
             params.put("id", id);
             params.put("options", new ObjectMapper().writeValueAsString(new String[]{"USERS", "QUESTIONS", "CREATOR", "CATEGORY", "STATISTICS"}));
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         client.get(getString(R.string.server) + "survey", params, new AsyncHttpResponseHandler() {
@@ -94,18 +104,26 @@ public class StatisticFragment extends ListFragment {
 //                    getFragmentManager().popBackStack();
 //                    e.printStackTrace();
 //                }
+                List<Integer> userAnswers = null;
                 try {
                 Survey survey = new ObjectMapper().readValue(new String(responseBody), Survey.class);
                 setSurvey(survey);
+                    List<UserAnswer> answers = survey.getAnswers();
+                    for(UserAnswer ua: answers){
+                        if(ua.getUser().getLogin().equals(user.getLogin())){
+                            userAnswers = ua.getAnswers();
+                        }
+                    }
                 AsyncHttpClient client = new AsyncHttpClient();
 
-                client.get(getString(R.string.server) + "img?id=" + survey.getCreator().getLogin(), new FileAsyncHttpResponseHandler(container.getContext()) {
+                    final List<Integer> finalUserAnswers = userAnswers;
+                    client.get(getString(R.string.server) + "img?id=" + survey.getCreator().getLogin(), new FileAsyncHttpResponseHandler(container.getContext()) {
                     ProgressDialog progressDialog = null;
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                         if(progressDialog!=null)
                             progressDialog.dismiss();
-                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
+                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, finalUserAnswers));
                     }
 
                     @Override
@@ -120,13 +138,13 @@ public class StatisticFragment extends ListFragment {
                     public void onSuccess(int statusCode, Header[] headers, final File file) {
                         if(progressDialog!=null)
                             progressDialog.dismiss();
-                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, BitmapFactory.decodeFile(file.getPath())));
+                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, BitmapFactory.decodeFile(file.getPath()), finalUserAnswers));
                     }
                 });
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey));
+            setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, userAnswers));
             }
 
             @Override

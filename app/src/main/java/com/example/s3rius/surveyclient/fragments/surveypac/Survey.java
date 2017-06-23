@@ -13,6 +13,7 @@ public class Survey implements Serializable {
     private String comment;
     private List<User> users;
     private List<Question> questions;
+    private List<UserAnswer> answers;
     private User creator;
     private Date date;
     private Category category;
@@ -42,6 +43,14 @@ public class Survey implements Serializable {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<UserAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<UserAnswer> answers) {
+        this.answers = answers;
     }
 
     public String getName() {

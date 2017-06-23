@@ -23,6 +23,16 @@
         app:egValueTextSize="36sp"
         android:layout_below="@id/StatQuestionText"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/graph"
+        android:id="@+id/yourAnswer"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        />
+
     <Button
         android:id="@+id/nextReview"
         android:layout_width="wrap_content"
@@ -30,8 +40,9 @@
         android:layout_gravity="center"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:text="@string/next_answer"
-        android:layout_below="@+id/graph"
+        android:layout_below="@+id/yourAnswer"
         android:layout_alignParentEnd="true" />
+
 
     <Button
         android:id="@+id/prevReview"
@@ -39,7 +50,7 @@
         android:layout_height="wrap_content"
         android:text="@string/prew_answer"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_below="@+id/graph"
+        android:layout_below="@+id/yourAnswer"
         android:layout_alignParentStart="true" />
 
     <View
