@@ -217,7 +217,7 @@ public class TakeSurvey extends ListFragment {
         protected String doInBackground(Void... params) {
             // получаем данные с внешнего ресурса
             try {
-                URL url = new URL(getString(R.string.server) + "topSurveys?sortBytime&limit=20");
+                URL url = new URL(getString(R.string.server) + "topSurveys?sortBy=time&limit=20");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

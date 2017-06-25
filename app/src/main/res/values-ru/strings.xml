@@ -138,5 +138,13 @@
     <string name="chooseAct">Выберите действие</string>
     <string name="open_in_fullscreen">Открыть изображение на весь экран</string>
     <string name="your_answer">Ваш ответ  \"\ </string>
+    <string name="short_password">Длина пароля должна быть больше 6 и меньше 32 символов</string>
+    <string name="short_login">Длина логина должна быть больше 6 и меньше 32 символов</string>
+    <string name="close_app">Закрыть приложение</string>
+    <string name="oops_exeption">Спасибо за вашу помощь, мы получили отчёт и скоро всё исправим.</string>
+    <string name="app_has_crash">Опаньки, приложение упало.</string>
+    <string name="report">отправить отчёт</string>
+    <string name="sorry">Извините...</string>
+    <string name="error_sending_report">Ошибка отправки отчёта</string>
 
 </resources>

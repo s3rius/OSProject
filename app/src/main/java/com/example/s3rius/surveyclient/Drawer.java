@@ -90,6 +90,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        Thread.setDefaultUncaughtExceptionHandler(new ExeptionsHandler(this));
+
         //setting up the fragments
         TakeSurvey fragment = new TakeSurvey();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -121,7 +123,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             client.get(getString(R.string.server) + "img", params, new FileAsyncHttpResponseHandler(Drawer.this) {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                    Toast.makeText(Drawer.this, getString(R.string.profile_icon_not_downloaded), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -1172,9 +1173,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
                         switch (statusCode) {
-                            case 400:
-                                Toast.makeText(Drawer.this, R.string.login_owned, Toast.LENGTH_SHORT).show();
+                            case 420:
+                                Toast.makeText(Drawer.this, new String(responseBody), Toast.LENGTH_SHORT).show();
                                 break;
+                            case 421:
+                                Toast.makeText(Drawer.this, getString(R.string.short_password), Toast.LENGTH_SHORT).show();
+                                break;
+                            case 422:
+                                Toast.makeText(Drawer.this, getString(R.string.short_login), Toast.LENGTH_SHORT).show();
                             default:
                                 Toast.makeText(Drawer.this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                                 break;

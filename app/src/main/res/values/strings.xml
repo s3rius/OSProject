@@ -143,4 +143,12 @@
     <string name="chooseAct">Choose action</string>
     <string name="open_in_fullscreen">Open picture in fullscreen</string>
     <string name="your_answer">Your answer is \"\ </string>
+    <string name="short_password">Password length must be greater than 6 and less than 32 characters</string>
+    <string name="short_login">Login length must be greater than 6 and less than 32 characters</string>
+    <string name="oops_exeption">Thanks you for your help. We got a report and we gonna fix it soon.</string>
+    <string name="close_app">Close that app.</string>
+    <string name="sorry">Sorry...</string>
+    <string name="report">Send report</string>
+    <string name="app_has_crash">Oooops... App has crash.</string>
+    <string name="error_sending_report">Error sending report</string>
 </resources>
