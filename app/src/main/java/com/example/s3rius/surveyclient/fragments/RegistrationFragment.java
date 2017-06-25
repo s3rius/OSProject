@@ -14,17 +14,18 @@ import android.widget.ImageView;
 
 import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RegistrationFragment extends Fragment {
 
-    String filePath;
-    String name;
-    String surname;
-    String login;
-    String password;
+    private String filePath;
+    private String name;
+    private String surname;
+    private String login;
+    private String password;
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -42,6 +43,10 @@ public class RegistrationFragment extends Fragment {
 //        outState.putString("surname", surname);
 //        outState.putString("login", login);
 //        outState.putString("password", password);
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     @Override
@@ -62,8 +67,9 @@ public class RegistrationFragment extends Fragment {
 //        }
         if(filePath!=null){
             final ImageView proPic = (ImageView) view.findViewById(R.id.reg_profile_pic);
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-            proPic.setImageBitmap(bitmap);
+//            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+//            proPic.setImageBitmap(bitmap);
+            Picasso.with(container.getContext()).load(filePath).resize(100, 100).centerCrop().into(proPic);
             proPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,6 +89,7 @@ public class RegistrationFragment extends Fragment {
                                             transaction.commit();
                                             transaction.addToBackStack(null);
                                         case 1 :
+                                            filePath = null;
                                             proPic.setImageBitmap(null);
                                             proPic.setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -92,12 +99,7 @@ public class RegistrationFragment extends Fragment {
                                             });
                                     }
                                 }
-                            }).setCancelable(true).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                            }).setCancelable(true);
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }

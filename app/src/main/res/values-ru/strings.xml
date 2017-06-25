@@ -117,7 +117,6 @@
     <string name="yes">Да</string>
     <string name="change_name">Сменить имя</string>
     <string name="change_surname">Сменить фамилию</string>
-    <string name="profile_icon_not_downloaded">Иконка профиля не загружена</string>
     <string name="open_statistics_without_survey">Открыть статистику</string>
     <string name="survey_look">Ваш опрос будет выглядить так :</string>
     <string name="add_question">Добавить вопрос</string>
@@ -144,7 +143,7 @@
     <string name="oops_exeption">Спасибо за вашу помощь, мы получили отчёт и скоро всё исправим.</string>
     <string name="app_has_crash">Опаньки, приложение упало.</string>
     <string name="report">отправить отчёт</string>
-    <string name="sorry">Извините...</string>
+    <string name="sorry">Извините…</string>
     <string name="error_sending_report">Ошибка отправки отчёта</string>
 
 </resources>

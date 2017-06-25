@@ -26,6 +26,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 
@@ -142,7 +143,8 @@ public class ProfileFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, final File file) {
                 progressDialog[0].dismiss();
                 ImageView pic = (ImageView) view.findViewById(R.id.profile_pic);
-                pic.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+//                pic.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                Picasso.with(container.getContext()).load(file).resize(200,200).onlyScaleDown().centerInside().into(pic);
                 pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

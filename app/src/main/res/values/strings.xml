@@ -122,7 +122,6 @@
     <string name="no_made_surveys">You\'ve not made any survey yet</string>
     <string name="change_name">Change name</string>
     <string name="change_surname">Change surname</string>
-    <string name="profile_icon_not_downloaded">Profile photo not downloaded</string>
     <string name="open_statistics_without_survey">Open statictics</string>
     <string name="survey_look">Your survey will look like this :</string>
     <string name="add_question">Add new Question</string>

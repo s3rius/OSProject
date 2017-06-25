@@ -127,7 +127,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, File file) {
-                    profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+//                    profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                    Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+
                 }
             });
         }
@@ -280,12 +282,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         client.get(getString(R.string.server) + "img", params, new FileAsyncHttpResponseHandler(Drawer.this) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                Toast.makeText(Drawer.this, getString(R.string.profile_icon_not_downloaded), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, File file) {
-                profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+//                profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+
             }
         });
         Menu menu = navigationView.getMenu();
@@ -968,7 +971,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.setResponseTimeout(20000);
-            File uploadImg = new File(picturePath);
+            final File uploadImg = new File(picturePath);
             RequestParams params = new RequestParams();
             try {
                 params.put("profile_picture", uploadImg);
@@ -989,7 +992,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         if (progressDialog[0] != null)
                             progressDialog[0].dismiss();
                         //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                        profileIcon.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//                        profileIcon.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                        Picasso.with(Drawer.this).load(uploadImg).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
                         Fragment profile = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                         android.support.v4.app.FragmentTransaction transaction
                                 = getSupportFragmentManager().beginTransaction();
@@ -1024,9 +1028,10 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             final String picturePath = cursor.getString(columnIndex);
 
             final ImageView view = (ImageView)loginFragment.getView().findViewById(R.id.reg_profile_pic);
-            view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//            view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             cursor.close();
             regPhoto = new File(picturePath);
+            Picasso.with(Drawer.this).load(regPhoto).resize(100, 100).onlyScaleDown().centerInside().into(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1125,7 +1130,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         AsyncHttpClient client = new AsyncHttpClient();
                         client.setResponseTimeout(20000);
                         RequestParams params = new RequestParams();
-                        if (regPhoto != null) {
+                        Fragment regFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        if (((RegistrationFragment)regFrag).getFilePath() != null) {
                             try {
                                 params.put("profile_picture", regPhoto);
                             } catch (FileNotFoundException e) {
