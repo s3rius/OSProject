@@ -138,7 +138,7 @@ public class StatisticFragment extends ListFragment {
                     public void onSuccess(int statusCode, Header[] headers, final File file) {
                         if(progressDialog!=null)
                             progressDialog.dismiss();
-                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey, BitmapFactory.decodeFile(file.getPath()), finalUserAnswers));
+                        setListAdapter(new StatisticListAdapter(StatisticFragment.this.getContext(), StatisticFragment.this.survey,file , finalUserAnswers));
                     }
                 });
             } catch (IOException e) {

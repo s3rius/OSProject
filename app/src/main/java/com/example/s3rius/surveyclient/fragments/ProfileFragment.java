@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -144,7 +146,9 @@ public class ProfileFragment extends Fragment {
                 progressDialog[0].dismiss();
                 ImageView pic = (ImageView) view.findViewById(R.id.profile_pic);
 //                pic.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
-                Picasso.with(container.getContext()).load(file).resize(200,200).onlyScaleDown().centerInside().into(pic);
+//                Picasso.with(container.getContext()).load(file).resize(200,200).onlyScaleDown().centerInside().into(pic);
+                Glide.with(container.getContext()).load(file).fitCenter().centerCrop().into(pic);
+
                 pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -26,7 +26,7 @@
     <string name="Login">Login</string>
     <string name="repeatPassword">Repeat password</string>
     <string name="Password">Password</string>
-    <string name="ConnectionErrorList">Can\'t load surveys.\nConnection error</string>
+    <string name="ConnectionErrorList">No surveys found.</string>
     <string name="about_us">About us</string>
     <string name="all_surveys">All surveys</string>
     <string name="add_profile_picture">Add profile picture</string>
@@ -150,4 +150,5 @@
     <string name="report">Send report</string>
     <string name="app_has_crash">Oooops... App has crash.</string>
     <string name="error_sending_report">Error sending report</string>
+    <string name="ConnectionErrorStatistics">Can\'t load statistics</string>
 </resources>

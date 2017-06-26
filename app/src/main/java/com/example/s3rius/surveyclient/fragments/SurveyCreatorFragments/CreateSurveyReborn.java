@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -117,8 +118,11 @@ public class CreateSurveyReborn extends Fragment {
                                                             if (!isOnlySpacesOrEmpty(comment.getText().toString())) {
                                                                 newSurvey.setComment(comment.getText().toString());
                                                                 enterNameUploadSurvey(newSurvey);
-                                                            } else
+                                                            } else if (newSurvey.getComment() != null) {
+                                                                enterNameUploadSurvey(newSurvey);
+                                                            } else {
                                                                 Toast.makeText(container.getContext(), getString(R.string.field_is_empty), Toast.LENGTH_SHORT).show();
+                                                            }
                                                         }
                                                     })
                                             .setNegativeButton(getString(R.string.cancel),
@@ -150,6 +154,9 @@ public class CreateSurveyReborn extends Fragment {
                 Button addAnswer = (Button) newQuestion.findViewById(R.id.addAnswer);
                 Button deleteQuestion = (Button) newQuestion.findViewById(R.id.deleteQuestion);
                 final EditText questionText = (EditText) newQuestion.findViewById(R.id.newQuestionText);
+                questionText.requestFocus();
+                InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                 questionText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,6 +223,9 @@ public class CreateSurveyReborn extends Fragment {
                             }
                         }
                         final EditText answerText = (EditText) newAnswer.findViewById(R.id.newAnswerText);
+                        answerText.requestFocus();
+                        InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                         answerText.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -1,9 +1,11 @@
 package com.example.s3rius.surveyclient;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -11,7 +13,11 @@ import android.os.Looper;
 import android.os.StatFs;
 import android.util.Log;
 
+import com.example.s3rius.surveyclient.fragments.surveypac.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -21,10 +27,12 @@ import java.util.Locale;
 class ExeptionsHandler implements Thread.UncaughtExceptionHandler {
     private static Context context1;
     private Context context;
+    private Activity activity;
 
     ExeptionsHandler(Context context) {
         this.context = context;
         context1 = context;
+        activity = (Activity) context;
     }
 
     @Override
@@ -35,6 +43,19 @@ class ExeptionsHandler implements Thread.UncaughtExceptionHandler {
         message.append("Error Report collected on : ")
                 .append(date.toString())
                 .append('\n').append('\n');
+        User savedUser = null;
+        SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
+        String Juser = preferences.getString("saved_user", null);
+        if (Juser != null) {
+            try {
+                savedUser = new ObjectMapper().readValue(Juser, User.class);
+            } catch (IOException r) {
+                r.printStackTrace();
+            }
+        }
+        message.append("login : ").append(savedUser.getLogin())
+                .append('\n')
+                .append('\n');
         message.append("Cause: ").append(e.getCause()).append("\n");
         addInformation(message);
         message.append("\n").append("\n");
@@ -66,6 +87,7 @@ class ExeptionsHandler implements Thread.UncaughtExceptionHandler {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi;
             pi = pm.getPackageInfo(context.getPackageName(), 0);
+
             message.append("Version: ").append(pi.versionName).append('\n');
             message.append("Package: ").append(pi.packageName).append('\n');
         } catch (Exception e) {
@@ -136,7 +158,7 @@ class ExeptionsHandler implements Thread.UncaughtExceptionHandler {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                System.exit(0);
+                                System.exit(10);
                             }
                         });
                 builder.setPositiveButton(context.getString(R.string.report),
@@ -148,7 +170,7 @@ class ExeptionsHandler implements Thread.UncaughtExceptionHandler {
 //                                        Intent.ACTION_SEND);
 //                                String subject = "Your App crashed! Fix it!";
                                 StringBuilder errorBody = new StringBuilder();
-                                errorBody.append("Бля,  опять всё пиздой пошло. За работу!")
+                                errorBody.append("Приложение упало, иди работай!")
                                         .append("\n").append("\n");
                                 errorBody.append('\n').append('\n');
                                 errorBody.append(errorContent).append('\n')

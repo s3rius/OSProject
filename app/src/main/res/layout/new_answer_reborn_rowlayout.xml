@@ -9,7 +9,7 @@
     android:id="@+id/answerRadio"
     android:textColor="@color/colorAccent"
     android:clickable="false"
-    android:checked="true"
+    android:checked="false"
     />
     <EditText
         android:layout_toRightOf="@+id/answerRadio"

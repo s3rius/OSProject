@@ -160,6 +160,7 @@ public class SurveyFragment extends ListFragment {
                             if (dialog[0] != null)
                                 dialog[0].dismiss();
                             Toast.makeText(container.getContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                            getFragmentManager().popBackStack();
                         }
                     });
                 } catch (IOException e) {

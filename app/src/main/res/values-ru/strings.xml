@@ -25,10 +25,10 @@
     <string name="about_us">О нас</string>
     <string name="Password">Пароль</string>
     <string name="Login">Логин</string>
-    <string name="ConnectionErrorList">Невозможно загрузить опросы, проблемы соединения.</string>
+    <string name="ConnectionErrorList">Не найдено ни одного опроса</string>
     <string name="about_us_text" formatted="false"><![CDATA[
      <title>Мы <b>независимые</b> разработчики без опыта. </title><br/>
-        Это наш первый настолько большой проект в комманде.<br/>
+        Это наш первый настолько большой проект в команде.<br/>
         Наша комманда:<br/>
         <li>
             &#8226; Android разработчик:<br/>

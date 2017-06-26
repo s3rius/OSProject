@@ -13,7 +13,7 @@
         android:textColor="#6b6a6a"
         android:textSize="7pt"
         android:singleLine="false"
-        android:text="@string/ConnectionErrorList" />
+        android:text="@string/ConnectionErrorStatistics" />
 
     <ListView
         android:id="@android:id/list"

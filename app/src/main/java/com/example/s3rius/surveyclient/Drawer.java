@@ -18,14 +18,12 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.s3rius.surveyclient.fragments.AboutUsFragment;
 import com.example.s3rius.surveyclient.fragments.CategoryFragment;
 import com.example.s3rius.surveyclient.fragments.FullscreenImageFragment;
@@ -40,16 +39,10 @@ import com.example.s3rius.surveyclient.fragments.LoginFragment;
 import com.example.s3rius.surveyclient.fragments.ProfileFragment;
 import com.example.s3rius.surveyclient.fragments.RegistrationFragment;
 import com.example.s3rius.surveyclient.fragments.StatisticFragment;
-import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
-import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
-import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
 import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyReborn;
 import com.example.s3rius.surveyclient.fragments.SurveyFragment;
 import com.example.s3rius.surveyclient.fragments.TakeSurvey;
 import com.example.s3rius.surveyclient.fragments.Top100Fragment;
-import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
-import com.example.s3rius.surveyclient.fragments.surveypac.Category;
-import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
 import com.example.s3rius.surveyclient.fragments.surveypac.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,15 +54,16 @@ import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateAnswers;
+//import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateQuestion;
+//import com.example.s3rius.surveyclient.fragments.SurveyCreatorFragments.CreateSurveyFragment;
 
 
 public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -128,8 +122,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, File file) {
 //                    profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
-                    Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
-
+//                    Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+                    Glide.with(Drawer.this).load(file).fitCenter().centerCrop().into(profileIcon);
                 }
             });
         }
@@ -287,7 +281,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             @Override
             public void onSuccess(int statusCode, Header[] headers, File file) {
 //                profileIcon.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
-                Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+//                Picasso.with(Drawer.this).load(file).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+                Glide.with(Drawer.this).load(file).fitCenter().centerCrop().into(profileIcon);
 
             }
         });
@@ -549,363 +544,363 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             }
         }
     }
-
-    public void newSurvey(View view) {
-        Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (newSurvey instanceof CreateSurveyFragment) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("survey", ((CreateSurveyFragment) newSurvey).getSurvey());
-            CreateQuestion createQuestion = new CreateQuestion();
-            createQuestion.setArguments(bundle);
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, createQuestion);
-            transaction.commit();
-            transaction.addToBackStack(null);
-        }
-    }
-
-    public void SurveyCreatingDone(View view) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (fragment instanceof CreateSurveyFragment) {
-            final Survey doneSurvey = ((CreateSurveyFragment) fragment).getSurvey();
-            if (!(doneSurvey.getQuestions().size() == 0)) {
-                LayoutInflater li = LayoutInflater.from(this);
-                View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
-                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(this);
-                mDialogBuilder.setView(promptsView);
-                final EditText surveyName = (EditText) promptsView.findViewById(R.id.surveyName);
-                mDialogBuilder
-                        .setCancelable(false)
-                        .setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(final DialogInterface dialog, int id) {
-                                        doneSurvey.setName(surveyName.getText().toString());
-                                        doneSurvey.setCreator(user);
-                                        doneSurvey.setUsers(new ArrayList<User>());
-                                        final AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
-                                        final String[][] cats = new String[1][1];
-                                        AsyncHttpClient client1 = new AsyncHttpClient();
-                                        final ProgressDialog[] progressDialog = {null};
-                                        client1.setResponseTimeout(20000);
-                                        client1.get(getString(R.string.server) + "topics/", new AsyncHttpResponseHandler() {
-                                            @Override
-                                            public void onStart() {
-                                                super.onStart();
-                                                progressDialog[0] = new ProgressDialog(Drawer.this);
-                                                progressDialog[0].setMessage(getString(R.string.please_wait));
-                                                progressDialog[0].show();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                if (progressDialog[0] != null)
-                                                    progressDialog[0].dismiss();
-                                                String responce = new String(responseBody);
-                                                JSONArray dataJsonObj = null;
-                                                try {
-                                                    dataJsonObj = new JSONArray(responce);
-                                                    cats[0] = new String[dataJsonObj.length()];
-                                                    for (int i = 0; i < dataJsonObj.length(); i++) {
-                                                        JSONObject obj = null;
-                                                        obj = dataJsonObj.getJSONObject(i);
-                                                        cats[0][i] = (obj.get("name").toString());
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                builder.setTitle(getString(R.string.chooseCat));
-                                                builder.setItems(cats[0], new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        doneSurvey.setCategory(new Category().setName(cats[0][which]));
-                                                        String createdSurvey = "";
-                                                        try {
-                                                            createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
-                                                        } catch (JsonProcessingException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        AsyncHttpClient client = new AsyncHttpClient();
-                                                        client.setResponseTimeout(20000);
-                                                        RequestParams params = new RequestParams();
-                                                        params.put("createdSurvey", createdSurvey);
-                                                        final ProgressDialog[] progressDialog = new ProgressDialog[1];
-                                                        client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
-                                                            @Override
-                                                            public void onStart() {
-                                                                super.onStart();
-                                                                progressDialog[0] = new ProgressDialog(Drawer.this);
-                                                                progressDialog[0].setMessage(getString(R.string.please_wait));
-                                                                progressDialog[0].show();
-                                                            }
-
-                                                            @Override
-                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                if (progressDialog[0] != null)
-                                                                    progressDialog[0].dismiss();
-                                                                Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
-                                                                TakeSurvey fragment = new TakeSurvey();
-                                                                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                                                                        getSupportFragmentManager().beginTransaction();
-                                                                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                                                                fragmentTransaction.commit();
-                                                                fragmentTransaction.addToBackStack(null);
-                                                            }
-
-                                                            @Override
-                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                if (progressDialog[0] != null)
-                                                                    progressDialog[0].dismiss();
-                                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                                AlertDialog dialog1 = builder.create();
-                                                dialog1.show();
-                                            }
-
-                                            @Override
-                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                if (progressDialog[0] != null)
-                                                    progressDialog[0].dismiss();
-                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                })
-                        .setNegativeButton(getString(R.string.cancel),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alertDialog = mDialogBuilder.create();
-                alertDialog.show();
-            } else {
-                Toast.makeText(this, getString(R.string.survey_is_empty), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public void addQuestion(View view) {
-        Survey survey = null;
-        EditText editText = null;
-        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (questionsQuan < 50) {
-            if (newQuestion instanceof CreateQuestion) {
-                editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
-                survey = ((CreateQuestion) newQuestion).getSurvey();
-                if (!editText.getText().toString().equals("")) {
-                    survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("survey", survey);
-                    CreateAnswers createAnswers = new CreateAnswers();
-                    createAnswers.setArguments(bundle);
-                    getSupportFragmentManager().popBackStack();
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, createAnswers);
-                    transaction.commit();
-                    transaction.addToBackStack(null);
-                } else
-                    Toast.makeText(this, R.string.empty_question, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, R.string.max_quantity_ques, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onOneAnswerCreate(View view) {
-        Survey survey = null;
-        int ansQuan = 0;
-        EditText editText = null;
-        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (ansQuan < 50) {
-            if (newAnswer instanceof CreateAnswers) {
-                editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
-                if (!editText.getText().toString().equals("")) {
-                    survey = ((CreateAnswers) newAnswer).getSurvey();
-                    survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
-                    editText.setText("");
-                    ansQuan++;
-                } else
-                    Toast.makeText(this, R.string.enterAns, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, R.string.max_quantity_ans, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onAnswerCreate(View view) {
-        Survey survey = null;
-        EditText editText = null;
-        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (newAnswer instanceof CreateAnswers) {
-            survey = ((CreateAnswers) newAnswer).getSurvey();
-            editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
-            ++questionsQuan;
-            if (!editText.getText().toString().equals("")) {
-                survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
-            }
-            if (survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().size() != 0) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("survey", survey);
-                CreateSurveyFragment createSurveyFragment = new CreateSurveyFragment();
-                createSurveyFragment.setArguments(bundle);
-                getSupportFragmentManager().popBackStack();
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, createSurveyFragment);
-                transaction.commit();
-            } else {
-                Toast.makeText(this, R.string.add_answers, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public void onChangeSurvey(final View view) {
-        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
-        CharSequence[] items;
-        items = new CharSequence[survey.getQuestions().size() + 1];
-        items[0] = getString(R.string.comment);
-        for (int i = 0; i < survey.getQuestions().size(); i++) {
-            items[i + 1] = survey.getQuestions().get(i).getName();
-        }
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.what_want_change);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) {
-                    LayoutInflater li = LayoutInflater.from(Drawer.this);
-                    View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
-                    AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(Drawer.this);
-                    mDialogBuilder.setView(promptsView);
-                    final EditText comment = (EditText) promptsView.findViewById(R.id.surveyName);
-                    if (survey.getComment() != null)
-                        comment.setHint(survey.getComment());
-                    mDialogBuilder
-                            .setCancelable(false)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(final DialogInterface dialog, int id) {
-                                            if (comment.getText().toString().isEmpty()) {
-                                                Toast.makeText(Drawer.this, R.string.empty_comment, Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                survey.setComment(comment.getText().toString());
-                                            }
-                                        }
-                                    })
-                            .setNegativeButton(getString(R.string.cancel),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alertDialog = mDialogBuilder.create();
-                    alertDialog.show();
-                } else {
-                    changeChoose(view, item - 1);
-                }
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void changeChoose(final View view, final int num) {
-        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        CharSequence[] which = {getString(R.string.change_question), getString(R.string.change_answer), getString(R.string.add_answer), getString(R.string.delete_question), getString(R.string.delete_answer)};
-        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.what_want_do));
-        builder.setItems(which, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) {
-                    CreateQuestion createQuestion = new CreateQuestion();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("survey", survey);
-                    bundle.putInt("questionInt", num);
-                    createQuestion.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, createQuestion);
-                    transaction.commit();
-                    transaction.addToBackStack(null);
-                }
-                if (item == 1) {
-                    changeAns(view, num, false, 0);
-                }
-                if (item == 2) {
-                    changeAns(view, num, false, 1);
-                }
-                if (item == 3) {
-                    survey.getQuestions().remove(num);
-                    final android.support.v4.app.FragmentTransaction transaction =
-                            getSupportFragmentManager().beginTransaction();
-                    transaction.detach(surveyFrag);
-                    transaction.attach(surveyFrag);
-                    transaction.commit();
-                }
-                if (item == 4) {
-                    changeAns(view, num, true, -1);
-                }
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void changeAns(final View view, final int num, final boolean erase, final int act) {
-        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
-        if (act == 1) {
-            CreateAnswers createAnswers = new CreateAnswers();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("survey", survey);
-            bundle.putInt("act", act);
-            bundle.putInt("questInt", num);
-            createAnswers.setArguments(bundle);
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, createAnswers);
-            transaction.commit();
-            transaction.addToBackStack(null);
-        } else {
-            CharSequence[] items;
-            items = new CharSequence[survey.getQuestions().get(num).getAnswers().size()];
-            for (int i = 0; i < survey.getQuestions().get(num).getAnswers().size(); i++) {
-                items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
-            }
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.what_want_change);
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-                    if (!erase) {
-                        CreateAnswers createAnswers = new CreateAnswers();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("survey", survey);
-                        bundle.putInt("act", act);
-                        bundle.putInt("questInt", num);
-                        bundle.putInt("ansInt", item);
-                        createAnswers.setArguments(bundle);
-                        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, createAnswers);
-                        transaction.commit();
-                        transaction.addToBackStack(null);
-                    } else {
-                        survey.getQuestions().get(num).getAnswers().remove(item);
-                        Fragment fragment = null;
-                        --questionsQuan;
-                        fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                        final android.support.v4.app.FragmentTransaction transaction =
-                                getSupportFragmentManager().beginTransaction();
-                        transaction.detach(fragment);
-                        transaction.attach(fragment);
-                        transaction.commit();
-                    }
-                }
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-    }
+//
+//    public void newSurvey(View view) {
+//        Fragment newSurvey = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (newSurvey instanceof CreateSurveyFragment) {
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("survey", ((CreateSurveyFragment) newSurvey).getSurvey());
+//            CreateQuestion createQuestion = new CreateQuestion();
+//            createQuestion.setArguments(bundle);
+//            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.fragment_container, createQuestion);
+//            transaction.commit();
+//            transaction.addToBackStack(null);
+//        }
+//    }
+//
+//    public void SurveyCreatingDone(View view) {
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (fragment instanceof CreateSurveyFragment) {
+//            final Survey doneSurvey = ((CreateSurveyFragment) fragment).getSurvey();
+//            if (!(doneSurvey.getQuestions().size() == 0)) {
+//                LayoutInflater li = LayoutInflater.from(this);
+//                View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
+//                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(this);
+//                mDialogBuilder.setView(promptsView);
+//                final EditText surveyName = (EditText) promptsView.findViewById(R.id.surveyName);
+//                mDialogBuilder
+//                        .setCancelable(false)
+//                        .setPositiveButton("OK",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(final DialogInterface dialog, int id) {
+//                                        doneSurvey.setName(surveyName.getText().toString());
+//                                        doneSurvey.setCreator(user);
+//                                        doneSurvey.setUsers(new ArrayList<User>());
+//                                        final AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
+//                                        final String[][] cats = new String[1][1];
+//                                        AsyncHttpClient client1 = new AsyncHttpClient();
+//                                        final ProgressDialog[] progressDialog = {null};
+//                                        client1.setResponseTimeout(20000);
+//                                        client1.get(getString(R.string.server) + "topics/", new AsyncHttpResponseHandler() {
+//                                            @Override
+//                                            public void onStart() {
+//                                                super.onStart();
+//                                                progressDialog[0] = new ProgressDialog(Drawer.this);
+//                                                progressDialog[0].setMessage(getString(R.string.please_wait));
+//                                                progressDialog[0].show();
+//                                            }
+//
+//                                            @Override
+//                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                                                if (progressDialog[0] != null)
+//                                                    progressDialog[0].dismiss();
+//                                                String responce = new String(responseBody);
+//                                                JSONArray dataJsonObj = null;
+//                                                try {
+//                                                    dataJsonObj = new JSONArray(responce);
+//                                                    cats[0] = new String[dataJsonObj.length()];
+//                                                    for (int i = 0; i < dataJsonObj.length(); i++) {
+//                                                        JSONObject obj = null;
+//                                                        obj = dataJsonObj.getJSONObject(i);
+//                                                        cats[0][i] = (obj.get("name").toString());
+//                                                    }
+//                                                } catch (JSONException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                                builder.setTitle(getString(R.string.chooseCat));
+//                                                builder.setItems(cats[0], new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        doneSurvey.setCategory(new Category().setName(cats[0][which]));
+//                                                        String createdSurvey = "";
+//                                                        try {
+//                                                            createdSurvey = new ObjectMapper().writeValueAsString(doneSurvey);
+//                                                        } catch (JsonProcessingException e) {
+//                                                            e.printStackTrace();
+//                                                        }
+//                                                        AsyncHttpClient client = new AsyncHttpClient();
+//                                                        client.setResponseTimeout(20000);
+//                                                        RequestParams params = new RequestParams();
+//                                                        params.put("createdSurvey", createdSurvey);
+//                                                        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+//                                                        client.post(getString(R.string.server) + "createdSurvey/", params, new AsyncHttpResponseHandler() {
+//                                                            @Override
+//                                                            public void onStart() {
+//                                                                super.onStart();
+//                                                                progressDialog[0] = new ProgressDialog(Drawer.this);
+//                                                                progressDialog[0].setMessage(getString(R.string.please_wait));
+//                                                                progressDialog[0].show();
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                                                                if (progressDialog[0] != null)
+//                                                                    progressDialog[0].dismiss();
+//                                                                Toast.makeText(Drawer.this, getString(R.string.succsessfullySent), Toast.LENGTH_SHORT).show();
+//                                                                TakeSurvey fragment = new TakeSurvey();
+//                                                                android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                                                                        getSupportFragmentManager().beginTransaction();
+//                                                                fragmentTransaction.replace(R.id.fragment_container, fragment);
+//                                                                fragmentTransaction.commit();
+//                                                                fragmentTransaction.addToBackStack(null);
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//                                                                if (progressDialog[0] != null)
+//                                                                    progressDialog[0].dismiss();
+//                                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+//                                                            }
+//                                                        });
+//                                                    }
+//                                                });
+//                                                AlertDialog dialog1 = builder.create();
+//                                                dialog1.show();
+//                                            }
+//
+//                                            @Override
+//                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//                                                if (progressDialog[0] != null)
+//                                                    progressDialog[0].dismiss();
+//                                                Toast.makeText(Drawer.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        });
+//                                    }
+//                                })
+//                        .setNegativeButton(getString(R.string.cancel),
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int id) {
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                AlertDialog alertDialog = mDialogBuilder.create();
+//                alertDialog.show();
+//            } else {
+//                Toast.makeText(this, getString(R.string.survey_is_empty), Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
+//
+//    public void addQuestion(View view) {
+//        Survey survey = null;
+//        EditText editText = null;
+//        Fragment newQuestion = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (questionsQuan < 50) {
+//            if (newQuestion instanceof CreateQuestion) {
+//                editText = (EditText) newQuestion.getView().findViewById(R.id.newQuestText);
+//                survey = ((CreateQuestion) newQuestion).getSurvey();
+//                if (!editText.getText().toString().equals("")) {
+//                    survey.getQuestions().add(new Question(editText.getText().toString(), new ArrayList<Answer>()));
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("survey", survey);
+//                    CreateAnswers createAnswers = new CreateAnswers();
+//                    createAnswers.setArguments(bundle);
+//                    getSupportFragmentManager().popBackStack();
+//                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.fragment_container, createAnswers);
+//                    transaction.commit();
+//                    transaction.addToBackStack(null);
+//                } else
+//                    Toast.makeText(this, R.string.empty_question, Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Toast.makeText(this, R.string.max_quantity_ques, Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
+//    public void onOneAnswerCreate(View view) {
+//        Survey survey = null;
+//        int ansQuan = 0;
+//        EditText editText = null;
+//        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (ansQuan < 50) {
+//            if (newAnswer instanceof CreateAnswers) {
+//                editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
+//                if (!editText.getText().toString().equals("")) {
+//                    survey = ((CreateAnswers) newAnswer).getSurvey();
+//                    survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
+//                    editText.setText("");
+//                    ansQuan++;
+//                } else
+//                    Toast.makeText(this, R.string.enterAns, Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Toast.makeText(this, R.string.max_quantity_ans, Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
+//    public void onAnswerCreate(View view) {
+//        Survey survey = null;
+//        EditText editText = null;
+//        Fragment newAnswer = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (newAnswer instanceof CreateAnswers) {
+//            survey = ((CreateAnswers) newAnswer).getSurvey();
+//            editText = (EditText) newAnswer.getView().findViewById(R.id.new_Answer);
+//            ++questionsQuan;
+//            if (!editText.getText().toString().equals("")) {
+//                survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().add(new Answer(editText.getText().toString(), 0));
+//            }
+//            if (survey.getQuestions().get(survey.getQuestions().size() - 1).getAnswers().size() != 0) {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("survey", survey);
+//                CreateSurveyFragment createSurveyFragment = new CreateSurveyFragment();
+//                createSurveyFragment.setArguments(bundle);
+//                getSupportFragmentManager().popBackStack();
+//                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container, createSurveyFragment);
+//                transaction.commit();
+//            } else {
+//                Toast.makeText(this, R.string.add_answers, Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+//
+//    public void onChangeSurvey(final View view) {
+//        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+//        CharSequence[] items;
+//        items = new CharSequence[survey.getQuestions().size() + 1];
+//        items[0] = getString(R.string.comment);
+//        for (int i = 0; i < survey.getQuestions().size(); i++) {
+//            items[i + 1] = survey.getQuestions().get(i).getName();
+//        }
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(R.string.what_want_change);
+//        builder.setItems(items, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int item) {
+//                if (item == 0) {
+//                    LayoutInflater li = LayoutInflater.from(Drawer.this);
+//                    View promptsView = li.inflate(R.layout.custom_alert_done_survey, null);
+//                    AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(Drawer.this);
+//                    mDialogBuilder.setView(promptsView);
+//                    final EditText comment = (EditText) promptsView.findViewById(R.id.surveyName);
+//                    if (survey.getComment() != null)
+//                        comment.setHint(survey.getComment());
+//                    mDialogBuilder
+//                            .setCancelable(false)
+//                            .setPositiveButton("OK",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(final DialogInterface dialog, int id) {
+//                                            if (comment.getText().toString().isEmpty()) {
+//                                                Toast.makeText(Drawer.this, R.string.empty_comment, Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                survey.setComment(comment.getText().toString());
+//                                            }
+//                                        }
+//                                    })
+//                            .setNegativeButton(getString(R.string.cancel),
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            dialog.cancel();
+//                                        }
+//                                    });
+//                    AlertDialog alertDialog = mDialogBuilder.create();
+//                    alertDialog.show();
+//                } else {
+//                    changeChoose(view, item - 1);
+//                }
+//            }
+//        });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+//    }
+//
+//    public void changeChoose(final View view, final int num) {
+//        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        CharSequence[] which = {getString(R.string.change_question), getString(R.string.change_answer), getString(R.string.add_answer), getString(R.string.delete_question), getString(R.string.delete_answer)};
+//        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(getString(R.string.what_want_do));
+//        builder.setItems(which, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int item) {
+//                if (item == 0) {
+//                    CreateQuestion createQuestion = new CreateQuestion();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("survey", survey);
+//                    bundle.putInt("questionInt", num);
+//                    createQuestion.setArguments(bundle);
+//                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.fragment_container, createQuestion);
+//                    transaction.commit();
+//                    transaction.addToBackStack(null);
+//                }
+//                if (item == 1) {
+//                    changeAns(view, num, false, 0);
+//                }
+//                if (item == 2) {
+//                    changeAns(view, num, false, 1);
+//                }
+//                if (item == 3) {
+//                    survey.getQuestions().remove(num);
+//                    final android.support.v4.app.FragmentTransaction transaction =
+//                            getSupportFragmentManager().beginTransaction();
+//                    transaction.detach(surveyFrag);
+//                    transaction.attach(surveyFrag);
+//                    transaction.commit();
+//                }
+//                if (item == 4) {
+//                    changeAns(view, num, true, -1);
+//                }
+//            }
+//        });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+//    }
+//
+//    public void changeAns(final View view, final int num, final boolean erase, final int act) {
+//        final Fragment surveyFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        final Survey survey = ((CreateSurveyFragment) surveyFrag).getSurvey();
+//        if (act == 1) {
+//            CreateAnswers createAnswers = new CreateAnswers();
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("survey", survey);
+//            bundle.putInt("act", act);
+//            bundle.putInt("questInt", num);
+//            createAnswers.setArguments(bundle);
+//            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.fragment_container, createAnswers);
+//            transaction.commit();
+//            transaction.addToBackStack(null);
+//        } else {
+//            CharSequence[] items;
+//            items = new CharSequence[survey.getQuestions().get(num).getAnswers().size()];
+//            for (int i = 0; i < survey.getQuestions().get(num).getAnswers().size(); i++) {
+//                items[i] = survey.getQuestions().get(num).getAnswers().get(i).getName();
+//            }
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(R.string.what_want_change);
+//            builder.setItems(items, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int item) {
+//                    if (!erase) {
+//                        CreateAnswers createAnswers = new CreateAnswers();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("survey", survey);
+//                        bundle.putInt("act", act);
+//                        bundle.putInt("questInt", num);
+//                        bundle.putInt("ansInt", item);
+//                        createAnswers.setArguments(bundle);
+//                        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                        transaction.replace(R.id.fragment_container, createAnswers);
+//                        transaction.commit();
+//                        transaction.addToBackStack(null);
+//                    } else {
+//                        survey.getQuestions().get(num).getAnswers().remove(item);
+//                        Fragment fragment = null;
+//                        --questionsQuan;
+//                        fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//                        final android.support.v4.app.FragmentTransaction transaction =
+//                                getSupportFragmentManager().beginTransaction();
+//                        transaction.detach(fragment);
+//                        transaction.attach(fragment);
+//                        transaction.commit();
+//                    }
+//                }
+//            });
+//            AlertDialog alert = builder.create();
+//            alert.show();
+//        }
+//    }
 
     public void uploadNewProfilePhoto(View view) {
         photoChooser(NEW_PROFILE_PICTURE);
@@ -944,7 +939,6 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
             }
         }
-
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, request_code);
@@ -993,7 +987,8 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                             progressDialog[0].dismiss();
                         //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 //                        profileIcon.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                        Picasso.with(Drawer.this).load(uploadImg).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
+                        Glide.with(Drawer.this).load(uploadImg).fitCenter().centerCrop().into(profileIcon);
+//                        Picasso.with(Drawer.this).load(uploadImg).resize(100, 100).onlyScaleDown().centerInside().into(profileIcon);
                         Fragment profile = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                         android.support.v4.app.FragmentTransaction transaction
                                 = getSupportFragmentManager().beginTransaction();
@@ -1027,11 +1022,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             final String picturePath = cursor.getString(columnIndex);
 
-            final ImageView view = (ImageView)loginFragment.getView().findViewById(R.id.reg_profile_pic);
+            final ImageView view = (ImageView) loginFragment.getView().findViewById(R.id.reg_profile_pic);
 //            view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             cursor.close();
             regPhoto = new File(picturePath);
-            Picasso.with(Drawer.this).load(regPhoto).resize(100, 100).onlyScaleDown().centerInside().into(view);
+//            Picasso.with(Drawer.this).load(regPhoto).resize(100, 100).onlyScaleDown().centerInside().into(view);
+            Glide.with(Drawer.this).load(regPhoto).fitCenter().centerCrop().into(view);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1040,9 +1037,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                             .setItems(new String[]{getString(R.string.open_in_fullscreen), getString(R.string.delete_profile_picture)}, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    switch (which){
-                                        case 0 :
-                                            ((RegistrationFragment)loginFragment).setFilePath(picturePath);
+                                    switch (which) {
+                                        case 0:
+                                            ((RegistrationFragment) loginFragment).setFilePath(picturePath);
                                             FullscreenImageFragment fullscreen = new FullscreenImageFragment();
                                             Bundle bundle = new Bundle();
                                             bundle.putString("imagePath", picturePath);
@@ -1051,7 +1048,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                                             transaction.replace(R.id.fragment_container, fullscreen);
                                             transaction.commit();
                                             transaction.addToBackStack(null);
-                                        case 1 :
+                                        case 1:
                                             view.setImageBitmap(null);
                                             view.setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -1093,9 +1090,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         login = (EditText) findViewById(R.id.newLogin);
         pass = (EditText) findViewById(R.id.newPassword);
         passRep = (EditText) findViewById(R.id.newPasswordRepeat);
-        if (isOnlySpacesOrEmpty(name.getText().toString() )||
+        if (isOnlySpacesOrEmpty(name.getText().toString()) ||
                 isOnlySpacesOrEmpty(surname.getText().toString()) ||
-                isOnlySpacesOrEmpty(login.getText().toString())||
+                isOnlySpacesOrEmpty(login.getText().toString()) ||
                 isOnlySpacesOrEmpty(pass.getText().toString()) ||
                 isOnlySpacesOrEmpty(passRep.getText().toString())) {
             Toast.makeText(this, getString(R.string.not_all_fields_filled), Toast.LENGTH_SHORT).show();
@@ -1131,9 +1128,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                         client.setResponseTimeout(20000);
                         RequestParams params = new RequestParams();
                         Fragment regFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                        if (((RegistrationFragment)regFrag).getFilePath() != null) {
+                        if (((RegistrationFragment) regFrag).getFilePath() != null) {
                             try {
-                                params.put("profile_picture", regPhoto);
+                                params.put("profile_picture", new File(((RegistrationFragment) regFrag).getFilePath()));
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -1247,28 +1244,28 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     }
 
-    public void onAnswerBack(View view) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        Survey survey = ((CreateAnswers) fragment).getSurvey();
-        survey.getQuestions().remove(survey.getQuestions().size() - 1);
-        ((CreateAnswers) fragment).setSurvey(survey);
-        getSupportFragmentManager().popBackStack();
-    }
-
-    public void onQuestionBack(View view) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (!((CreateQuestion) fragment).getSurvey().getQuestions().isEmpty()) {
-            if (((CreateQuestion) fragment)
-                    .getSurvey()
-                    .getQuestions()
-                    .get(((CreateQuestion) fragment).getSurvey().getQuestions().size() - 1)
-                    .getAnswers().size() == 0) {
-                ((CreateAnswers) fragment).getSurvey().getQuestions()
-                        .remove(((CreateAnswers) fragment).getSurvey().getQuestions().size() - 1);
-            }
-        }
-        getSupportFragmentManager().popBackStack();
-    }
+//    public void onAnswerBack(View view) {
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        Survey survey = ((CreateAnswers) fragment).getSurvey();
+//        survey.getQuestions().remove(survey.getQuestions().size() - 1);
+//        ((CreateAnswers) fragment).setSurvey(survey);
+//        getSupportFragmentManager().popBackStack();
+//    }
+//
+//    public void onQuestionBack(View view) {
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (!((CreateQuestion) fragment).getSurvey().getQuestions().isEmpty()) {
+//            if (((CreateQuestion) fragment)
+//                    .getSurvey()
+//                    .getQuestions()
+//                    .get(((CreateQuestion) fragment).getSurvey().getQuestions().size() - 1)
+//                    .getAnswers().size() == 0) {
+//                ((CreateAnswers) fragment).getSurvey().getQuestions()
+//                        .remove(((CreateAnswers) fragment).getSurvey().getQuestions().size() - 1);
+//            }
+//        }
+//        getSupportFragmentManager().popBackStack();
+//    }
 
     public void deleteProfile(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Drawer.this);
@@ -1340,10 +1337,9 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     public boolean isOnlySpacesOrEmpty(CharSequence sequence) {
         if (sequence != null) {
-            if(!sequence.toString().trim().isEmpty()){
+            if (!sequence.toString().trim().isEmpty()) {
                 return false;
-            }
-            else
+            } else
                 return true;
         } else
             return true;

@@ -15,15 +15,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.s3rius.surveyclient.Drawer;
 import com.example.s3rius.surveyclient.R;
 import com.example.s3rius.surveyclient.fragments.surveypac.Answer;
 import com.example.s3rius.surveyclient.fragments.surveypac.Question;
 import com.example.s3rius.surveyclient.fragments.surveypac.Survey;
+import com.squareup.picasso.Picasso;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,7 +34,7 @@ import java.util.List;
 
 public class StatisticListAdapter extends ArrayAdapter<Question> {
 
-    Bitmap madeByPic = null;
+    File madeByPic = null;
     private Context context;
     private Survey survey;
     List<Integer> answers;
@@ -43,7 +46,7 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
         this.answers = answers;
     }
 
-    StatisticListAdapter(Context context, Survey survey, Bitmap madeByPic, List<Integer> answers) {
+    StatisticListAdapter(Context context, Survey survey, File madeByPic, List<Integer> answers) {
         super(context, R.layout.survey_rowlayout, survey.getQuestions());
         this.context = context;
         this.survey = survey;
@@ -175,7 +178,9 @@ public class StatisticListAdapter extends ArrayAdapter<Question> {
             v = inflater.inflate(R.layout.made_by_rowlayout, null);
             if (madeByPic != null) {
                 ImageView profilePic = (ImageView) v.findViewById(R.id.made_by_pic);
-                profilePic.setImageBitmap(madeByPic);
+//                profilePic.setImageBitmap(madeByPic);
+//                Picasso.with(getContext()).load(madeByPic).resize(70, 70).onlyScaleDown().centerInside().into(profilePic);
+                Glide.with(getContext()).load(madeByPic).fitCenter().centerCrop().into(profilePic);
             }
             TextView name = (TextView) v.findViewById(R.id.made_by_name);
             TextView surname = (TextView) v.findViewById(R.id.made_by_surname);
